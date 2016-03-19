@@ -84,7 +84,6 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_notes)
 	# if n == 0, do stuff (MIDI, file) and return. Do I need to save into array what notes chosen? Probs
 	if number_notes == 0
 		p "CHOSEN NOTES: #{chosen_notes.map { |i| DEGREES[(i - root) % 12] }}"
-		$files = $files + 1
 		return
 	end
 	all_notes.each do |chosen_note|
