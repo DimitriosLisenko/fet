@@ -31,3 +31,6 @@ MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"]
 #	@tempo: whatever
 # }
 
+MAJOR_PROGRESSION = [[0, 4, 7], [0, 5, 9], [2, 7, 11], [0, 4, 7]]
+MAJOR_PROGRESSION = [[0, 3, 7], [0, 5, 8], [2, 7, 10], [0, 3, 7]]
+# The sequence is quarter note each of those chords, quarter note rest, quarter/half note the note to guess
