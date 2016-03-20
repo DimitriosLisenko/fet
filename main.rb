@@ -67,7 +67,7 @@ end
 
 def select_notes_recursive(all_notes, chosen_notes, root, number_notes, key_type, tempo)
 	if number_notes == 0
-		chosen_notes.sort # So file name corresponds to degree of lowest to highest
+		chosen_notes.sort! # So file name corresponds to degree of lowest to highest
 		info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }}"
 		puts info if ARGV[3] == "debug"
 
