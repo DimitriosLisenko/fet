@@ -35,18 +35,21 @@ PIANO_RANGE = (33..120).to_a # A0 - C8 Maybe reduce range a little? Can vary wil
 # GUITAR_RANGE = (52..100).to_a # E2 - E6
 
 def main
-	number_notes = ARGV[0].to_i
-	if !(1..11).to_a.include?(number_notes)
+	number_degrees = ARGV[0].to_i
+	if !(1..11).to_a.include?(number_degrees)
+		puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
 		puts "Please enter number of degrees from 1 to 11 inclusive"
 		return
 	end
 	number_exercises = ARGV[1].to_i
 	if !(1..200).to_a.include?(number_exercises)
+		puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
 		puts "Please enter number of exercises to create from 1 to 200 inclusive"
 		return
 	end
 	tempo = ARGV[2].to_i
 	if !(40..250).to_a.include?(tempo)
+		puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
 		puts "Please enter tempo from 40 to 250 inclusive"
 		return
 	end
@@ -57,16 +60,16 @@ def main
 	number_exercises.times do
 		# Create major key exercises
 		root = MAJOR_KEY_ROOT_NOTE.to_a.sample
-		select_notes_recursive(PIANO_RANGE, [], root, number_notes, "major", tempo)
+		select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "major", tempo)
 
 		# Create minor key exercises
 		root = MINOR_KEY_ROOT_NOTE.to_a.sample
-		select_notes_recursive(PIANO_RANGE, [], root, number_notes, "minor", tempo)
+		select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "minor", tempo)
 	end
 end
 
-def select_notes_recursive(all_notes, chosen_notes, root, number_notes, key_type, tempo)
-	if number_notes == 0
+def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_type, tempo)
+	if number_degrees == 0
 		chosen_notes.sort! # So file name corresponds to degree of lowest to highest
 		info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }}"
 		puts info if ARGV[3] == "debug"
@@ -88,7 +91,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_notes, key_type
 
 	degree = (random_note - root[1]) % 12
 	all_notes_without_note_degree = all_notes.select { |note| (note - root[1]) % 12 != degree }
-	select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_notes - 1, key_type, tempo)
+	select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type, tempo)
 end
 
 main
