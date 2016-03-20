@@ -1,5 +1,4 @@
-# All 12 notes
-NOTES = [["B#", "C"], ["C#", "Db"], ["D"], ["D#", "Eb"], ["E", "Fb"], ["E#", "F"], ["F#", "Gb"], ["G"], ["G#", "Ab"], ["A"], ["A#", "Bb"], ["B", "Cb"]]
+require "./midi.rb"
 
 # All 12 degrees
 DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"]
@@ -8,63 +7,32 @@ DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"]
 # No 6 sharps because the 6 flat versions are enharmonic and more common.
 # These keys chosen because they contain only flats and sharps, no double flats/sharps.
 MAJOR_KEYS = ["B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab", "Db", "Gb"]
-MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"] # Need for file name, but not for calculation
+MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"]
 
+# Maps root note to MIDI value
 MAJOR_KEY_ROOT_NOTE = {
-	"B": 47,
-	"E": 40,
-	"A": 45,
-	"D": 50,
-	"G": 43,
-	"C": 48,
-	"F": 41,
-	"Bb": 46,
-	"Eb": 51,
-	"Ab": 44,
-	"Db": 49,
-	"Gb": 42
+	"B" => 47,
+	"E" => 40,
+	"A" => 45,
+	"D" => 50,
+	"G" => 43,
+	"C" => 48,
+	"F" => 41,
+	"Bb" => 46,
+	"Eb" => 51,
+	"Ab" => 44,
+	"Db" => 49,
+	"Gb" => 42
 }
+MINOR_KEY_ROOT_NOTE = MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
 
-# Piano has notes A0 to C8
 
-# Input: 1 <= n <= 11 (number of DISTINCT DEGREES to play), 60 <= t <= 300 (tempo)
-# Create 12 major key progressions and 12 minor key progressions at tempo t
-# Create for all 88 piano keys combinations of n DISTINCT DEGREES (a shit fuck ton!)
-# This means if degree 2 was chosen for first note, all 2's (7 or so out of 88) cannot be use for next notes.
-# For each of the 24 keys, add all the note combos and name them correctly (e.g. C_Major_2_b3.mid), which is an even more shit fuck ton.
-
-# To get notes for a specific key, do something like
-# (NOTES.index { |note| root.include?(note) }).times { |i| NOTES << NOTES.shift }
-# Better yet as it's non-destructive:
-# root_index = NOTES.index { |note| root.include?(note) }
-# x[root_index..-1] + x[0...root_index]
-
-# Class Output something along the lines of (depends on MIDI library)
-# class Output
-# 	@key: XMajor/Xminor
-#	@degrees: [...] (sort by last character, which will be the number)
-#	@tempo: whatever
-# }
-
-# Given same offset, will play relative major and minor
 MAJOR_PROGRESSION = [[0, 4, 7], [5, 9, 12], [7, 11, 14], [0, 4, 7]]
-MINOR_PROGRESSION = [[-3, 0, 4], [2, 5, 9], [4, 7, 11], [3, 0, 4]]
+MINOR_PROGRESSION = [[0, 3, 7], [5, 8, 12], [7, 10, 14], [0, 3, 7]]
 
 # In midilib, 0 is C(-2).
 PIANO_RANGE = (33..120).to_a # A0 - C8
-GUITAR_RANGE = (52..100).to_a # E2 - E6
-
-# The sequence is quarter note each of those chords, quarter note rest, quarter/half note the note to guess
-
-# If root of progression is x, then (note - x) % 12 is the interval!
-# e.g. (33..120).to_a.select { |i| (i - 64) % 12 != 0 }
-
-# MAJOR_KEYS will be a map now
-# For each value in maj keys
-# 	play MAJOR_PROGRESSION and quarter note rest
-# 	play interval
-# 	save as XM_b2_5.mid for example
-#
+# GUITAR_RANGE = (52..100).to_a # E2 - E6
 
 def main
 	number_notes = ARGV[0].to_i
@@ -72,28 +40,59 @@ def main
 		puts "Please enter number of degrees from 1 to 11 inclusive"
 		return
 	end
-	# tempo = gets.chomp.to_i
+	number_exercises = ARGV[1].to_i
+	if !(1..200).to_a.include?(number_exercises)
+		puts "Please enter number of exercises to create from 1 to 200 inclusive"
+		return
+	end
+	tempo = ARGV[2].to_i
+	if !(40..250).to_a.include?(tempo)
+		puts "Please enter tempo from 40 to 250 inclusive"
+		return
+	end
 
-	MAJOR_KEY_ROOT_NOTE.each do |root_name, root_value|
-		select_notes_recursive(PIANO_RANGE, [], root_value, number_notes)
+	number_exercises.times do
+		# Create major key exercises
+		root = MAJOR_KEY_ROOT_NOTE.to_a.sample
+		select_notes_recursive(PIANO_RANGE, [], root, number_notes, "major", tempo)
+
+		# Create minor key exercises
+		root = MINOR_KEY_ROOT_NOTE.to_a.sample
+		select_notes_recursive(PIANO_RANGE, [], root, number_notes, "minor", tempo)
 	end
 end
 
-def select_notes_recursive(all_notes, chosen_notes, root, number_notes)
-	# if n == 0, do stuff (MIDI, file) and return. Do I need to save into array what notes chosen? Probs
+def select_notes_recursive(all_notes, chosen_notes, root, number_notes, key_type, tempo)
 	if number_notes == 0
-		p "CHOSEN NOTES: #{MAJOR_KEY_ROOT_NOTE.key(root) }#{chosen_notes.map { |i| DEGREES[(i - root) % 12] }}"
+		chosen_notes.sort # So file name corresponds to degree of lowest to highest
+		info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }}"
+		puts info if ARGV[3] == "debug"
+
+		if key_type == "major"
+			progression = MAJOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
+		elsif key_type == "minor"
+			progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
+		end
+
+		file_name = "#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }.join("_")}.mid"
+
+		create_midi_file(tempo, progression, chosen_notes, info, file_name)
 		return
 	end
-	all_notes.each do |chosen_note|
-		next if chosen_notes.size > 0 && chosen_note < chosen_notes[-1]
-		chosen_notes << chosen_note
-		degree = (chosen_note - root) % 12
-		all_notes_without_note_degree = all_notes.select { |note| (note - root) % 12 != degree }
-		select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_notes - 1)
-		chosen_notes.pop
-	end
+
+	random_note = all_notes.sample
+	chosen_notes << random_note
+
+	degree = (random_note - root[1]) % 12
+	all_notes_without_note_degree = all_notes.select { |note| (note - root[1]) % 12 != degree }
+	select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_notes - 1, key_type, tempo)
 end
 
 main
-# STARTING TO THINK THAT USING RANDOM NOTES AND GETTING FIRST 100 IS A BETTER APPROACH...
+
+# All 12 notes (ended up not using it, but could use it later to show note)
+# "Note Names: #{chosen_notes.map { |i| NOTES[i % 12] }}" # Would need to figure out whether to use flat/natural/sharp for a given key - could have map with this info
+# To get notes for starting from a specific root, do something like
+# root_index = NOTES.index { |note| note.include?(root_note) }
+# x[root_index..-1] + x[0...root_index]
+# NOTES = [["B#", "C"], ["C#", "Db"], ["D"], ["D#", "Eb"], ["E", "Fb"], ["E#", "F"], ["F#", "Gb"], ["G"], ["G#", "Ab"], ["A"], ["A#", "Bb"], ["B", "Cb"]]
