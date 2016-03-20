@@ -31,7 +31,8 @@ MAJOR_PROGRESSION = [[0, 4, 7], [5, 9, 12], [7, 11, 14], [0, 4, 7]]
 MINOR_PROGRESSION = [[0, 3, 7], [5, 8, 12], [7, 10, 14], [0, 3, 7]]
 
 # In midilib, 0 is C(-2).
-PIANO_RANGE = (33..120).to_a # A0 - C8 Maybe reduce range a little? Can vary wildly atm
+# PIANO_RANGE = (33..120).to_a # A0 - C8 Maybe reduce range a little? Can vary wildly atm
+PIANO_RANGE = (33..108).to_a # A0 - C7
 # GUITAR_RANGE = (52..100).to_a # E2 - E6
 
 def main
@@ -80,6 +81,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
 			progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
 		end
 
+		# Minor bug: if this file came up, then it gets overwritten
 		file_name = "./#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }.join("_")}.mid"
 
 		create_midi_file(tempo, progression, chosen_notes, info, file_name)
