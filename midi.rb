@@ -23,7 +23,7 @@ def create_midi_file(tempo, progression, notes, info, file_name)
 	track.instrument = GM_PATCH_NAMES[0] # This is the piano patch
 
 	# Create the progression
-	track.events << ProgramChange.new(0, 1, 0)
+	track.events << ProgramChange.new(0, 1, 0) # Specify instrument as 2nd argument - see consts in midilib
 	quarter_note_length = seq.note_to_delta('quarter')
 	progression.each do |chord|
 		chord.each do |note|

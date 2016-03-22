@@ -32,7 +32,7 @@ MINOR_PROGRESSION = [[0, 3, 7], [5, 8, 12], [7, 10, 14], [0, 3, 7]]
 
 # In midilib, 0 is C(-2).
 # PIANO_RANGE = (33..120).to_a # A0 - C8 Maybe reduce range a little? Can vary wildly atm
-PIANO_RANGE = (33..108).to_a # A0 - C7
+PIANO_RANGE = (33..96).to_a # A0 - C6
 # GUITAR_RANGE = (52..100).to_a # E2 - E6
 
 def main
