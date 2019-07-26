@@ -24,6 +24,7 @@ MAJOR_KEY_ROOT_NOTE = {
 	"Db" => 49,
 	"Gb" => 42
 }
+MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
 MINOR_KEY_ROOT_NOTE = MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
 
 
@@ -43,7 +44,7 @@ def main
 		return
 	end
 	number_exercises = ARGV[1].to_i
-	if !(1..200).to_a.include?(number_exercises)
+	if !(1..1000).to_a.include?(number_exercises)
 		puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
 		puts "Please enter number of exercises to create from 1 to 200 inclusive"
 		return
@@ -82,6 +83,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
 		end
 
 		# Minor bug: if this file came up, then it gets overwritten
+		# Also doesn't take into account octaves! So Am_1(1)_2(2) same as Am_1(3)_2(5)
 		file_name = "./#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }.join("_")}.mid"
 
 		create_midi_file(tempo, progression, chosen_notes, info, file_name)

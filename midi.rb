@@ -40,7 +40,7 @@ def create_midi_file(tempo, progression, notes, info, file_name)
 		end
 	end
 	track.events << Tempo.new(Tempo.bpm_to_mpq(120)) # Change tempo so notes always sound for the same time
-	track.events << NoteOff.new(0, 0, 0, quarter_note_length) # Add quarter note rest
+	track.events << NoteOff.new(0, 0, 0, 2 * quarter_note_length) # Add quarter note rest
 	notes.each do |note|
 		track.events << NoteOn.new(0, note, 127, 0)
 	end
@@ -52,6 +52,13 @@ def create_midi_file(tempo, progression, notes, info, file_name)
 			time_interval = quarter_note_length
 		end
 		track.events << NoteOff.new(0, note, 127, time_interval)
+	end
+
+	# Play the notes sequentially too
+	track.events << NoteOff.new(0, 0, 0, 6 * quarter_note_length)
+	notes.each do |note|
+		track.events << NoteOn.new(0, note, 127, 0)
+		track.events << NoteOff.new(0, note, 127, quarter_note_length)
 	end
 
 	File.open(file_name, 'wb') { |file| seq.write(file) } # write to file
