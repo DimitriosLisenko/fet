@@ -52,5 +52,5 @@ The midi/mp3 files can then be placed on shuffle in an audio player and drilled.
 ## Installing Dependencies
 ### OS X
 ```
-brew install timidity lame
+brew install espeak lame timidity 
 ```
