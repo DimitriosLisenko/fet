@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require "./midi.rb"
 
 # All 12 degrees
