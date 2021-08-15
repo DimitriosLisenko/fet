@@ -13,18 +13,18 @@ MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"]
 
 # Maps root note to MIDI value
 MAJOR_KEY_ROOT_NOTE = {
-	"B" => 47,
-	"E" => 40,
-	"A" => 45,
-	"D" => 50,
-	"G" => 43,
-	"C" => 48,
-	"F" => 41,
-	"Bb" => 46,
-	"Eb" => 51,
-	"Ab" => 44,
-	"Db" => 49,
-	"Gb" => 42
+  "B" => 47,
+  "E" => 40,
+  "A" => 45,
+  "D" => 50,
+  "G" => 43,
+  "C" => 48,
+  "F" => 41,
+  "Bb" => 46,
+  "Eb" => 51,
+  "Ab" => 44,
+  "Db" => 49,
+  "Gb" => 42
 }
 MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
 MINOR_KEY_ROOT_NOTE = MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
@@ -41,65 +41,64 @@ PIANO_RANGE = (33..96).to_a # A0 - C6
 # GUITAR_RANGE = (52..100).to_a # E2 - E6
 
 def main
-	number_degrees = ARGV[0].to_i
-	if !(1..11).to_a.include?(number_degrees)
-		puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
-		puts "Please enter number of degrees from 1 to 11 inclusive"
-		return
-	end
-	number_exercises = ARGV[1].to_i
-	if !(1..1000).to_a.include?(number_exercises)
-		puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
-		puts "Please enter number of exercises to create from 1 to 200 inclusive"
-		return
-	end
-	tempo = ARGV[2].to_i
-	if !(40..250).to_a.include?(tempo)
-		puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
-		puts "Please enter tempo from 40 to 250 inclusive"
-		return
-	end
+  number_degrees = ARGV[0].to_i
+  if !(1..11).to_a.include?(number_degrees)
+    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Please enter number of degrees from 1 to 11 inclusive"
+    return
+  end
+  number_exercises = ARGV[1].to_i
+  if !(1..1000).to_a.include?(number_exercises)
+    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Please enter number of exercises to create from 1 to 200 inclusive"
+    return
+  end
+  tempo = ARGV[2].to_i
+  if !(40..250).to_a.include?(tempo)
+    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Please enter tempo from 40 to 250 inclusive"
+    return
+  end
 
-	Dir.mkdir("minor") unless File.exists?("major")
-	Dir.mkdir("major") unless File.exists?("major")
+  Dir.mkdir("minor") unless File.exists?("major")
+  Dir.mkdir("major") unless File.exists?("major")
 
-	number_exercises.times do
-		# Create major key exercises
-		root = MAJOR_KEY_ROOT_NOTE.to_a.sample
-		select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "major", tempo)
+  number_exercises.times do
+    # Create major key exercises
+    root = MAJOR_KEY_ROOT_NOTE.to_a.sample
+    until select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "major", tempo); end
 
-		# Create minor key exercises
-		root = MINOR_KEY_ROOT_NOTE.to_a.sample
-		select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "minor", tempo)
-	end
+    # Create minor key exercises
+    root = MINOR_KEY_ROOT_NOTE.to_a.sample
+    until select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "minor", tempo); end
+  end
 end
 
 def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_type, tempo)
-	if number_degrees == 0
-		chosen_notes.sort! # So file name corresponds to degree of lowest to highest
-		info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }}"
-		puts info if ARGV[3] == "debug"
+  if number_degrees == 0
+    chosen_notes.sort! # So file name corresponds to degree of lowest to highest
+    info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }} Notes: #{chosen_notes}"
+    puts info if ARGV[3] == "debug"
 
-		if key_type == "major"
-			progression = MAJOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
-		elsif key_type == "minor"
-			progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
-		end
+    if key_type == "major"
+      progression = MAJOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
+    elsif key_type == "minor"
+      progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
+    end
 
-		# Minor bug: if this file came up, then it gets overwritten
-		# Also doesn't take into account octaves! So Am_1(1)_2(2) same as Am_1(3)_2(5)
-		file_name = "./#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }.join("_")}.mid"
+    file_name = "./#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[(i - root[1]) % 12]}(#{i})" }.join("_")}.mid"
+    return false if File.exists?(file_name)
 
-		create_midi_file(tempo, progression, chosen_notes, info, file_name)
-		return
-	end
+    create_midi_file(tempo, progression, chosen_notes, info, file_name)
+    return true
+  end
 
-	random_note = all_notes.sample
-	chosen_notes << random_note
+  random_note = all_notes.sample
+  chosen_notes << random_note
 
-	degree = (random_note - root[1]) % 12
-	all_notes_without_note_degree = all_notes.select { |note| (note - root[1]) % 12 != degree }
-	select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type, tempo)
+  degree = (random_note - root[1]) % 12
+  all_notes_without_note_degree = all_notes.select { |note| (note - root[1]) % 12 != degree }
+  select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type, tempo)
 end
 
 main
