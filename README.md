@@ -49,7 +49,6 @@ These midi files can then be converted to MP3 if required via the `midi_to_mp3.s
 
 The midi/mp3 files can then be placed on shuffle in an audio player and drilled.
 
-## Requirements
-Ruby
-
-[TiMidity++](http://timidity.sourceforge.net/) if using `midi_to_mp3.sh` script. On macOS, install via `brew install timidity`.
+## Installing Dependencies
+### OS X
+brew install timidity lame
