@@ -16,7 +16,7 @@ For example, running the following command:
 ```sh
 ruby main.rb 2 5 120
 ```
-Will generate the following files in the root of the project:
+could generate the following files in the root of the project:
 ```sh
 $ find .
 ...
