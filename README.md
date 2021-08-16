@@ -2,6 +2,7 @@
 Create midi/mp3 files for functional ear training. Each file will contain a major/minor chord progression, followed by note(s) that you should identify the scale degree of by ear.
 
 ## Usage
+### Listening Exercises
 ```sh
 ruby generate_listening_exercises.rb {number_of_degrees} {number_of_exercises} {tempo}
 ```
@@ -10,7 +11,7 @@ ruby generate_listening_exercises.rb {number_of_degrees} {number_of_exercises} {
 
 `number_of_exercises`: How many exercises to generate per progression. Suggested value: 100.
 
-`tempo`: How fast the chord progression + notes play - the faster, the harder. Suggested value: 120.
+`tempo`: How fast the chord progression + notes play - the faster, the harder the exercise is. Suggested value: 120.
 
 For example, running the following command:
 ```sh
@@ -35,7 +36,7 @@ listening/minor/Em_6(49)_b2(77).mid
 ```
 The file name contains all the information required for the answer. For example, `EM_b5(46)_b3(91).mid`:
 
-`EM`: the chord progression is E Major.
+`EM`: the chord progression is in E Major.
 
 `b5`: the bottom note will be the b5 degree
 
@@ -45,7 +46,54 @@ The file name contains all the information required for the answer. For example,
 
 `(91)`: the MIDI value of the note played is 91 (not required for the answer, but it's there to avoid duplicate filenames)
 
-These midi files can then be converted to MP3 if required via the `midi_to_mp3.sh` script.
+These midi files can then be converted to MP3 if required via:
+```
+midi_to_mp3.sh listening
+```
+
+The midi/mp3 files can then be placed on shuffle in an audio player and drilled.
+
+### Singing Exercises
+```sh
+ruby generate_singing_exercises.rb {tempo} {sleep_duration}
+```
+
+`tempo`: How fast the chord progression + notes play - the faster, the harder the exercise is. Suggested value: 120.
+
+`sleep_duration`: After the chord progression, how many seconds to wait before playing the answer so you can compare it with what you sang. Values from 1 to 60 are allowed. Suggested value: 3.
+
+
+For example, running the following command:
+```sh
+ruby generate_singing_exercises.rb 120 3
+```
+will generate all possible combinations for keys and degrees in the root of the project:
+```sh
+$ find .
+...
+./singing/major/AM_1.mid
+./singing/major/BbM_3.mid
+./singing/major/CM_4.mid
+./singing/major/CM_5.mid
+./singing/major/BbM_2.mid
+...
+./singing/minor/Am_1.mid
+./singing/minor/Bbm_3.mid
+./singing/minor/Cm_4.mid
+./singing/minor/G#m_4.mid
+./singing/minor/F#m_1.mid
+...
+```
+The file name contains all the information required for the answer. For example, `BbM_3.mid`:
+
+`BbM`: the chord progression is in Bb Major.
+
+`3`: you should sing the 3rd degree.
+
+These midi files can then be converted to MP3 if required via:
+```
+midi_to_mp3.sh singing
+```
 
 The midi/mp3 files can then be placed on shuffle in an audio player and drilled.
 
