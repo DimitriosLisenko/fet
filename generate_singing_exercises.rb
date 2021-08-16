@@ -79,11 +79,11 @@ def main
     return
   end
 
+  FileUtils.mkdir_p("singing/major")
   MAJOR_KEYS.each do |key|
     root_note = MAJOR_KEY_ROOT_NOTE[key]
     VOCAL_RANGE_FOR_SINGING_EXERCISES.each do |target_note|
       degree = (target_note - root_note) % 12
-      FileUtils.mkdir_p("singing/major")
       progression = MAJOR_PROGRESSION.map { |chord| chord.map { |note| note + root_note } }
       file_name = "./singing/major/#{key}M_#{DEGREES[degree]}.mid"
       info = "Key: #{key} major Degrees: #{DEGREES[degree]}"
@@ -91,11 +91,11 @@ def main
     end
   end
 
+  FileUtils.mkdir_p("singing/minor")
   MINOR_KEYS.each do |key|
     root_note = MINOR_KEY_ROOT_NOTE[key]
     VOCAL_RANGE_FOR_SINGING_EXERCISES.each do |target_note|
       degree = (target_note - root_note) % 12
-      FileUtils.mkdir_p("singing/minor")
       progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root_note } }
       file_name = "./singing/minor/#{key}m_#{DEGREES[degree]}.mid"
       info = "Key: #{key} minor Degrees: #{DEGREES[degree]}"
