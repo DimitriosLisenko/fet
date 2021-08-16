@@ -9,7 +9,50 @@ include MIDI
 
 def create_midi_file(tempo, progression, notes, info, file_name)
   seq = Sequence.new()
+  track = create_track_with_progression(tempo, progression, info, seq)
 
+  track.events << Tempo.new(Tempo.bpm_to_mpq(120)) # Change tempo so notes always sound for the same time
+  track.events << NoteOff.new(0, 0, 0, 2 * quarter_note_length(seq)) # Add quarter note rest
+  notes.each do |note|
+    track.events << NoteOn.new(0, note, 127, 0)
+  end
+  quarter_note_added = false
+  notes.each do |note|
+    time_interval = 0
+    if !quarter_note_added
+      quarter_note_added = true
+      time_interval = quarter_note_length(seq)
+    end
+    track.events << NoteOff.new(0, note, 127, time_interval)
+  end
+
+  # Play the notes sequentially too
+  track.events << NoteOff.new(0, 0, 0, 6 * quarter_note_length(seq))
+  notes.each do |note|
+    track.events << NoteOn.new(0, note, 127, 0)
+    track.events << NoteOff.new(0, note, 127, quarter_note_length(seq))
+  end
+
+  File.open(file_name, 'wb') { |file| seq.write(file) } # write to file
+end
+
+def create_singing_midi_file(tempo, progression, note, sleep_duration, info, file_name)
+  seq = Sequence.new()
+  track = create_track_with_progression(tempo, progression, info, seq)
+
+  # Change tempo to 60 so that sleep_duration quarter notes corresponds to number of seconds and wait for that long
+  track.events << Tempo.new(Tempo.bpm_to_mpq(60))
+  track.events << NoteOff.new(0, 0, 0, sleep_duration * quarter_note_length(seq))
+
+  # Play the note (at the original tempo)
+  track.events << Tempo.new(Tempo.bpm_to_mpq(tempo))
+  track.events << NoteOn.new(0, note, 127, 0)
+  track.events << NoteOff.new(0, note, 127, quarter_note_length(seq))
+
+  File.open(file_name, 'wb') { |file| seq.write(file) } # write to file
+end
+
+def create_track_with_progression(tempo, progression, info, seq)
   # Create a first track for the sequence. This holds tempo events and meta info.
   track = Track.new(seq)
   seq.tracks << track
@@ -24,7 +67,6 @@ def create_midi_file(tempo, progression, notes, info, file_name)
 
   # Create the progression
   track.events << ProgramChange.new(0, 1, 0) # Specify instrument as 2nd argument - see consts in midilib
-  quarter_note_length = seq.note_to_delta('quarter')
   progression.each do |chord|
     chord.each do |note|
       track.events << NoteOn.new(0, note, 127, 0) # track number, note, volume, time to add
@@ -34,32 +76,15 @@ def create_midi_file(tempo, progression, notes, info, file_name)
       time_interval = 0
       if !quarter_note_added
         quarter_note_added = true
-        time_interval = quarter_note_length
+        time_interval = quarter_note_length(seq)
       end
       track.events << NoteOff.new(0, note, 127, time_interval)
     end
   end
-  track.events << Tempo.new(Tempo.bpm_to_mpq(120)) # Change tempo so notes always sound for the same time
-  track.events << NoteOff.new(0, 0, 0, 2 * quarter_note_length) # Add quarter note rest
-  notes.each do |note|
-    track.events << NoteOn.new(0, note, 127, 0)
-  end
-  quarter_note_added = false
-  notes.each do |note|
-    time_interval = 0
-    if !quarter_note_added
-      quarter_note_added = true
-      time_interval = quarter_note_length
-    end
-    track.events << NoteOff.new(0, note, 127, time_interval)
-  end
 
-  # Play the notes sequentially too
-  track.events << NoteOff.new(0, 0, 0, 6 * quarter_note_length)
-  notes.each do |note|
-    track.events << NoteOn.new(0, note, 127, 0)
-    track.events << NoteOff.new(0, note, 127, quarter_note_length)
-  end
+  return track
+end
 
-  File.open(file_name, 'wb') { |file| seq.write(file) } # write to file
+def quarter_note_length(seq)
+  return seq.note_to_delta('quarter')
 end

@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "fileutils"
 require "./midi.rb"
 
 # All 12 degrees
@@ -10,6 +11,35 @@ DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"]
 # These keys chosen because they contain only flats and sharps, no double flats/sharps.
 MAJOR_KEYS = ["B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab", "Db", "Gb"]
 MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"]
+
+# In midilib, 0 is C(-2).
+MIDI_VALUE_C0 = 24
+MIDI_VALUE_C1 = 36
+MIDI_VALUE_C2 = 48
+MIDI_VALUE_C3 = 60
+MIDI_VALUE_C4 = 72
+MIDI_VALUE_C5 = 84
+MIDI_VALUE_C6 = 96
+MIDI_VALUE_C7 = 108
+MIDI_VALUE_C8 = 120
+
+MIDI_VALUE_ADDITION_C = 0
+MIDI_VALUE_ADDITION_C_SHARP = 1
+MIDI_VALUE_ADDITION_D_FLAT = 1
+MIDI_VALUE_ADDITION_D = 2
+MIDI_VALUE_ADDITION_D_SHARP = 3
+MIDI_VALUE_ADDITION_E_FLAT = 3
+MIDI_VALUE_ADDITION_E = 4
+MIDI_VALUE_ADDITION_F = 5
+MIDI_VALUE_ADDITION_F_SHARP = 6
+MIDI_VALUE_ADDITION_G_FLAT = 6
+MIDI_VALUE_ADDITION_G = 7
+MIDI_VALUE_ADDITION_G_SHARP = 8
+MIDI_VALUE_ADDITION_A_FLAT = 8
+MIDI_VALUE_ADDITION_A = 9
+MIDI_VALUE_ADDITION_A_SHARP = 10
+MIDI_VALUE_ADDITION_B_FLAT = 10
+MIDI_VALUE_ADDITION_B = 11
 
 # Maps root note to MIDI value
 MAJOR_KEY_ROOT_NOTE = {
@@ -35,33 +65,32 @@ MINOR_KEY_ROOT_NOTE = MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 
 MAJOR_PROGRESSION = [[0, 4, 7], [0, 5, 9], [-1, 5, 7], [0, 4, 7]]
 MINOR_PROGRESSION = [[0, 3, 7], [0, 5, 8], [-1, 5, 7], [0, 3, 7]]
 
-# In midilib, 0 is C(-2).
-# PIANO_RANGE = (33..120).to_a # A0 - C8 Maybe reduce range a little? Can vary wildly atm
-PIANO_RANGE = (33..96).to_a # A0 - C6
-# GUITAR_RANGE = (52..100).to_a # E2 - E6
+# PIANO_RANGE = ((MIDI_VALUE_C0 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C8).to_a # A0 - C8 Maybe reduce range a little? Can vary wildly atm
+PIANO_RANGE = ((MIDI_VALUE_C0 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C6).to_a # A0 - C6
+# GUITAR_RANGE = ((MIDI_VALUE_C2 + MIDI_VALUE_ADDITION_E)..(MIDI_VALUE_C6 + MIDI_VALUE_ADDITION_E)).to_a # E2 - E6
 
 def main
   number_degrees = ARGV[0].to_i
   if !(1..11).to_a.include?(number_degrees)
-    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Usage: ruby generate_listening_exercises.rb {number of degrees} {number of exercises} {tempo}"
     puts "Please enter number of degrees from 1 to 11 inclusive"
     return
   end
   number_exercises = ARGV[1].to_i
   if !(1..1000).to_a.include?(number_exercises)
-    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Usage: ruby generate_listening_exercises.rb {number of degrees} {number of exercises} {tempo}"
     puts "Please enter number of exercises to create from 1 to 200 inclusive"
     return
   end
   tempo = ARGV[2].to_i
   if !(40..250).to_a.include?(tempo)
-    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Usage: ruby generate_listening_exercises.rb {number of degrees} {number of exercises} {tempo}"
     puts "Please enter tempo from 40 to 250 inclusive"
     return
   end
 
-  Dir.mkdir("minor") unless File.exists?("major")
-  Dir.mkdir("major") unless File.exists?("major")
+  FileUtils.mkdir_p("listening/minor")
+  FileUtils.mkdir_p("listening/major")
 
   number_exercises.times do
     # Create major key exercises
@@ -86,7 +115,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
       progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
     end
 
-    file_name = "./#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[(i - root[1]) % 12]}(#{i})" }.join("_")}.mid"
+    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[(i - root[1]) % 12]}(#{i})" }.join("_")}.mid"
     return false if File.exists?(file_name)
 
     create_midi_file(tempo, progression, chosen_notes, info, file_name)
