@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "fileutils"
 require "./midi.rb"
 
 # All 12 degrees
@@ -88,8 +89,8 @@ def main
     return
   end
 
-  Dir.mkdir("minor") unless File.exists?("major")
-  Dir.mkdir("major") unless File.exists?("major")
+  FileUtils.mkdir_p("listening/minor")
+  FileUtils.mkdir_p("listening/major")
 
   number_exercises.times do
     # Create major key exercises
@@ -114,7 +115,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
       progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
     end
 
-    file_name = "./#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[(i - root[1]) % 12]}(#{i})" }.join("_")}.mid"
+    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[(i - root[1]) % 12]}(#{i})" }.join("_")}.mid"
     return false if File.exists?(file_name)
 
     create_midi_file(tempo, progression, chosen_notes, info, file_name)

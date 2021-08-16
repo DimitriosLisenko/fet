@@ -1,3 +1,2 @@
 #!/bin/bash
-rm -rf minor
-rm -rf major
+rm -rf listening
