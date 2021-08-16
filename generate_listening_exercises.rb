@@ -72,19 +72,19 @@ PIANO_RANGE = ((MIDI_VALUE_C0 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C6).to_a # A0
 def main
   number_degrees = ARGV[0].to_i
   if !(1..11).to_a.include?(number_degrees)
-    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Usage: ruby generate_listening_exercises.rb {number of degrees} {number of exercises} {tempo}"
     puts "Please enter number of degrees from 1 to 11 inclusive"
     return
   end
   number_exercises = ARGV[1].to_i
   if !(1..1000).to_a.include?(number_exercises)
-    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Usage: ruby generate_listening_exercises.rb {number of degrees} {number of exercises} {tempo}"
     puts "Please enter number of exercises to create from 1 to 200 inclusive"
     return
   end
   tempo = ARGV[2].to_i
   if !(40..250).to_a.include?(tempo)
-    puts "Usage: ruby main.rb {number of degrees} {number of exercises} {tempo}"
+    puts "Usage: ruby generate_listening_exercises.rb {number of degrees} {number of exercises} {tempo}"
     puts "Please enter tempo from 40 to 250 inclusive"
     return
   end

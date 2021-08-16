@@ -3,7 +3,7 @@ Create midi/mp3 files for functional ear training. Each file will contain a majo
 
 ## Usage
 ```sh
-ruby main.rb {number_of_degrees} {number_of_exercises} {tempo}
+ruby generate_listening_exercises.rb {number_of_degrees} {number_of_exercises} {tempo}
 ```
 
 `number_of_degrees`: After the chord progression, how many distinct degrees to play. Values from 1 to 11 are allowed. Suggested value: 1.
@@ -14,23 +14,23 @@ ruby main.rb {number_of_degrees} {number_of_exercises} {tempo}
 
 For example, running the following command:
 ```sh
-ruby main.rb 2 5 120
+ruby generate_listening_exercises.rb 2 5 120
 ```
 could generate the following files in the root of the project:
 ```sh
 $ find .
 ...
-major/EM_b5(46)_b3(91).mid
-major/CM_b2(37)_b5(54).mid
-major/DbM_b6(33)_7(36).mid
-major/CM_b6(44)_6(57).mid
-major/BbM_6(79)_4(87).mid
+listening/major/EM_b5(46)_b3(91).mid
+listening/major/CM_b2(37)_b5(54).mid
+listening/major/DbM_b6(33)_7(36).mid
+listening/major/CM_b6(44)_6(57).mid
+listening/major/BbM_6(79)_4(87).mid
 ...
-minor/Gm_7(54)_3(95).mid
-minor/Ebm_b2(52)_b7(73).mid
-minor/Gm_b5(61)_1(79).mid
-minor/Fm_7(52)_1(65).mid
-minor/Em_6(49)_b2(77).mid
+listening/minor/Gm_7(54)_3(95).mid
+listening/minor/Ebm_b2(52)_b7(73).mid
+listening/minor/Gm_b5(61)_1(79).mid
+listening/minor/Fm_7(52)_1(65).mid
+listening/minor/Em_6(49)_b2(77).mid
 ...
 ```
 The file name contains all the information required for the answer. For example, `EM_b5(46)_b3(91).mid`:
