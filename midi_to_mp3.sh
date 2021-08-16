@@ -1,13 +1,13 @@
 #!/bin/bash
-for i in major/*.mid ; do 
-	timidity -Ow -o - $i | lame - ${i/mid/mp3}
-	# rm $i
+for i in ${1}/major/*.mid ; do 
+  timidity -Ow -o - $i | lame - ${i/mid/mp3}
+  # rm $i
 done
 
-for i in minor/*.mid ; do 
-	timidity -Ow -o - $i | lame - ${i/mid/mp3}
-	# rm $i
+for i in ${1}/minor/*.mid ; do 
+  timidity -Ow -o - $i | lame - ${i/mid/mp3}
+  # rm $i
 done
 
-mv major/*.mp3 major/mp3
-mv minor/*.mp3 minor/mp3
+mv ${1}/major/*.mp3 ${1}/major/mp3
+mv ${1}/minor/*.mp3 ${1}/minor/mp3
