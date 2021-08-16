@@ -40,7 +40,8 @@ def create_singing_midi_file(tempo, progression, note, sleep_duration, info, fil
   seq = Sequence.new()
   track = create_track_with_progression(tempo, progression, info, seq)
 
-  # Change tempo to 60 so that sleep_duration quarter notes corresponds to number of seconds and wait for that long
+  # Change tempo to 60 so that sleep_duration quarter notes corresponds to number of seconds
+  # Sleep for the requested duration
   track.events << Tempo.new(Tempo.bpm_to_mpq(60))
   track.events << NoteOff.new(0, 0, 0, sleep_duration * quarter_note_length(seq))
 
@@ -48,6 +49,11 @@ def create_singing_midi_file(tempo, progression, note, sleep_duration, info, fil
   track.events << Tempo.new(Tempo.bpm_to_mpq(tempo))
   track.events << NoteOn.new(0, note, 127, 0)
   track.events << NoteOff.new(0, note, 127, quarter_note_length(seq))
+
+  # Change tempo to 60 so that sleep_duration quarter notes corresponds to number of seconds
+  # Sleep for 2 seconds to add space in between tracks
+  track.events << Tempo.new(Tempo.bpm_to_mpq(60))
+  track.events << NoteOff.new(0, 0, 0, 2 * quarter_note_length(seq))
 
   File.open(file_name, 'wb') { |file| seq.write(file) } # write to file
 end
