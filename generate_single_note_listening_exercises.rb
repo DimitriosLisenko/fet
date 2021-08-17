@@ -74,21 +74,21 @@ def main
   FileUtils.mkdir_p("listening_single_note/major")
   MAJOR_KEYS.each do |key|
     root_note = MAJOR_KEY_ROOT_NOTE[key]
-	degree = (MIDI_VALUE_C4 - root_note) % 12
-	progression = MAJOR_PROGRESSION.map { |chord| chord.map { |note| note + root_note } }
-	file_name = "./listening_single_note/major/#{key}M_#{DEGREES[degree]}.mid"
-	info = "Key: #{key} major Degrees: #{DEGREES[degree]}"
-	create_midi_file(tempo, progression, [MIDI_VALUE_C4], info, file_name)
+    degree = (MIDI_VALUE_C4 - root_note) % 12
+    progression = MAJOR_PROGRESSION.map { |chord| chord.map { |note| note + root_note } }
+    file_name = "./listening_single_note/major/#{key}M_#{DEGREES[degree]}.mid"
+    info = "Key: #{key} major Degrees: #{DEGREES[degree]}"
+    create_midi_file(tempo, progression, [MIDI_VALUE_C4], info, file_name)
   end
 
   FileUtils.mkdir_p("listening_single_note/minor")
   MINOR_KEYS.each do |key|
     root_note = MINOR_KEY_ROOT_NOTE[key]
-	degree = (MIDI_VALUE_C4 - root_note) % 12
-	progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root_note } }
-	file_name = "./listening_single_note/minor/#{key}m_#{DEGREES[degree]}.mid"
-	info = "Key: #{key} minor Degrees: #{DEGREES[degree]}"
-	create_midi_file(tempo, progression, [MIDI_VALUE_C4], info, file_name)
+    degree = (MIDI_VALUE_C4 - root_note) % 12
+    progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root_note } }
+    file_name = "./listening_single_note/minor/#{key}m_#{DEGREES[degree]}.mid"
+    info = "Key: #{key} minor Degrees: #{DEGREES[degree]}"
+    create_midi_file(tempo, progression, [MIDI_VALUE_C4], info, file_name)
   end
 end
 
