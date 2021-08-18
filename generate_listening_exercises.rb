@@ -150,6 +150,27 @@ def midi_note_name(root_name, note_degree_index, note_midi_value)
   return degree_name(root_name, note_degree_index) + octave_value(note_midi_value).to_s
 end
 
+def relative_major(note_name, key_type)
+  offset = case key_type
+  when "lydian"
+    -1
+  when "major", "ionian"
+    0
+  when "mixolydian"
+    1
+  when "dorian"
+    2
+  when "minor", "aeolian"
+    3
+  when "phrygian"
+    4
+  when "locrian"
+    5
+  end
+
+  return CIRCLE_OF_FIFTHS[CIRCLE_OF_FIFTHS.index(note_name) - offset]
+end
+
 def degree_name(root_name, degree_index)
   notes_array = notes_of_major_scale(root_name)
 
