@@ -3,6 +3,9 @@
 require "fileutils"
 require "./midi.rb"
 
+class InvalidRootName < StandardError; end
+class UnsupportedRootName < StandardError; end
+
 # All 12 degrees
 DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"]
 
@@ -11,6 +14,15 @@ DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"]
 # These keys chosen because they contain only flats and sharps, no double flats/sharps.
 MAJOR_KEYS = ["B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab", "Db", "Gb"]
 MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"]
+
+CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS = ["F", "C", "G", "D", "A", "E", "B"]
+CIRCLE_OF_FIFTHS = [
+  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}bb" },
+  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}b" },
+  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS,
+  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}#" },
+  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}x" },
+]
 
 # In midilib, 0 is C(-2).
 MIDI_VALUE_C0 = 24
@@ -115,7 +127,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
       progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
     end
 
-    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[(i - root[1]) % 12]}(#{i})" }.join("_")}.mid"
+    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[degree(root[1], i)]}(#{midi_note_name(root[0], degree(root[1], i), i)})" }.join("_")}.mid"
     return false if File.exists?(file_name)
 
     create_midi_file(tempo, progression, chosen_notes, info, file_name)
@@ -128,6 +140,67 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
   degree = (random_note - root[1]) % 12
   all_notes_without_note_degree = all_notes.select { |note| (note - root[1]) % 12 != degree }
   select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type, tempo)
+end
+
+def degree(root_midi_value, note_midi_value)
+  return (note_midi_value - root_midi_value) % 12
+end
+
+def midi_note_name(root_name, note_degree_index, note_midi_value)
+  return degree_name(root_name, note_degree_index) + octave_value(note_midi_value).to_s
+end
+
+def degree_name(root_name, degree_index)
+  notes_array = notes_of_major_scale(root_name)
+
+  note_degree_name = DEGREES[degree_index]
+  is_flattened_degree = note_degree_name[0] == "b"
+  note_degree = is_flattened_degree ? note_degree_name[1].to_i : note_degree_name[0].to_i
+
+  result = notes_array[note_degree - 1]
+  return is_flattened_degree ? flatten_note_name(result) : result
+end
+
+def octave_value(midi_value)
+  return (midi_value - 24) / 12
+end
+
+# NOTE: performs the following conversion
+# Fx -> F#
+# F# -> F
+# F -> Fb
+# Fb -> Fbb
+# TODO: be super pedantic and perform the xx -> #x -> x -> # conversion as well
+def flatten_note_name(full_note_name)
+  note_name = full_note_name[0]
+  accidental = full_note_name[1]
+  case accidental
+  when "x"
+    return note_name + "#"
+  when "#"
+    return note_name
+  else
+    return full_note_name + "b"
+  end
+end
+
+def notes_of_major_scale(root_name)
+  return notes_of_scale(root_name, -1, 5)
+end
+
+def notes_of_minor_scale(root_name)
+  return notes_of_scale(root_name, -4, 2)
+end
+
+def notes_of_scale(root_name, left_offset, right_offset)
+  index = CIRCLE_OF_FIFTHS.index(root_name)
+  raise InvalidRootName.new(root_name) if index.nil?
+
+  result = CIRCLE_OF_FIFTHS[(index + left_offset)..(index + right_offset)]
+  raise UnsupportedRootName.new(root_name) unless result.size == 7
+
+  result = result.sort
+  return result.rotate(result.index(root_name))
 end
 
 main
