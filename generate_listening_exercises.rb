@@ -24,16 +24,17 @@ CIRCLE_OF_FIFTHS = [
   *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}x" },
 ]
 
-# In midilib, 0 is C(-2).
-MIDI_VALUE_C0 = 24
-MIDI_VALUE_C1 = 36
-MIDI_VALUE_C2 = 48
-MIDI_VALUE_C3 = 60
-MIDI_VALUE_C4 = 72
-MIDI_VALUE_C5 = 84
-MIDI_VALUE_C6 = 96
-MIDI_VALUE_C7 = 108
-MIDI_VALUE_C8 = 120
+# In MIDI, the minimum note value is 0 (which is C(-1)) and the maximum note value is 127 (which is G(9))
+MIDI_VALUE_C0 = 12
+MIDI_VALUE_C1 = 24
+MIDI_VALUE_C2 = 36
+MIDI_VALUE_C3 = 48
+MIDI_VALUE_C4 = 60
+MIDI_VALUE_C5 = 72
+MIDI_VALUE_C6 = 84
+MIDI_VALUE_C7 = 96
+MIDI_VALUE_C8 = 108
+MIDI_VALUE_C9 = 120
 
 MIDI_VALUE_ADDITION_C = 0
 MIDI_VALUE_ADDITION_C_SHARP = 1
@@ -78,7 +79,7 @@ MAJOR_PROGRESSION = [[0, 4, 7], [0, 5, 9], [-1, 5, 7], [0, 4, 7]]
 MINOR_PROGRESSION = [[0, 3, 7], [0, 5, 8], [-1, 5, 7], [0, 3, 7]]
 
 # PIANO_RANGE = ((MIDI_VALUE_C0 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C8).to_a # A0 - C8 Maybe reduce range a little? Can vary wildly atm
-PIANO_RANGE = ((MIDI_VALUE_C0 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C6).to_a # A0 - C6
+PIANO_RANGE = ((MIDI_VALUE_C1 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C7).to_a # A1 - C7
 # GUITAR_RANGE = ((MIDI_VALUE_C2 + MIDI_VALUE_ADDITION_E)..(MIDI_VALUE_C6 + MIDI_VALUE_ADDITION_E)).to_a # E2 - E6
 
 def main
@@ -183,7 +184,7 @@ def degree_name(root_name, degree_index)
 end
 
 def octave_value(midi_value)
-  return (midi_value - 24) / 12
+  return (midi_value - 12) / 12
 end
 
 # NOTE: performs the following conversion
