@@ -1,5 +1,6 @@
 AllCops:
   TargetRubyVersion: 3.0
+  NewCops: enable
 
 Style/StringLiterals:
   Enabled: true
@@ -20,6 +21,9 @@ Style/RaiseArgs:
 Style/WordArray:
   Enabled: true
   EnforcedStyle: brackets
+
+Layout/CaseIndentation:
+  Enabled: true
 
 Layout/LineLength:
   Max: 175
