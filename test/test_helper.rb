@@ -3,8 +3,10 @@
 require "simplecov"
 SimpleCov.start
 
-require "codecov"
-SimpleCov.formatter = SimpleCov::Formatter::Codecov
+unless ENV['CODECOV_TOKEN'].nil?
+  require "codecov"
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+end
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "fet"
