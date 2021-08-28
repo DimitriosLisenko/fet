@@ -5,5 +5,7 @@ module Fet
 
   class InvalidRootName < Error; end
 
+  class InvalidModeName < Error; end
+
   class UnsupportedRootName < Error; end
 end

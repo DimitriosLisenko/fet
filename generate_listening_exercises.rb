@@ -1,28 +1,8 @@
 #!/usr/bin/env ruby
 
 require "fileutils"
+require "./lib/fet.rb"
 require "./midi.rb"
-
-class InvalidRootName < StandardError; end
-class UnsupportedRootName < StandardError; end
-
-# All 12 degrees
-DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"]
-
-# All keys. First element is 5 sharps, 4 sharps, ... 0 sharps/flats, 1 flat, ... all the way up to 6 flats.
-# No 6 sharps because the 6 flat versions are enharmonic and more common.
-# These keys chosen because they contain only flats and sharps, no double flats/sharps.
-MAJOR_KEYS = ["B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab", "Db", "Gb"]
-MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"]
-
-CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS = ["F", "C", "G", "D", "A", "E", "B"]
-CIRCLE_OF_FIFTHS = [
-  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}bb" },
-  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}b" },
-  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS,
-  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}#" },
-  *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| "#{note}x" },
-]
 
 # In MIDI, the minimum note value is 0 (which is C(-1)) and the maximum note value is 127 (which is G(9))
 MIDI_VALUE_C0 = 12
@@ -70,7 +50,7 @@ MAJOR_KEY_ROOT_NOTE = {
   "Gb" => 42
 }
 MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
-MINOR_KEY_ROOT_NOTE = MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
+MINOR_KEY_ROOT_NOTE = Fet::MusicTheory::MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
 
 
 # MAJOR_PROGRESSION = [[0, 4, 7], [5, 9, 12], [7, 11, 14], [0, 4, 7]]
@@ -119,7 +99,7 @@ end
 def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_type, tempo)
   if number_degrees == 0
     chosen_notes.sort! # So file name corresponds to degree of lowest to highest
-    info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| DEGREES[(i - root[1]) % 12] }} Notes: #{chosen_notes}"
+    info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| Fet::MusicTheory::DEGREES[(i - root[1]) % 12] }} Notes: #{chosen_notes}"
     puts info if ARGV[3] == "debug"
 
     if key_type == "major"
@@ -128,7 +108,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
       progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
     end
 
-    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{DEGREES[degree(root[1], i)]}(#{midi_note_name(root[0], degree(root[1], i), i)})" }.join("_")}.mid"
+    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{Fet::MusicTheory::DEGREES[degree(root[1], i)]}(#{midi_note_name(root[0], degree(root[1], i), i)})" }.join("_")}.mid"
     return false if File.exists?(file_name)
 
     create_midi_file(tempo, progression, chosen_notes, info, file_name)
@@ -151,78 +131,19 @@ def midi_note_name(root_name, note_degree_index, note_midi_value)
   return degree_name(root_name, note_degree_index) + octave_value(note_midi_value).to_s
 end
 
-def relative_major(note_name, key_type)
-  offset = case key_type
-  when "lydian"
-    -1
-  when "major", "ionian"
-    0
-  when "mixolydian"
-    1
-  when "dorian"
-    2
-  when "minor", "aeolian"
-    3
-  when "phrygian"
-    4
-  when "locrian"
-    5
-  end
-
-  return CIRCLE_OF_FIFTHS[CIRCLE_OF_FIFTHS.index(note_name) - offset]
-end
-
 def degree_name(root_name, degree_index)
-  notes_array = notes_of_major_scale(root_name)
+  notes_array = Fet::MusicTheory.notes_of_major_scale(root_name)
 
-  note_degree_name = DEGREES[degree_index]
+  note_degree_name = Fet::MusicTheory::DEGREES[degree_index]
   is_flattened_degree = note_degree_name[0] == "b"
   note_degree = is_flattened_degree ? note_degree_name[1].to_i : note_degree_name[0].to_i
 
   result = notes_array[note_degree - 1]
-  return is_flattened_degree ? flatten_note_name(result) : result
+  return is_flattened_degree ? Fet::MusicTheory.flatten_note(result) : result
 end
 
 def octave_value(midi_value)
   return (midi_value - 12) / 12
-end
-
-# NOTE: performs the following conversion
-# Fx -> F#
-# F# -> F
-# F -> Fb
-# Fb -> Fbb
-# TODO: be super pedantic and perform the xx -> #x -> x -> # conversion as well
-def flatten_note_name(full_note_name)
-  note_name = full_note_name[0]
-  accidental = full_note_name[1]
-  case accidental
-  when "x"
-    return note_name + "#"
-  when "#"
-    return note_name
-  else
-    return full_note_name + "b"
-  end
-end
-
-def notes_of_major_scale(root_name)
-  return notes_of_scale(root_name, -1, 5)
-end
-
-def notes_of_minor_scale(root_name)
-  return notes_of_scale(root_name, -4, 2)
-end
-
-def notes_of_scale(root_name, left_offset, right_offset)
-  index = CIRCLE_OF_FIFTHS.index(root_name)
-  raise InvalidRootName.new(root_name) if index.nil?
-
-  result = CIRCLE_OF_FIFTHS[(index + left_offset)..(index + right_offset)]
-  raise UnsupportedRootName.new(root_name) unless result.size == 7
-
-  result = result.sort
-  return result.rotate(result.index(root_name))
 end
 
 main
