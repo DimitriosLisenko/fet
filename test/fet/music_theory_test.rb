@@ -4,6 +4,36 @@ require "test_helper"
 
 module Fet
   class MusicTheoryTest < Minitest::Test
+    MAJOR_SCALES = [
+      ["B", "C#", "D#", "E", "F#", "G#", "A#"],
+      ["E", "F#", "G#", "A", "B", "C#", "D#"],
+      ["A", "B", "C#", "D", "E", "F#", "G#"],
+      ["D", "E", "F#", "G", "A", "B", "C#"],
+      ["G", "A", "B", "C", "D", "E", "F#"],
+      ["C", "D", "E", "F", "G", "A", "B"],
+      ["F", "G", "A", "Bb", "C", "D", "E"],
+      ["Bb", "C", "D", "Eb", "F", "G", "A"],
+      ["Eb", "F", "G", "Ab", "Bb", "C", "D"],
+      ["Ab", "Bb", "C", "Db", "Eb", "F", "G"],
+      ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"],
+      ["Gb", "Ab", "Bb", "Cb", "Db", "Eb", "F"],
+    ].deep_freeze
+
+    MINOR_SCALES = [
+      ["G#", "A#", "B", "C#", "D#", "E", "F#"],
+      ["C#", "D#", "E", "F#", "G#", "A", "B"],
+      ["F#", "G#", "A", "B", "C#", "D", "E"],
+      ["B", "C#", "D", "E", "F#", "G", "A"],
+      ["E", "F#", "G", "A", "B", "C", "D"],
+      ["A", "B", "C", "D", "E", "F", "G"],
+      ["D", "E", "F", "G", "A", "Bb", "C"],
+      ["G", "A", "Bb", "C", "D", "Eb", "F"],
+      ["C", "D", "Eb", "F", "G", "Ab", "Bb"],
+      ["F", "G", "Ab", "Bb", "C", "Db", "Eb"],
+      ["Bb", "C", "Db", "Eb", "F", "Gb", "Ab"],
+      ["Eb", "F", "Gb", "Ab", "Bb", "Cb", "Db"],
+    ].deep_freeze
+
     def test_flatten_note
       progressively_flattened_notes.each_cons(2) do |sharpened_note, flattened_note|
         assert_equal(flattened_note, Fet::MusicTheory.flatten_note(sharpened_note))
@@ -25,6 +55,18 @@ module Fet
     def test_flatten_followed_by_sharpen
       progressively_flattened_notes.each do |note|
         assert_equal(note, Fet::MusicTheory.sharpen_note(Fet::MusicTheory.flatten_note(note)))
+      end
+    end
+
+    def test_notes_of_major_scale
+      MAJOR_SCALES.each do |major_scale|
+        assert_equal(major_scale, Fet::MusicTheory.notes_of_major_scale(major_scale[0]))
+      end
+    end
+
+    def test_notes_of_major_scale
+      MINOR_SCALES.each do |minor_scale|
+        assert_equal(minor_scale, Fet::MusicTheory.notes_of_minor_scale(minor_scale[0]))
       end
     end
 
