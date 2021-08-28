@@ -25,32 +25,32 @@ module Fet
     # NOTE: performs the following conversions:
     # Fxx -> F#x -> Fx -> F# -> F -> Fb -> Fbb
     def self.flatten_note(note_name)
-      root_name = note_name[0]
+      note_name_without_accidental = note_name[0]
       accidental = note_name[1..]
 
       case
       when accidental.start_with?("x")
-        return "#{root_name}##{accidental[1..]}"
+        return "#{note_name_without_accidental}##{accidental[1..]}"
       when accidental.start_with?("#")
-        return "#{root_name}#{accidental[1..]}"
+        return "#{note_name_without_accidental}#{accidental[1..]}"
       else
-        return "#{root_name}#{accidental}b"
+        return "#{note_name_without_accidental}#{accidental}b"
       end
     end
 
     # NOTE: performs the following conversions:
     # Fbb -> Fb -> F -> F# ->Fx -> F#x -> Fxx
     def self.sharpen_note(note_name)
-      root_name = note_name[0]
+      note_name_without_accidental = note_name[0]
       accidental = note_name[1..]
 
       case
       when accidental.start_with?("b")
-        return "#{root_name}#{accidental[1..]}"
+        return "#{note_name_without_accidental}#{accidental[1..]}"
       when accidental.start_with?("#")
-        return "#{root_name}x#{accidental[1..]}"
+        return "#{note_name_without_accidental}x#{accidental[1..]}"
       else
-        return "#{root_name}##{accidental}"
+        return "#{note_name_without_accidental}##{accidental}"
       end
     end
 
@@ -66,26 +66,26 @@ module Fet
     ].deep_freeze
 
     # A aeolian -> ["A", "B", "C", "D", "E", "F", "G"]
-    def self.notes_of_mode(root_name, mode_name)
-      relative_major_root_name = relative_major(root_name, mode_name)
+    def self.notes_of_mode(note_name, mode_name)
+      relative_major_note_name = relative_major(note_name, mode_name)
 
-      index = CIRCLE_OF_FIFTHS.index(relative_major_root_name)
-      raise InvalidRootName.new(root_name) if index.nil?
+      index = CIRCLE_OF_FIFTHS.index(relative_major_note_name)
+      raise InvalidRootName.new(note_name) if index.nil?
 
       result = CIRCLE_OF_FIFTHS[(index - 1)..(index + 5)]
-      raise UnsupportedRootName.new(root_name) unless result.size == 7
+      raise UnsupportedRootName.new(note_name) unless result.size == 7
 
       result = result.sort
-      return result.rotate(result.index(root_name))
+      return result.rotate(result.index(note_name))
     end
 
     # A aeolian -> C
-    def self.relative_major(root_name, mode_name)
-      index = CIRCLE_OF_FIFTHS.index(root_name)
-      raise InvalidRootName.new(root_name) if index.nil?
+    def self.relative_major(note_name, mode_name)
+      index = CIRCLE_OF_FIFTHS.index(note_name)
+      raise InvalidRootName.new(note_name) if index.nil?
 
       result = CIRCLE_OF_FIFTHS[index - mode_offset_from_major(mode_name)]
-      raise UnsupportedRootName.new(root_name) if result.nil?
+      raise UnsupportedRootName.new(note_name) if result.nil?
 
       return result
     end
