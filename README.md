@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/DimitriosLisenko/fet/branch/master/graph/badge.svg?token=6W2B0Z4E4S)](https://codecov.io/gh/DimitriosLisenko/fet)
+
 # FET (Functional Ear Training)
 Create midi/mp3 files for functional ear training. Each file will contain a major/minor chord progression, followed by note(s) that you should identify the scale degree of by ear.
 
