@@ -43,7 +43,7 @@ GEM
     unicode-display_width (2.0.0)
 
 PLATFORMS
-  x86_64-darwin-20
+  ruby
 
 DEPENDENCIES
   fet!
