@@ -65,13 +65,6 @@ module Fet
       *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| sharpen_note(sharpen_note(sharpen_note(note))) },
     ].deep_freeze
 
-    def self.mode_offset_from_major(mode_name)
-      MODES_IN_ORDER_OF_DARKNESS.each.with_index do |mode_names, index|
-        return (index - 1) if mode_names.include?(mode_name)
-      end
-      raise InvalidModeName.new(mode_name)
-    end
-
     # A aeolian -> ["A", "B", "C", "D", "E", "F", "G"]
     def self.notes_of_mode(root_name, mode_name)
       relative_major_root_name = relative_major(root_name, mode_name)
@@ -95,6 +88,17 @@ module Fet
       raise UnsupportedRootName.new(root_name) if result.nil?
 
       return result
+    end
+
+    class << self
+      private
+
+      def mode_offset_from_major(mode_name)
+        MODES_IN_ORDER_OF_DARKNESS.each.with_index do |mode_names, index|
+          return (index - 1) if mode_names.include?(mode_name)
+        end
+        raise InvalidModeName.new(mode_name)
+      end
     end
   end
 end
