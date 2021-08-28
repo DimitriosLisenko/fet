@@ -1,4 +1,4 @@
-# Functional Ear Training
+# FET (Functional Ear Training)
 Create midi/mp3 files for functional ear training. Each file will contain a major/minor chord progression, followed by note(s) that you should identify the scale degree of by ear.
 
 ## Usage
