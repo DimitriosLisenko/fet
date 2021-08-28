@@ -17,11 +17,11 @@ module Fet
 
       case
       when accidental.start_with?("x")
-        return note_name + "#" + accidental[1..]
+        return "#{note_name}##{accidental[1..]}"
       when accidental.start_with?("#")
-        return note_name + accidental[1..]
+        return "#{note_name}#{accidental[1..]}"
       else
-        return full_note_name + "b"
+        return "#{note_name}#{accidental}b"
       end
     end
 
@@ -33,13 +33,11 @@ module Fet
 
       case
       when accidental.start_with?("b")
-        return note_name + accidental[1..]
+        return "#{note_name}#{accidental[1..]}"
       when accidental.start_with?("#")
-        return note_name + "x" + accidental[1..]
-      when accidental.start_with?("x")
-        return note_name + "#" + accidental
+        return "#{note_name}x#{accidental[1..]}"
       else
-        return note_name + "#"
+        return "#{note_name}##{accidental}"
       end
     end
 
