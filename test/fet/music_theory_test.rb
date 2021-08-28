@@ -70,6 +70,18 @@ module Fet
       end
     end
 
+    def test_invalid_mode_name
+      assert_raises(Fet::InvalidModeName) do
+        Fet::MusicTheory.notes_of_mode("C", "doughnut")
+      end
+    end
+
+    def test_invalid_root_name
+      assert_raises(Fet::InvalidRootName) do
+        Fet::MusicTheory.notes_of_mode("H", "major")
+      end
+    end
+
     private
 
     def progressively_flattened_notes
