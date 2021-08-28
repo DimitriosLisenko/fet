@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Fet
-  class MusicTheory
+  # Module in charge of handling music theory concepts
+  module MusicTheory
     # All 12 degrees
     DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"].deep_freeze
 

@@ -9,5 +9,20 @@ Style/StringLiteralsInInterpolation:
   Enabled: true
   EnforcedStyle: double_quotes
 
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/RaiseArgs:
+  Enabled: true
+  EnforcedStyle: compact
+
+Style/WordArray:
+  Enabled: true
+  EnforcedStyle: brackets
+
 Layout/LineLength:
-  Max: 120
+  Max: 175
+
+Style/RedundantReturn:
+  Enabled: false
