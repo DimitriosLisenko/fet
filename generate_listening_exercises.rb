@@ -4,36 +4,6 @@ require "fileutils"
 require "./lib/fet.rb"
 require "./midi.rb"
 
-# In MIDI, the minimum note value is 0 (which is C(-1)) and the maximum note value is 127 (which is G(9))
-MIDI_VALUE_C0 = 12
-MIDI_VALUE_C1 = 24
-MIDI_VALUE_C2 = 36
-MIDI_VALUE_C3 = 48
-MIDI_VALUE_C4 = 60
-MIDI_VALUE_C5 = 72
-MIDI_VALUE_C6 = 84
-MIDI_VALUE_C7 = 96
-MIDI_VALUE_C8 = 108
-MIDI_VALUE_C9 = 120
-
-MIDI_VALUE_ADDITION_C = 0
-MIDI_VALUE_ADDITION_C_SHARP = 1
-MIDI_VALUE_ADDITION_D_FLAT = 1
-MIDI_VALUE_ADDITION_D = 2
-MIDI_VALUE_ADDITION_D_SHARP = 3
-MIDI_VALUE_ADDITION_E_FLAT = 3
-MIDI_VALUE_ADDITION_E = 4
-MIDI_VALUE_ADDITION_F = 5
-MIDI_VALUE_ADDITION_F_SHARP = 6
-MIDI_VALUE_ADDITION_G_FLAT = 6
-MIDI_VALUE_ADDITION_G = 7
-MIDI_VALUE_ADDITION_G_SHARP = 8
-MIDI_VALUE_ADDITION_A_FLAT = 8
-MIDI_VALUE_ADDITION_A = 9
-MIDI_VALUE_ADDITION_A_SHARP = 10
-MIDI_VALUE_ADDITION_B_FLAT = 10
-MIDI_VALUE_ADDITION_B = 11
-
 # Maps root note to MIDI value
 MAJOR_KEY_ROOT_NOTE = {
   "B" => 47,
@@ -52,15 +22,14 @@ MAJOR_KEY_ROOT_NOTE = {
 MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
 MINOR_KEY_ROOT_NOTE = Fet::MusicTheory::MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
 
-
 # MAJOR_PROGRESSION = [[0, 4, 7], [5, 9, 12], [7, 11, 14], [0, 4, 7]]
 # MINOR_PROGRESSION = [[0, 3, 7], [5, 8, 12], [7, 10, 14], [0, 3, 7]]
 MAJOR_PROGRESSION = [[0, 4, 7], [0, 5, 9], [-1, 5, 7], [0, 4, 7]]
 MINOR_PROGRESSION = [[0, 3, 7], [0, 5, 8], [-1, 5, 7], [0, 3, 7]]
 
-# PIANO_RANGE = ((MIDI_VALUE_C0 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C8).to_a # A0 - C8 Maybe reduce range a little? Can vary wildly atm
-PIANO_RANGE = ((MIDI_VALUE_C1 + MIDI_VALUE_ADDITION_A)..MIDI_VALUE_C7).to_a # A1 - C7
-# GUITAR_RANGE = ((MIDI_VALUE_C2 + MIDI_VALUE_ADDITION_E)..(MIDI_VALUE_C6 + MIDI_VALUE_ADDITION_E)).to_a # E2 - E6
+# PIANO_RANGE = (Fet::MidiMusicTheory.note_midi_value("A", 0)..Fet::MidiMusicTheory.note_midi_value("C", 8)).to_a
+PIANO_RANGE = (Fet::MidiMusicTheory.note_midi_value("A", 1)..Fet::MidiMusicTheory.note_midi_value("C", 7)).to_a
+# GUITAR_RANGE = (Fet::MidiMusicTheory.note_midi_value("E", 2)..Fet::MidiMusicTheory.note_midi_value("E", 6)).to_a
 
 def main
   number_degrees = ARGV[0].to_i

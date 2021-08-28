@@ -22,6 +22,36 @@ module Fet
       ["locrian"],
     ].deep_freeze
 
+    SEMITONES_FROM_C = {
+      "C" => 0,
+      "D" => 2,
+      "E" => 4,
+      "F" => 5,
+      "G" => 7,
+      "A" => 9,
+      "B" => 11,
+    }.deep_freeze
+
+    # NOTE: returns value from 0 to 11
+    def self.semitones_from_c(note_name)
+      note_name_without_accidental = note_name[0]
+      accidental = note_name[1..]
+      return (SEMITONES_FROM_C[note_name_without_accidental] + accidental_to_semitones(accidental)) % 12
+    end
+
+    def self.accidental_to_semitones(accidental)
+      case
+      when accidental.start_with?("#")
+        return 1 + 2 * accidental[1..].size
+      when accidental.start_with?("x")
+        return 2 * accidental[1..].size
+      when accidental.start_with?("b")
+        return -accidental.size
+      else
+        return 0
+      end
+    end
+
     # NOTE: performs the following conversions:
     # Fxx -> F#x -> Fx -> F# -> F -> Fb -> Fbb
     def self.flatten_note(note_name)
@@ -98,6 +128,15 @@ module Fet
           return (index - 1) if mode_names.include?(mode_name)
         end
         raise InvalidModeName.new(mode_name)
+      end
+
+      def validate_accidental(accidental)
+        return true if accidental.empty?
+        return true if accidental.start_with?("#") && accidental[1..].chars.uniq == ["x"]
+        return true if accidental.start_with?("x") && accidental.chars.uniq == ["x"]
+        return true if accidental.start_with?("b") && accidental.chars.uniq == ["b"]
+
+        raise InvalidAccidental.new(accidental)
       end
     end
   end

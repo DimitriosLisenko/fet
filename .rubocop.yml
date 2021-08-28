@@ -34,3 +34,6 @@ Layout/LineLength:
 
 Style/RedundantReturn:
   Enabled: false
+
+Style/EmptyCaseCondition:
+  Enabled: false
