@@ -65,14 +65,6 @@ module Fet
       *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| sharpen_note(sharpen_note(sharpen_note(note))) },
     ].deep_freeze
 
-    def self.notes_of_major_scale(root_name)
-      return notes_of_scale(root_name, -1, 5)
-    end
-
-    def self.notes_of_minor_scale(root_name)
-      return notes_of_scale(root_name, -4, 2)
-    end
-
     def self.mode_offset_from_major(mode_name)
       MODES_IN_ORDER_OF_DARKNESS.each.with_index do |mode_names, index|
         return (index - 1) if mode_names.include?(mode_name)
@@ -80,23 +72,29 @@ module Fet
       raise InvalidModeName.new(mode_name)
     end
 
-    def self.relative_major(root_name, mode_name)
-      return CIRCLE_OF_FIFTHS[CIRCLE_OF_FIFTHS.index(root_name) - mode_offset_from_major(mode_name)]
+    # A aeolian -> ["A", "B", "C", "D", "E", "F", "G"]
+    def self.notes_of_mode(root_name, mode_name)
+      relative_major_root_name = relative_major(root_name, mode_name)
+
+      index = CIRCLE_OF_FIFTHS.index(relative_major_root_name)
+      raise InvalidRootName.new(root_name) if index.nil?
+
+      result = CIRCLE_OF_FIFTHS[(index - 1)..(index + 5)]
+      raise UnsupportedRootName.new(root_name) unless result.size == 7
+
+      result = result.sort
+      return result.rotate(result.index(root_name))
     end
 
-    class << self
-      private
+    # A aeolian -> C
+    def self.relative_major(root_name, mode_name)
+      index = CIRCLE_OF_FIFTHS.index(root_name)
+      raise InvalidRootName.new(root_name) if index.nil?
 
-      def notes_of_scale(root_name, left_offset, right_offset)
-        index = CIRCLE_OF_FIFTHS.index(root_name)
-        raise InvalidRootName.new(root_name) if index.nil?
+      result = CIRCLE_OF_FIFTHS[index - mode_offset_from_major(mode_name)]
+      raise UnsupportedRootName.new(root_name) if result.nil?
 
-        result = CIRCLE_OF_FIFTHS[(index + left_offset)..(index + right_offset)]
-        raise UnsupportedRootName.new(root_name) unless result.size == 7
-
-        result = result.sort
-        return result.rotate(result.index(root_name))
-      end
+      return result
     end
   end
 end

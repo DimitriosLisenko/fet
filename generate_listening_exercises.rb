@@ -132,7 +132,7 @@ def midi_note_name(root_name, note_degree_index, note_midi_value)
 end
 
 def degree_name(root_name, degree_index)
-  notes_array = Fet::MusicTheory.notes_of_major_scale(root_name)
+  notes_array = Fet::MusicTheory.notes_of_mode(root_name, "major")
 
   note_degree_name = Fet::MusicTheory::DEGREES[degree_index]
   is_flattened_degree = note_degree_name[0] == "b"
