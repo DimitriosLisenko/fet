@@ -12,16 +12,17 @@ DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"]
 MAJOR_KEYS = ["B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab", "Db", "Gb"]
 MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"]
 
-# In midilib, 0 is C(-2).
-MIDI_VALUE_C0 = 24
-MIDI_VALUE_C1 = 36
-MIDI_VALUE_C2 = 48
-MIDI_VALUE_C3 = 60
-MIDI_VALUE_C4 = 72
-MIDI_VALUE_C5 = 84
-MIDI_VALUE_C6 = 96
-MIDI_VALUE_C7 = 108
-MIDI_VALUE_C8 = 120
+# In MIDI, the minimum note value is 0 (which is C(-1)) and the maximum note value is 127 (which is G(9))
+MIDI_VALUE_C0 = 12
+MIDI_VALUE_C1 = 24
+MIDI_VALUE_C2 = 36
+MIDI_VALUE_C3 = 48
+MIDI_VALUE_C4 = 60
+MIDI_VALUE_C5 = 72
+MIDI_VALUE_C6 = 84
+MIDI_VALUE_C7 = 96
+MIDI_VALUE_C8 = 108
+MIDI_VALUE_C9 = 120
 
 MIDI_VALUE_ADDITION_C = 0
 MIDI_VALUE_ADDITION_C_SHARP = 1
