@@ -1,4 +1,4 @@
-# Functional Ear Training
+# FET (Functional Ear Training)
 Create midi/mp3 files for functional ear training. Each file will contain a major/minor chord progression, followed by note(s) that you should identify the scale degree of by ear.
 
 ## Usage
@@ -21,30 +21,30 @@ could generate the following files in the root of the project:
 ```sh
 $ find .
 ...
-listening/major/EM_b5(46)_b3(91).mid
-listening/major/CM_b2(37)_b5(54).mid
-listening/major/DbM_b6(33)_7(36).mid
-listening/major/CM_b6(44)_6(57).mid
-listening/major/BbM_6(79)_4(87).mid
+./listening/major/DbM_b6(Bbb2)_5(Ab5).mid
+./listening/major/BbM_7(A4)_2(C6).mid
+./listening/major/EM_b6(C2)_3(G#2).mid
+./listening/major/GbM_6(Eb4)_3(Bb5).mid
+./listening/major/FM_6(D4)_3(A5).mid
 ...
-listening/minor/Gm_7(54)_3(95).mid
-listening/minor/Ebm_b2(52)_b7(73).mid
-listening/minor/Gm_b5(61)_1(79).mid
-listening/minor/Fm_7(52)_1(65).mid
-listening/minor/Em_6(49)_b2(77).mid
+./listening/minor/Dm_b7(C3)_1(D4).mid
+./listening/minor/F#m_b2(G2)_3(A#4).mid
+./listening/minor/G#m_b6(E1)_b2(A2).mid
+./listening/minor/Dm_6(B0)_7(C#3).mid
+./listening/minor/C#m_5(G#4)_6(A#4).mid
 ...
 ```
-The file name contains all the information required for the answer. For example, `EM_b5(46)_b3(91).mid`:
+The file name contains all the information required for the answer. For example, `EM_b6(C2)_3(G#2).mid`:
 
 `EM`: the chord progression is in E Major.
 
-`b5`: the bottom note will be the b5 degree
+`b6`: the bottom note will be the b6 degree
 
-`(46)`: the MIDI value of the note played is 46 (not required for the answer, but it's there to avoid duplicate filenames)
+`(C2)`: the [scientific pitch notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation) of which is C2
 
-`b3`: the next note from the bottom will be the b3 degree
+`3`: the next note from the bottom will be the 3 degree
 
-`(91)`: the MIDI value of the note played is 91 (not required for the answer, but it's there to avoid duplicate filenames)
+`(G#2)`: the [scientific pitch notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation) of which is G#2
 
 These midi files can then be converted to MP3 if required via:
 ```
