@@ -20,4 +20,4 @@ Rake::RDocTask.new do |rd|
   rd.title = "FET (Functional Ear Trainer)"
 end
 
-task default: %i[test rubocop]
+task(default: [:test, :rubocop])
