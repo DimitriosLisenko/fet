@@ -48,6 +48,19 @@ module Fet
       return Note.new(note_as_string)
     end
 
+    def accidental_to_semitone_offset
+      case
+      when accidental.start_with?("#")
+        return 1 + 2 * accidental[1..].size
+      when accidental.start_with?("x")
+        return 2 * accidental[1..].size
+      when accidental.start_with?("b")
+        return -accidental.size
+      else
+        return 0
+      end
+    end
+
     private
 
     def validate_full_note!

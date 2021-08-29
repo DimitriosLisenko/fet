@@ -37,20 +37,7 @@ module Fet
     # NOTE: returns value from 0 to 11
     def self.semitones_from_c(note_name)
       note = Note.new(note_name)
-      return (SEMITONES_FROM_C[note.natural_note] + accidental_to_semitones(note.accidental)) % 12
-    end
-
-    def self.accidental_to_semitones(accidental)
-      case
-      when accidental.start_with?("#")
-        return 1 + 2 * accidental[1..].size
-      when accidental.start_with?("x")
-        return 2 * accidental[1..].size
-      when accidental.start_with?("b")
-        return -accidental.size
-      else
-        return 0
-      end
+      return (SEMITONES_FROM_C[note.natural_note] + note.accidental_to_semitone_offset) % 12
     end
 
     CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS = ["F", "C", "G", "D", "A", "E", "B"].deep_freeze
