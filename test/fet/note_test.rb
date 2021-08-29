@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require_relative "hardcoded_scales"
 
 module Fet
   class NoteTest < Minitest::Test
+    include HardcodedScales
+
     def test_flatten_note
       progressively_flattened_notes.each_cons(2) do |sharpened_note, flattened_note|
         assert_equal(flattened_note.full_note, sharpened_note.flattened_note.full_note)
@@ -64,10 +67,36 @@ module Fet
       assert_equal("xxx", Fet::Note.accidental_from_semitone_offset(6))
     end
 
+    def test_major_scale_degrees
+      MAJOR_SCALES.each do |major_scale|
+        degrees = major_scale.map do |major_scale_note|
+          Note.new(major_scale_note).degree(major_scale[0])
+        end
+        assert_equal(degrees_of_major_scale, degrees)
+      end
+    end
+
+    def test_minor_scale_degrees
+      MINOR_SCALES.each do |minor_scale|
+        degrees = minor_scale.map do |minor_scale_note|
+          Note.new(minor_scale_note).degree(minor_scale[0])
+        end
+        assert_equal(degrees_of_minor_scale, degrees)
+      end
+    end
+
     private
 
     def progressively_flattened_notes
       return ["Exxx", "E#xx", "Exx", "E#x", "Ex", "E#", "E", "Eb", "Ebb", "Ebbb"].map { |note_as_string| Note.new(note_as_string) }
+    end
+
+    def degrees_of_major_scale
+      ["1", "2", "3", "4", "5", "6", "7"]
+    end
+
+    def degrees_of_minor_scale
+      ["1", "2", "b3", "4", "5", "b6", "b7"]
     end
   end
 end

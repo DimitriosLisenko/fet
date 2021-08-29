@@ -1,38 +1,11 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require_relative "hardcoded_scales"
 
 module Fet
   class MusicTheoryTest < Minitest::Test
-    MAJOR_SCALES = [
-      ["B", "C#", "D#", "E", "F#", "G#", "A#"],
-      ["E", "F#", "G#", "A", "B", "C#", "D#"],
-      ["A", "B", "C#", "D", "E", "F#", "G#"],
-      ["D", "E", "F#", "G", "A", "B", "C#"],
-      ["G", "A", "B", "C", "D", "E", "F#"],
-      ["C", "D", "E", "F", "G", "A", "B"],
-      ["F", "G", "A", "Bb", "C", "D", "E"],
-      ["Bb", "C", "D", "Eb", "F", "G", "A"],
-      ["Eb", "F", "G", "Ab", "Bb", "C", "D"],
-      ["Ab", "Bb", "C", "Db", "Eb", "F", "G"],
-      ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"],
-      ["Gb", "Ab", "Bb", "Cb", "Db", "Eb", "F"],
-    ].deep_freeze
-
-    MINOR_SCALES = [
-      ["G#", "A#", "B", "C#", "D#", "E", "F#"],
-      ["C#", "D#", "E", "F#", "G#", "A", "B"],
-      ["F#", "G#", "A", "B", "C#", "D", "E"],
-      ["B", "C#", "D", "E", "F#", "G", "A"],
-      ["E", "F#", "G", "A", "B", "C", "D"],
-      ["A", "B", "C", "D", "E", "F", "G"],
-      ["D", "E", "F", "G", "A", "Bb", "C"],
-      ["G", "A", "Bb", "C", "D", "Eb", "F"],
-      ["C", "D", "Eb", "F", "G", "Ab", "Bb"],
-      ["F", "G", "Ab", "Bb", "C", "Db", "Eb"],
-      ["Bb", "C", "Db", "Eb", "F", "Gb", "Ab"],
-      ["Eb", "F", "Gb", "Ab", "Bb", "Cb", "Db"],
-    ].deep_freeze
+    include HardcodedScales
 
     def test_notes_of_major_scale
       MAJOR_SCALES.each do |major_scale|
