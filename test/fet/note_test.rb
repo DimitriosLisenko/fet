@@ -28,6 +28,15 @@ module Fet
       end
     end
 
+    def test_invalid_accidentals
+      assert_raises(InvalidNote) { Note.new("E##") }
+      assert_raises(InvalidNote) { Note.new("Ex#") }
+      assert_raises(InvalidNote) { Note.new("Eb#") }
+      assert_raises(InvalidNote) { Note.new("E#b") }
+      assert_raises(InvalidNote) { Note.new("E#xxb") }
+      assert_raises(InvalidNote) { Note.new("Ej") }
+    end
+
     private
 
     def progressively_flattened_notes
