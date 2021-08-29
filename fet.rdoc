@@ -1,5 +1,89 @@
-= fet
+== fet - Functional Ear Trainer
 
-Generate this with
-    fet _doc
-After you have described your command line interface
+v0.1.0
+
+=== Global Options
+=== --help
+Show this message
+
+
+
+=== --version
+Display the program version
+
+
+
+=== Commands
+==== Command: <tt>generate </tt>
+Generate MIDI files for ear training
+
+
+===== Commands
+====== Command: <tt>listening </tt>
+Generate MIDI files for listening
+
+Each MIDI file will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause.
+======= Options
+======= -d|--degrees arg
+
+Number of degrees to play
+
+[Default Value] 1
+[Must Match] ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
+
+
+======= -e|--exercises arg
+
+Number of exercises to generate
+
+[Default Value] 200
+
+
+======= -t|--tempo arg
+
+Tempo at which the chord progression is played at
+
+[Default Value] 120
+
+
+====== Command: <tt>singing </tt>
+Generate MIDI files for singing
+
+Each MIDI file will contain a chord progression, followed by a specified pause, during which the degree should be sung. The degree is then played for confirmation.
+======= Options
+======= -p|--pause arg
+
+How many seconds to wait before playing the correct note
+
+[Default Value] 3
+
+
+======= -t|--tempo arg
+
+Tempo at which the chord progression is played at
+
+[Default Value] 120
+
+
+====== Command: <tt>single_note_listening </tt>
+Generate MIDI files for listening (single note)
+
+Each MIDI file will contain a chord progression, followed the same note across all files.
+======= Options
+======= -t|--tempo arg
+
+Tempo at which the chord progression is played at
+
+[Default Value] 120
+
+
+==== Command: <tt>help  command</tt>
+Shows a list of commands or help for one command
+
+Gets help for the application or its commands. Can also list the commands in a way helpful to creating a bash-style completion function
+===== Options
+===== -c
+List commands one per line, to assist with shell completion
+
+
+
