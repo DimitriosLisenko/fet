@@ -34,30 +34,6 @@ module Fet
       ["Eb", "F", "Gb", "Ab", "Bb", "Cb", "Db"],
     ].deep_freeze
 
-    def test_flatten_note
-      progressively_flattened_notes.each_cons(2) do |sharpened_note, flattened_note|
-        assert_equal(flattened_note, Fet::MusicTheory.flatten_note(sharpened_note))
-      end
-    end
-
-    def test_sharpen_note
-      progressively_flattened_notes.each_cons(2) do |sharpened_note, flattened_note|
-        assert_equal(sharpened_note, Fet::MusicTheory.sharpen_note(flattened_note))
-      end
-    end
-
-    def test_sharpen_followed_by_flatten
-      progressively_flattened_notes.each do |note|
-        assert_equal(note, Fet::MusicTheory.flatten_note(Fet::MusicTheory.sharpen_note(note)))
-      end
-    end
-
-    def test_flatten_followed_by_sharpen
-      progressively_flattened_notes.each do |note|
-        assert_equal(note, Fet::MusicTheory.sharpen_note(Fet::MusicTheory.flatten_note(note)))
-      end
-    end
-
     def test_notes_of_major_scale
       MAJOR_SCALES.each do |major_scale|
         assert_equal(major_scale, Fet::MusicTheory.notes_of_mode(major_scale[0], "major"))
@@ -80,12 +56,6 @@ module Fet
       assert_raises(Fet::InvalidNote) do
         Fet::MusicTheory.notes_of_mode("H", "major")
       end
-    end
-
-    private
-
-    def progressively_flattened_notes
-      return ["Exxx", "E#xx", "Exx", "E#x", "Ex", "E#", "E", "Eb", "Ebb", "Ebbb"]
     end
   end
 end

@@ -18,6 +18,36 @@ module Fet
       validate_accidental!
     end
 
+    # NOTE: performs the following conversions:
+    # Fbb -> Fb -> F -> F# ->Fx -> F#x -> Fxx
+    def sharpened_note
+      note_as_string = case
+                       when accidental.start_with?("b")
+                         "#{natural_note}#{accidental[1..]}"
+                       when accidental.start_with?("#")
+                         "#{natural_note}x#{accidental[1..]}"
+                       else
+                         "#{natural_note}##{accidental}"
+                       end
+
+      return Note.new(note_as_string)
+    end
+
+    # NOTE: performs the following conversions:
+    # Fxx -> F#x -> Fx -> F# -> F -> Fb -> Fbb
+    def flattened_note
+      note_as_string = case
+                       when accidental.start_with?("x")
+                         "#{natural_note}##{accidental[1..]}"
+                       when accidental.start_with?("#")
+                         "#{natural_note}#{accidental[1..]}"
+                       else
+                         "#{natural_note}#{accidental}b"
+                       end
+
+      return Note.new(note_as_string)
+    end
+
     private
 
     def validate_full_note!

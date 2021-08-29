@@ -53,43 +53,15 @@ module Fet
       end
     end
 
-    # NOTE: performs the following conversions:
-    # Fxx -> F#x -> Fx -> F# -> F -> Fb -> Fbb
-    def self.flatten_note(note_name)
-      note = Note.new(note_name)
-      case
-      when note.accidental.start_with?("x")
-        return "#{note.natural_note}##{note.accidental[1..]}"
-      when note.accidental.start_with?("#")
-        return "#{note.natural_note}#{note.accidental[1..]}"
-      else
-        return "#{note.natural_note}#{note.accidental}b"
-      end
-    end
-
-    # NOTE: performs the following conversions:
-    # Fbb -> Fb -> F -> F# ->Fx -> F#x -> Fxx
-    def self.sharpen_note(note_name)
-      note = Note.new(note_name)
-      case
-      when note.accidental.start_with?("b")
-        return "#{note.natural_note}#{note.accidental[1..]}"
-      when note.accidental.start_with?("#")
-        return "#{note.natural_note}x#{note.accidental[1..]}"
-      else
-        return "#{note.natural_note}##{note.accidental}"
-      end
-    end
-
     CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS = ["F", "C", "G", "D", "A", "E", "B"].deep_freeze
     CIRCLE_OF_FIFTHS = [
-      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| flatten_note(flatten_note(flatten_note(note))) },
-      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| flatten_note(flatten_note(note)) },
-      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| flatten_note(note) },
+      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| Note.new(note).flattened_note.flattened_note.flattened_note.full_note },
+      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| Note.new(note).flattened_note.flattened_note.full_note },
+      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| Note.new(note).flattened_note.full_note },
       *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS,
-      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| sharpen_note(note) },
-      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| sharpen_note(sharpen_note(note)) },
-      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| sharpen_note(sharpen_note(sharpen_note(note))) },
+      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| Note.new(note).sharpened_note.full_note },
+      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| Note.new(note).sharpened_note.sharpened_note.full_note },
+      *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| Note.new(note).sharpened_note.sharpened_note.sharpened_note.full_note },
     ].deep_freeze
 
     # A aeolian -> ["A", "B", "C", "D", "E", "F", "G"]
