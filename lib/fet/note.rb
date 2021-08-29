@@ -3,6 +3,12 @@
 module Fet
   # Class responsible for parsing and validating musical notes from a string, e.g. "Eb"
   class Note
+    ACCIDENTAL_TO_SEMITONES_MAP = {
+      "b" => -1,
+      "#" => 1,
+      "x" => 2,
+    }.deep_freeze
+
     attr_accessor :full_note,
                   :natural_note,
                   :accidental
@@ -49,16 +55,7 @@ module Fet
     end
 
     def accidental_to_semitone_offset
-      case
-      when accidental.start_with?("#")
-        return 1 + 2 * accidental[1..].size
-      when accidental.start_with?("x")
-        return 2 * accidental.size
-      when accidental.start_with?("b")
-        return -accidental.size
-      else
-        return 0
-      end
+      return accidental.chars.map { |char| ACCIDENTAL_TO_SEMITONES_MAP[char] }.sum
     end
 
     private
