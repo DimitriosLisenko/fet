@@ -67,21 +67,14 @@ module Fet
       assert_equal("xxx", Fet::Note.accidental_from_semitone_offset(6))
     end
 
-    def test_major_scale_degrees
-      MAJOR_SCALES.each do |major_scale|
-        degrees = major_scale.map do |major_scale_note|
-          Note.new(major_scale_note).degree(major_scale[0])
+    def test_scale_degrees
+      Fet::MusicTheory::MODES_IN_ORDER_OF_DARKNESS.flatten.each do |mode_name|
+        hardcoded_scales(mode_name).each do |scale|
+          degrees = scale.map do |scale_note|
+            Note.new(scale_note).degree(scale[0])
+          end
+          assert_equal(degrees_of_mode(mode_name), degrees)
         end
-        assert_equal(degrees_of_major_scale, degrees)
-      end
-    end
-
-    def test_minor_scale_degrees
-      MINOR_SCALES.each do |minor_scale|
-        degrees = minor_scale.map do |minor_scale_note|
-          Note.new(minor_scale_note).degree(minor_scale[0])
-        end
-        assert_equal(degrees_of_minor_scale, degrees)
       end
     end
 
@@ -89,14 +82,6 @@ module Fet
 
     def progressively_flattened_notes
       return ["Exxx", "E#xx", "Exx", "E#x", "Ex", "E#", "E", "Eb", "Ebb", "Ebbb"].map { |note_as_string| Note.new(note_as_string) }
-    end
-
-    def degrees_of_major_scale
-      ["1", "2", "3", "4", "5", "6", "7"]
-    end
-
-    def degrees_of_minor_scale
-      ["1", "2", "b3", "4", "5", "b6", "b7"]
     end
   end
 end

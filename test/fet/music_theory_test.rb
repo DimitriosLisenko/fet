@@ -8,13 +8,13 @@ module Fet
     include HardcodedScales
 
     def test_notes_of_major_scale
-      MAJOR_SCALES.each do |major_scale|
+      hardcoded_scales("major").each do |major_scale|
         assert_equal(major_scale, Fet::MusicTheory.notes_of_mode(major_scale[0], "major"))
       end
     end
 
     def test_notes_of_minor_scale
-      MINOR_SCALES.each do |minor_scale|
+      hardcoded_scales("minor").each do |minor_scale|
         assert_equal(minor_scale, Fet::MusicTheory.notes_of_mode(minor_scale[0], "minor"))
       end
     end
