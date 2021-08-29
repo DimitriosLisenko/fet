@@ -51,6 +51,19 @@ module Fet
       assert_raises(InvalidNote) { Note.new(0) }
     end
 
+    def test_accidental_from_semitone_offset
+      assert_equal("bbb", Fet::Note.accidental_from_semitone_offset(-3))
+      assert_equal("bb", Fet::Note.accidental_from_semitone_offset(-2))
+      assert_equal("b", Fet::Note.accidental_from_semitone_offset(-1))
+      assert_equal("", Fet::Note.accidental_from_semitone_offset(0))
+      assert_equal("#", Fet::Note.accidental_from_semitone_offset(1))
+      assert_equal("x", Fet::Note.accidental_from_semitone_offset(2))
+      assert_equal("#x", Fet::Note.accidental_from_semitone_offset(3))
+      assert_equal("xx", Fet::Note.accidental_from_semitone_offset(4))
+      assert_equal("#xx", Fet::Note.accidental_from_semitone_offset(5))
+      assert_equal("xxx", Fet::Note.accidental_from_semitone_offset(6))
+    end
+
     private
 
     def progressively_flattened_notes

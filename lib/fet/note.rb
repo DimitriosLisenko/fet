@@ -24,6 +24,15 @@ module Fet
       validate_accidental!
     end
 
+    def self.accidental_from_semitone_offset(semitone_offset)
+      return "" if semitone_offset.zero?
+      return "b" * -semitone_offset if semitone_offset.negative?
+
+      number_of_hashes = (semitone_offset % 2).zero? ? 0 : 1
+      number_of_xs = semitone_offset / 2
+      return "#" * number_of_hashes + "x" * number_of_xs
+    end
+
     # NOTE: performs the following conversions:
     # Fbb -> Fb -> F -> F# ->Fx -> F#x -> Fxx
     def sharpened_note
