@@ -79,10 +79,19 @@ module Fet
     end
 
     def test_normalized_note
+      assert_equal("G", Note.new("G").normalized_note.full_note)
       assert_equal("E", Note.new("Fb").normalized_note.full_note)
       assert_equal("F", Note.new("E#").normalized_note.full_note)
       assert_equal("B", Note.new("Cb").normalized_note.full_note)
       assert_equal("C", Note.new("B#").normalized_note.full_note)
+      assert_equal("A", Note.new("Gx").normalized_note.full_note)
+      assert_equal("G", Note.new("Abb").normalized_note.full_note)
+      assert_equal("G", Note.new("Gxxxxxx").normalized_note.full_note)
+      assert_equal("G#", Note.new("G#xxxxxx").normalized_note.full_note)
+      assert_equal("A", Note.new("Gxxxxxxx").normalized_note.full_note)
+      assert_equal("G", Note.new("Gbbbbbbbbbbbb").normalized_note.full_note)
+      assert_equal("Gb", Note.new("Gbbbbbbbbbbbbb").normalized_note.full_note)
+      assert_equal("F", Note.new("Gbbbbbbbbbbbbbb").normalized_note.full_note)
     end
 
     private

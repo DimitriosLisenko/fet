@@ -68,6 +68,17 @@ module Fet
       *CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.map { |note| Note.new(note).sharpened_note.sharpened_note.sharpened_note.full_note },
     ].deep_freeze
 
+    ORDERED_NATURAL_NOTES = CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS.sort.deep_freeze
+    SEMITONES_TO_NEXT_NATURAL_NOTE = {
+      "A" => 2,
+      "B" => 1,
+      "C" => 2,
+      "D" => 2,
+      "E" => 1,
+      "F" => 2,
+      "G" => 2,
+    }.deep_freeze
+
     # A aeolian -> ["A", "B", "C", "D", "E", "F", "G"]
     def self.notes_of_mode(note_name, mode_name)
       relative_major_note_name = relative_major(note_name, mode_name)

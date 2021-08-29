@@ -67,10 +67,19 @@ module Fet
     # NOTE: normalizing the note means:
     # - converting the natural note + accidentals such that the remaining accidental is either "b", "", or "#", or
     # - if a note name is provided, then convert the accidental such that the natural note matches the pitch of the original
-    def normalized_note(note_name = nil)
-      # if it's sharp, keep sharp
-      # if it's flat, keep flat
-      # special cases: E#, Fb, B#, Cb
+    def normalized_note
+      remaining_semitones = accidental_to_semitone_offset
+      next_note = remaining_semitones.positive? ? next_natural_note : previous_natural_note
+      next_note_offset = remaining_semitones.positive? ? semitone_offset_to_next_natural_note : semitone_offset_to_previous_natural_note
+      return Note.new(full_note) if next_note_offset.abs > remaining_semitones.abs
+
+      return Note.new("#{next_note}#{self.class.accidental_from_semitone_offset(remaining_semitones - next_note_offset)}").normalized_note
+    end
+
+    # TODO: do
+    def change_natural_note(new_natural_note)
+      semitone_offset = accidental_to_semitone_offset
+      return Note.new("#{natural_note}#{self.class.accidental_from_semitone_offset(semitone_offset)}") if new_natural_note == natural_note
     end
 
     # TODO: create a diatonic scale class and move it there
@@ -88,6 +97,18 @@ module Fet
 
     def accidental_to_semitone_offset
       return accidental.chars.map { |char| ACCIDENTAL_TO_SEMITONES_MAP[char] }.sum
+    end
+
+    def natural?
+      return accidental.chars.empty?
+    end
+
+    def flattened?
+      return accidental.chars.include?("b")
+    end
+
+    def sharpened?
+      return accidental.chars.include?("#") || accidental.chars.include?("x")
     end
 
     private
@@ -146,6 +167,26 @@ module Fet
       normalized_offset = accidental_to_semitone_offset.abs % 12
       normalized_offset = -normalized_offset if accidental_to_semitone_offset.negative?
       return self.class.accidental_from_semitone_offset(normalized_offset)
+    end
+
+    def next_natural_note
+      index = Fet::MusicTheory::ORDERED_NATURAL_NOTES.index(natural_note)
+      index = (index + 1) % Fet::MusicTheory::ORDERED_NATURAL_NOTES.size
+      return Fet::MusicTheory::ORDERED_NATURAL_NOTES[index]
+    end
+
+    def previous_natural_note
+      index = Fet::MusicTheory::ORDERED_NATURAL_NOTES.index(natural_note)
+      index = (index - 1) % Fet::MusicTheory::ORDERED_NATURAL_NOTES.size
+      return Fet::MusicTheory::ORDERED_NATURAL_NOTES[index]
+    end
+
+    def semitone_offset_to_next_natural_note
+      return Fet::MusicTheory::SEMITONES_TO_NEXT_NATURAL_NOTE[natural_note]
+    end
+
+    def semitone_offset_to_previous_natural_note
+      return -Fet::MusicTheory::SEMITONES_TO_NEXT_NATURAL_NOTE[previous_natural_note]
     end
   end
 end
