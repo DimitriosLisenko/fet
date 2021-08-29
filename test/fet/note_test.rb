@@ -73,7 +73,7 @@ module Fet
           degrees = scale.map do |scale_note|
             Note.new(scale_note).degree(scale[0])
           end
-          assert_equal(degrees_of_mode(mode_name), degrees)
+          assert_equal(Fet::MusicTheory.degrees_of_mode(mode_name), degrees)
         end
       end
     end

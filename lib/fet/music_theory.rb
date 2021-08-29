@@ -24,6 +24,16 @@ module Fet
       ["locrian"],
     ].deep_freeze
 
+    DEGREES_OF_MODE = {
+      ["lydian"] => ["1", "2", "3", "#4", "5", "6", "7"],
+      ["major", "ionian"] => ["1", "2", "3", "4", "5", "6", "7"],
+      ["mixolydian"] => ["1", "2", "3", "4", "5", "6", "b7"],
+      ["dorian"] => ["1", "2", "b3", "4", "5", "6", "b7"],
+      ["minor", "aeolian"] => ["1", "2", "b3", "4", "5", "b6", "b7"],
+      ["phrygian"] => ["1", "b2", "b3", "4", "5", "b6", "b7"],
+      ["locrian"] => ["1", "b2", "b3", "4", "b5", "b6", "b7"],
+    }.deep_freeze
+
     SEMITONES_FROM_C = {
       "C" => 0,
       "D" => 2,
@@ -38,6 +48,13 @@ module Fet
     def self.semitones_from_c(note_name)
       note = Note.new(note_name)
       return (SEMITONES_FROM_C[note.natural_note] + note.accidental_to_semitone_offset) % 12
+    end
+
+    def self.degrees_of_mode(mode_name)
+      mode_info = DEGREES_OF_MODE.detect { |mode_names, _| mode_names.include?(mode_name) }
+      raise InvalidModeName.new(mode_name) if mode_info.nil?
+
+      return mode_info[1]
     end
 
     CIRCLE_OF_FIFTHS_WITHOUT_ACCIDENTALS = ["F", "C", "G", "D", "A", "E", "B"].deep_freeze
