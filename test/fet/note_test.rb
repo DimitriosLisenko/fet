@@ -68,7 +68,7 @@ module Fet
     }.deep_freeze
 
     def test_accidental_from_semitone_offset
-      ACCIDENTAL_TO_OFFSET_HASH.each do |offset, accidental|
+      OFFSET_TO_ACCIDENTAL_HASH.each do |offset, accidental|
         assert_equal(accidental, Fet::Note.accidental_from_semitone_offset(offset))
       end
     end
