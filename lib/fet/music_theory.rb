@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "note.rb"
+require_relative "note"
 
 module Fet
   # Module in charge of handling music theory concepts
