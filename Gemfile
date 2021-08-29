@@ -2,10 +2,8 @@
 
 source "https://rubygems.org"
 
-# Specify your gem"s dependencies in fet.gemspec
+# Specify your gem's runtime dependencies in fet.gemspec
 gemspec
-
-gem 'gli', '~> 2.20', '>= 2.20.1'
 
 group :test do
   gem "minitest", "~> 5.0"
@@ -16,5 +14,6 @@ group :test, :development do
   gem "codecov", "~> 0.6.0"
   gem "pry-byebug", "~> 3.9"
   gem "rake", "~> 13.0"
+  gem "rdoc", "~> 6.3", ">= 6.3.2"
   gem "rubocop", "~> 1.7"
 end

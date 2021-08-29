@@ -13,4 +13,11 @@ require "rubocop/rake_task"
 
 RuboCop::RakeTask.new
 
+require "rdoc/task"
+Rake::RDocTask.new do |rd|
+  rd.main = "README.rdoc"
+  rd.rdoc_files.include("README.rdoc", "lib/**/*.rb", "bin/**/*")
+  rd.title = "FET (Functional Ear Trainer)"
+end
+
 task default: %i[test rubocop]

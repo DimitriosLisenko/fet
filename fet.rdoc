@@ -1,0 +1,5 @@
+= fet
+
+Generate this with
+    fet _doc
+After you have described your command line interface

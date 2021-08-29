@@ -23,13 +23,19 @@ Gem::Specification.new do |spec|
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
   end
-  spec.bindir        = "bin"
-  spec.executables   = spec.files.grep(%r{\Abin/}) { |f| File.basename(f) }
+  spec.bindir = "bin"
+  spec.executables << "fet"
+  spec.executables = spec.files.grep(%r{\Abin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
+  # Gem runtime dependencies - place development dependencies inside Gemfile
+  spec.add_dependency "gli", "~> 2.20", ">= 2.20.1"
   spec.add_dependency "ice_nine", "~> 0.11.2"
   spec.add_dependency "midilib", "~> 2.0", ">= 2.0.5"
+
+  # RDoc configuration
+  spec.extra_rdoc_files = ["README.rdoc", "fet.rdoc"]
+  spec.rdoc_options << "--title" << "fet" << "--main" << "README.rdoc" << "-ri"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html
