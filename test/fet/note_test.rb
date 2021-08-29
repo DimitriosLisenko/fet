@@ -78,6 +78,13 @@ module Fet
       end
     end
 
+    def test_normalized_note
+      assert_equal("E", Note.new("Fb").normalized_note.full_note)
+      assert_equal("F", Note.new("E#").normalized_note.full_note)
+      assert_equal("B", Note.new("Cb").normalized_note.full_note)
+      assert_equal("C", Note.new("B#").normalized_note.full_note)
+    end
+
     private
 
     def progressively_flattened_notes
