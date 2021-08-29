@@ -76,13 +76,12 @@ module Fet
       return Note.new("#{next_note}#{self.class.accidental_from_semitone_offset(remaining_semitones - next_note_offset)}").normalized_note
     end
 
-    # TODO: do
-    def change_natural_note(new_natural_note)
-      semitone_offset = accidental_to_semitone_offset
-      return Note.new("#{natural_note}#{self.class.accidental_from_semitone_offset(semitone_offset)}") if new_natural_note == natural_note
-    end
+    # NOTE: Note.new("E").change_natural_note("D") -> Note.new("Dx")
+    # def change_natural_note(new_natural_note)
+    #   semitone_offset = accidental_to_semitone_offset
+    #   return Note.new("#{natural_note}#{self.class.accidental_from_semitone_offset(semitone_offset)}") if new_natural_note == natural_note
+    # end
 
-    # TODO: create a diatonic scale class and move it there
     def degree(root_name)
       notes_array = Fet::MusicTheory.notes_of_mode(root_name, "major")
       index = notes_array.index { |note| Note.new(note).natural_note == natural_note }
@@ -90,7 +89,6 @@ module Fet
       degree = index + 1
       degree_note = Note.new(notes_array[index])
 
-      # TODO: normalized_note(natural_note).accidental_to_semitone_offset - degree_note.normalized_accidental(degree_note.natural_note).accidental_to_semitone_offset
       accidental_difference = accidental_to_semitone_offset - degree_note.accidental_to_semitone_offset
       return "#{self.class.accidental_from_semitone_offset(accidental_difference)}#{degree}"
     end
@@ -161,12 +159,6 @@ module Fet
       return accidental.chars.uniq.all? { |char| ["#", "x"].include?(char) } && # only allow "#" and "x" characters
              [0, 1].include?(accidental.chars.select { |char| char == "#" }.size) && # there can be at most one "#" character
              accidental.chars.sort.join == accidental # the "#" character must come before any "x" characters
-    end
-
-    def normalized_accidental
-      normalized_offset = accidental_to_semitone_offset.abs % 12
-      normalized_offset = -normalized_offset if accidental_to_semitone_offset.negative?
-      return self.class.accidental_from_semitone_offset(normalized_offset)
     end
 
     def next_natural_note
