@@ -53,7 +53,7 @@ module Fet
       when accidental.start_with?("#")
         return 1 + 2 * accidental[1..].size
       when accidental.start_with?("x")
-        return 2 * accidental[1..].size
+        return 2 * accidental.size
       when accidental.start_with?("b")
         return -accidental.size
       else
