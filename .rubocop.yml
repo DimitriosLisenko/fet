@@ -1,6 +1,9 @@
 AllCops:
   TargetRubyVersion: 3.0
   NewCops: enable
+  Exclude:
+  - ./*.rb
+  - ./tmp/*.rb
 
 Style/StringLiterals:
   Enabled: true

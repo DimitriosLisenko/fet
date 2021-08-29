@@ -2,10 +2,12 @@
 
 require "test_helper"
 require_relative "hardcoded_scales"
+require_relative "invalid_note_tester"
 
 module Fet
   class NoteTest < Minitest::Test
     include HardcodedScales
+    include InvalidNoteTester
 
     def test_flatten_note
       progressively_flattened_notes.each_cons(2) do |sharpened_note, flattened_note|
@@ -29,29 +31,6 @@ module Fet
       progressively_flattened_notes.each do |note|
         assert_equal(note.full_note, note.flattened_note.sharpened_note.full_note)
       end
-    end
-
-    def test_invalid_accidentals
-      assert_raises(InvalidNote) { Note.new("E##") }
-      assert_raises(InvalidNote) { Note.new("Ex#") }
-      assert_raises(InvalidNote) { Note.new("Eb#") }
-      assert_raises(InvalidNote) { Note.new("E#b") }
-      assert_raises(InvalidNote) { Note.new("E#xxb") }
-      assert_raises(InvalidNote) { Note.new("Ej") }
-      assert_raises(InvalidNote) { Note.new("Ebd") }
-      assert_raises(InvalidNote) { Note.new("Edb") }
-    end
-
-    def test_invalid_natural_notes
-      assert_raises(InvalidNote) { Note.new("H") }
-      assert_raises(InvalidNote) { Note.new("c#") }
-      assert_raises(InvalidNote) { Note.new("Ubb") }
-    end
-
-    def test_invalid_types
-      assert_raises(InvalidNote) { Note.new(nil) }
-      assert_raises(InvalidNote) { Note.new(Note.new("C")) }
-      assert_raises(InvalidNote) { Note.new(0) }
     end
 
     OFFSET_TO_ACCIDENTAL_HASH = {
