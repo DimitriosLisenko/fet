@@ -29,6 +29,10 @@ Style/WordArray:
   Enabled: true
   EnforcedStyle: brackets
 
+Style/SymbolArray:
+  Enabled: true
+  EnforcedStyle: brackets
+
 Layout/CaseIndentation:
   Enabled: true
 

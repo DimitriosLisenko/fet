@@ -1,71 +1,68 @@
 #!/usr/bin/env ruby
-require 'gli'
-begin # XXX: Remove this begin/rescue before distributing your app
-require 'fet'
-rescue LoadError
-  STDERR.puts "In development, you need to use `bundle exec bin/fet` to run your app"
-  STDERR.puts "At install-time, RubyGems will make sure lib, etc. are in the load path"
-  STDERR.puts "Feel free to remove this message from bin/fet now"
-  exit 64
-end
 
+# frozen_string_literal: true
+
+require "gli"
+require "fet"
+
+# Class in charge of implementing command-line interface
 class App
   extend GLI::App
 
-  program_desc 'Describe your application here'
+  program_desc("Functional Ear Trainer")
 
-  version Fet::VERSION
+  version(Fet::VERSION)
 
-  subcommand_option_handling :normal
-  arguments :strict
+  subcommand_option_handling(:normal)
+  arguments(:strict)
 
-  desc 'Describe some switch here'
-  switch [:s,:switch]
+  desc("Generate MIDI files for ear training")
+  # arg_name "Describe arguments to generate here"
+  command(:generate) do |c|
+    c.desc("Generate MIDI files for listening")
+    c.long_desc("Each MIDI file will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause.")
+    c.command :listening do |listening|
+      listening.desc("Tempo at which the chord progression is played at")
+      listening.default_value(120)
+      listening.flag([:t, :tempo], type: Integer)
 
-  desc 'Describe some flag here'
-  default_value 'the default'
-  arg_name 'The name of the argument'
-  flag [:f,:flagname]
+      listening.desc("Number of degrees to play")
+      listening.default_value(1)
+      listening.flag([:d, :degrees], type: Integer, must_match: (1..11).map(&:to_s))
 
-  desc 'Describe generate here'
-  arg_name 'Describe arguments to generate here'
-  command :generate do |c|
-    c.desc 'Describe a switch to generate'
-    c.switch :s
+      listening.desc("Number of exercises to generate")
+      listening.default_value(200)
+      listening.flag([:e, :exercises], type: Integer)
 
-    c.desc 'Describe a flag to generate'
-    c.default_value 'default'
-    c.flag :f
-    c.action do |global_options,options,args|
-
-      # Your command logic here
-
-      # If you have any errors, just raise them
-      # raise "that command made no sense"
-
-      puts "generate command ran"
+      listening.action do |global_options, options, args|
+      end
     end
-  end
 
-  pre do |global,command,options,args|
-    # Pre logic here
-    # Return true to proceed; false to abort and not call the
-    # chosen command
-    # Use skips_pre before a command to skip this block
-    # on that command only
-    true
-  end
+    c.desc("Generate MIDI files for listening (single note)")
+    c.long_desc("Each MIDI file will contain a chord progression, followed the same note across all files.")
+    c.command :single_note_listening do |single_note_listening|
+      single_note_listening.desc("Tempo at which the chord progression is played at")
+      single_note_listening.default_value(120)
+      single_note_listening.flag([:t, :tempo], type: Integer)
 
-  post do |global,command,options,args|
-    # Post logic here
-    # Use skips_post before a command to skip this
-    # block on that command only
-  end
+      single_note_listening.action do |global_options, options, args|
+      end
+    end
 
-  on_error do |exception|
-    # Error logic here
-    # return false to skip default error handling
-    true
+    c.desc("Generate MIDI files for singing")
+    c.long_desc("Each MIDI file will contain a chord progression, followed by a specified pause, during which the degree should be sung. The degree is then played for confirmation.")
+    c.command :singing do |singing|
+      singing.desc("Tempo at which the chord progression is played at")
+      singing.default_value(120)
+      singing.flag([:t, :tempo], type: Integer)
+
+      singing.desc("How many seconds to wait before playing the correct note")
+      singing.default_value(3)
+      singing.flag([:p, :pause], type: Integer)
+
+      singing.action do |global_options, options, args|
+      end
+    end
   end
 end
 
