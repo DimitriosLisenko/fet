@@ -45,6 +45,12 @@ module Fet
       assert_raises(InvalidNote) { Note.new("Ubb") }
     end
 
+    def test_invalid_types
+      assert_raises(InvalidNote) { Note.new(nil) }
+      assert_raises(InvalidNote) { Note.new(Note.new("C")) }
+      assert_raises(InvalidNote) { Note.new(0) }
+    end
+
     private
 
     def progressively_flattened_notes
