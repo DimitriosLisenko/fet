@@ -3,7 +3,7 @@
 require "simplecov"
 SimpleCov.start
 
-unless ENV['CODECOV_TOKEN'].nil?
+unless ENV["CODECOV_TOKEN"].nil?
   require "codecov"
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end

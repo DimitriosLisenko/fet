@@ -54,17 +54,23 @@ module Fet
       assert_raises(InvalidNote) { Note.new(0) }
     end
 
+    OFFSET_TO_ACCIDENTAL_HASH = {
+      -3 => "bbb",
+      -2 => "bb",
+      -1 => "b",
+      0 => "",
+      1 => "#",
+      2 => "x",
+      3 => "#x",
+      4 => "xx",
+      5 => "#xx",
+      6 => "xxx",
+    }.deep_freeze
+
     def test_accidental_from_semitone_offset
-      assert_equal("bbb", Fet::Note.accidental_from_semitone_offset(-3))
-      assert_equal("bb", Fet::Note.accidental_from_semitone_offset(-2))
-      assert_equal("b", Fet::Note.accidental_from_semitone_offset(-1))
-      assert_equal("", Fet::Note.accidental_from_semitone_offset(0))
-      assert_equal("#", Fet::Note.accidental_from_semitone_offset(1))
-      assert_equal("x", Fet::Note.accidental_from_semitone_offset(2))
-      assert_equal("#x", Fet::Note.accidental_from_semitone_offset(3))
-      assert_equal("xx", Fet::Note.accidental_from_semitone_offset(4))
-      assert_equal("#xx", Fet::Note.accidental_from_semitone_offset(5))
-      assert_equal("xxx", Fet::Note.accidental_from_semitone_offset(6))
+      ACCIDENTAL_TO_OFFSET_HASH.each do |offset, accidental|
+        assert_equal(accidental, Fet::Note.accidental_from_semitone_offset(offset))
+      end
     end
 
     def test_scale_degrees
@@ -78,20 +84,26 @@ module Fet
       end
     end
 
+    NOTE_TO_NORMALIZED_NOTE_HASH = {
+      "G" => "G",
+      "Fb" => "E",
+      "E#" => "F",
+      "Cb" => "B",
+      "B#" => "C",
+      "Gx" => "A",
+      "Abb" => "G",
+      "Gxxxxxx" => "G",
+      "G#xxxxxx" => "G#",
+      "Gxxxxxxx" => "A",
+      "Gbbbbbbbbbbbb" => "G",
+      "Gbbbbbbbbbbbbb" => "Gb",
+      "Gbbbbbbbbbbbbbb" => "F",
+    }.deep_freeze
+
     def test_normalized_note
-      assert_equal("G", Note.new("G").normalized_note.full_note)
-      assert_equal("E", Note.new("Fb").normalized_note.full_note)
-      assert_equal("F", Note.new("E#").normalized_note.full_note)
-      assert_equal("B", Note.new("Cb").normalized_note.full_note)
-      assert_equal("C", Note.new("B#").normalized_note.full_note)
-      assert_equal("A", Note.new("Gx").normalized_note.full_note)
-      assert_equal("G", Note.new("Abb").normalized_note.full_note)
-      assert_equal("G", Note.new("Gxxxxxx").normalized_note.full_note)
-      assert_equal("G#", Note.new("G#xxxxxx").normalized_note.full_note)
-      assert_equal("A", Note.new("Gxxxxxxx").normalized_note.full_note)
-      assert_equal("G", Note.new("Gbbbbbbbbbbbb").normalized_note.full_note)
-      assert_equal("Gb", Note.new("Gbbbbbbbbbbbbb").normalized_note.full_note)
-      assert_equal("F", Note.new("Gbbbbbbbbbbbbbb").normalized_note.full_note)
+      NOTE_TO_NORMALIZED_NOTE_HASH.each do |note, normalized_note|
+        assert_equal(normalized_note, Note.new(note).normalized_note.full_note)
+      end
     end
 
     def test_note_natural

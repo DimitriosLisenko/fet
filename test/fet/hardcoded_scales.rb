@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fet
   module HardcodedScales
     MAJOR_SCALES = [
