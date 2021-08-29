@@ -94,6 +94,30 @@ module Fet
       assert_equal("F", Note.new("Gbbbbbbbbbbbbbb").normalized_note.full_note)
     end
 
+    def test_note_natural
+      assert(Note.new("C").natural?)
+      assert(!Note.new("C").flattened?)
+      assert(!Note.new("C").sharpened?)
+    end
+
+    def test_note_flattened
+      assert(!Note.new("Cb").natural?)
+      assert(Note.new("Cb").flattened?)
+      assert(!Note.new("Cb").sharpened?)
+    end
+
+    def test_note_sharp
+      assert(!Note.new("C#").natural?)
+      assert(!Note.new("C#").flattened?)
+      assert(Note.new("C#").sharpened?)
+    end
+
+    def test_another_note_sharp
+      assert(!Note.new("Cx").natural?)
+      assert(!Note.new("Cx").flattened?)
+      assert(Note.new("Cx").sharpened?)
+    end
+
     private
 
     def progressively_flattened_notes
