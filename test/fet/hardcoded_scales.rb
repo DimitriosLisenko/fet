@@ -1,6 +1,8 @@
 module Fet
   module HardcodedScales
     MAJOR_SCALES = [
+      ["C#", "D#", "E#", "F#", "G#", "A#", "B#"],
+      ["F#", "G#", "A#", "B", "C#", "D#", "E#"],
       ["B", "C#", "D#", "E", "F#", "G#", "A#"],
       ["E", "F#", "G#", "A", "B", "C#", "D#"],
       ["A", "B", "C#", "D", "E", "F#", "G#"],
@@ -13,6 +15,7 @@ module Fet
       ["Ab", "Bb", "C", "Db", "Eb", "F", "G"],
       ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"],
       ["Gb", "Ab", "Bb", "Cb", "Db", "Eb", "F"],
+      ["Cb", "Db", "Eb", "Fb", "Gb", "Ab", "Bb"],
     ].deep_freeze
     private_constant :MAJOR_SCALES
 
