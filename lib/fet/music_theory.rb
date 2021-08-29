@@ -129,15 +129,6 @@ module Fet
         end
         raise InvalidModeName.new(mode_name)
       end
-
-      def validate_accidental(accidental)
-        return true if accidental.empty?
-        return true if accidental.start_with?("#") && accidental[1..].chars.uniq == ["x"]
-        return true if accidental.start_with?("x") && accidental.chars.uniq == ["x"]
-        return true if accidental.start_with?("b") && accidental.chars.uniq == ["b"]
-
-        raise InvalidAccidental.new(accidental)
-      end
     end
   end
 end
