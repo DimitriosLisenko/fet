@@ -39,6 +39,12 @@ module Fet
       assert_raises(InvalidNote) { Note.new("Edb") }
     end
 
+    def test_invalid_natural_notes
+      assert_raises(InvalidNote) { Note.new("H") }
+      assert_raises(InvalidNote) { Note.new("c#") }
+      assert_raises(InvalidNote) { Note.new("Ubb") }
+    end
+
     private
 
     def progressively_flattened_notes
