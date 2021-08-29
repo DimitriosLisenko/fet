@@ -77,7 +77,7 @@ module Fet
     end
 
     def test_invalid_root_name
-      assert_raises(Fet::InvalidRootName) do
+      assert_raises(Fet::InvalidNote) do
         Fet::MusicTheory.notes_of_mode("H", "major")
       end
     end

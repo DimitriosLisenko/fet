@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "note.rb"
+
 module Fet
   # Module in charge of handling music theory concepts
   module MusicTheory
@@ -34,9 +36,8 @@ module Fet
 
     # NOTE: returns value from 0 to 11
     def self.semitones_from_c(note_name)
-      note_name_without_accidental = note_name[0]
-      accidental = note_name[1..]
-      return (SEMITONES_FROM_C[note_name_without_accidental] + accidental_to_semitones(accidental)) % 12
+      note = Note.new(note_name)
+      return (SEMITONES_FROM_C[note.natural_note] + accidental_to_semitones(note.accidental)) % 12
     end
 
     def self.accidental_to_semitones(accidental)
@@ -55,32 +56,28 @@ module Fet
     # NOTE: performs the following conversions:
     # Fxx -> F#x -> Fx -> F# -> F -> Fb -> Fbb
     def self.flatten_note(note_name)
-      note_name_without_accidental = note_name[0]
-      accidental = note_name[1..]
-
+      note = Note.new(note_name)
       case
-      when accidental.start_with?("x")
-        return "#{note_name_without_accidental}##{accidental[1..]}"
-      when accidental.start_with?("#")
-        return "#{note_name_without_accidental}#{accidental[1..]}"
+      when note.accidental.start_with?("x")
+        return "#{note.natural_note}##{note.accidental[1..]}"
+      when note.accidental.start_with?("#")
+        return "#{note.natural_note}#{note.accidental[1..]}"
       else
-        return "#{note_name_without_accidental}#{accidental}b"
+        return "#{note.natural_note}#{note.accidental}b"
       end
     end
 
     # NOTE: performs the following conversions:
     # Fbb -> Fb -> F -> F# ->Fx -> F#x -> Fxx
     def self.sharpen_note(note_name)
-      note_name_without_accidental = note_name[0]
-      accidental = note_name[1..]
-
+      note = Note.new(note_name)
       case
-      when accidental.start_with?("b")
-        return "#{note_name_without_accidental}#{accidental[1..]}"
-      when accidental.start_with?("#")
-        return "#{note_name_without_accidental}x#{accidental[1..]}"
+      when note.accidental.start_with?("b")
+        return "#{note.natural_note}#{note.accidental[1..]}"
+      when note.accidental.start_with?("#")
+        return "#{note.natural_note}x#{note.accidental[1..]}"
       else
-        return "#{note_name_without_accidental}##{accidental}"
+        return "#{note.natural_note}##{note.accidental}"
       end
     end
 
@@ -100,8 +97,6 @@ module Fet
       relative_major_note_name = relative_major(note_name, mode_name)
 
       index = CIRCLE_OF_FIFTHS.index(relative_major_note_name)
-      raise InvalidRootName.new(note_name) if index.nil?
-
       result = CIRCLE_OF_FIFTHS[(index - 1)..(index + 5)]
       raise UnsupportedRootName.new(note_name) unless result.size == 7
 
@@ -111,8 +106,9 @@ module Fet
 
     # A aeolian -> C
     def self.relative_major(note_name, mode_name)
-      index = CIRCLE_OF_FIFTHS.index(note_name)
-      raise InvalidRootName.new(note_name) if index.nil?
+      note = Note.new(note_name)
+      index = CIRCLE_OF_FIFTHS.index(note.full_note)
+      raise UnsupportedRootName.new(note_name) if index.nil?
 
       result = CIRCLE_OF_FIFTHS[index - mode_offset_from_major(mode_name)]
       raise UnsupportedRootName.new(note_name) if result.nil?
