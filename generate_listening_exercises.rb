@@ -108,7 +108,7 @@ def degree_name(root_name, degree_index)
   note_degree = is_flattened_degree ? note_degree_name[1].to_i : note_degree_name[0].to_i
 
   result = notes_array[note_degree - 1]
-  return is_flattened_degree ? Fet::MusicTheory.flatten_note(result) : result
+  return is_flattened_degree ? Fet::Note.new(result).flattened_note.full_note : result
 end
 
 def octave_value(midi_value)
