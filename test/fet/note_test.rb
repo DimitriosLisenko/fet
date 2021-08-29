@@ -35,6 +35,8 @@ module Fet
       assert_raises(InvalidNote) { Note.new("E#b") }
       assert_raises(InvalidNote) { Note.new("E#xxb") }
       assert_raises(InvalidNote) { Note.new("Ej") }
+      assert_raises(InvalidNote) { Note.new("Ebd") }
+      assert_raises(InvalidNote) { Note.new("Edb") }
     end
 
     private
