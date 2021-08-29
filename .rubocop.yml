@@ -4,6 +4,7 @@ AllCops:
   Exclude:
   - ./*.rb
   - ./tmp/*.rb
+  - vendor/bundle/**/*
 
 Style/StringLiterals:
   Enabled: true
