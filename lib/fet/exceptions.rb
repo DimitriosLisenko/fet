@@ -11,6 +11,8 @@ module Fet
 
   class InvalidMidiNote < Error; end
 
+  class InvalidDegreeName < Error; end
+
   # TODO: this can be removed if the circle of fifths is generated dynamically
   class UnsupportedRootName < Error; end
 end
