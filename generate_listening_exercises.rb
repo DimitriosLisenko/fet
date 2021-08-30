@@ -4,24 +4,11 @@ require "fileutils"
 require "./lib/fet.rb"
 require "./midi.rb"
 
-# Maps root note to MIDI value
-MAJOR_KEY_ROOT_NOTE = {
-  "B" => 47,
-  "E" => 40,
-  "A" => 45,
-  "D" => 50,
-  "G" => 43,
-  "C" => 48,
-  "F" => 41,
-  "Bb" => 46,
-  "Eb" => 51,
-  "Ab" => 44,
-  "Db" => 49,
-  "Gb" => 42
-}
-
-MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
-MINOR_KEY_ROOT_NOTE = Fet::MusicTheory::MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
+# The reason number of exercises is required is because the actual number generated is quite large...
+# it's more like 88C3, but a bit smaller because one you choose 1, you actually exclude some of the 88 other than just itself
+# (i.e. if you chose the 3rd degree, you exclude the rest of the 3rd degrees too)
+# 2 degrees => 21592 (left it for a while and it seemed to stop at this value) - comparable to 64C2 * 12 = 24192
+# 3 degrees => 252398 (before I stopped it, there was more being generated)
 
 def main
   number_degrees = ARGV[0].to_i
@@ -48,11 +35,11 @@ def main
 
   number_exercises.times do
     # Create major key exercises
-    root = MAJOR_KEY_ROOT_NOTE.to_a.sample
+    root = Fet::MAJOR_ROOT_MIDI_VALUES.to_a.sample
     until select_notes_recursive(Fet::REDUCED_BY_OCTAVE_PIANO_RANGE, [], root, number_degrees, "major", tempo); end
 
     # Create minor key exercises
-    root = MINOR_KEY_ROOT_NOTE.to_a.sample
+    root = Fet::MINOR_ROOT_MIDI_VALUES.to_a.sample
     until select_notes_recursive(Fet::REDUCED_BY_OCTAVE_PIANO_RANGE, [], root, number_degrees, "minor", tempo); end
   end
 end

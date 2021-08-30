@@ -8,11 +8,9 @@ module Fet
     # All 12 degrees
     DEGREES = ["1", "b2", "2", "b3", "3", "4", "b5", "5", "b6", "6", "b7", "7"].deep_freeze
 
-    # All keys. First element is 5 sharps, 4 sharps, ... 0 sharps/flats, 1 flat, ... all the way up to 6 flats.
-    # No 6 sharps because the 6 flat versions are enharmonic and more common.
-    # These keys chosen because they contain only flats and sharps, no double flats/sharps.
-    MAJOR_KEYS = ["B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab", "Db", "Gb"].deep_freeze
-    MINOR_KEYS = ["G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb"].deep_freeze
+    # All 15 keys - 7 sharps...0 accidentals...7 flats.
+    MAJOR_KEYS = ["C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab", "Db", "Gb", "Cb"].deep_freeze
+    MINOR_KEYS = ["A#", "D#", "G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb", "Ab"].deep_freeze
 
     MODES_IN_ORDER_OF_DARKNESS = [
       ["lydian"],
