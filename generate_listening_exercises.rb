@@ -55,7 +55,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
     file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| note_filename_part(root[0], i) }.join("_")}.mid"
     return false if File.exists?(file_name)
 
-    create_midi_file(tempo, progression, chosen_notes, info, file_name)
+    Fet::MidilibInterface.new(tempo: tempo, progression: progression, notes: chosen_notes, info: info, filename: file_name).create_listening_midi_file
     return true
   end
 

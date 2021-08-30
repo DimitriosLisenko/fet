@@ -13,14 +13,16 @@ module Fet
       self.info = info
       self.filename = filename
       self.sequence = MIDI::Sequence.new
-      self.track = create_track_with_progression
+      self.track = generate_instrument_track
     end
 
     def create_listening_midi_file
+      # Play the chord progression
+      set_progression_on_track
       # Temporarily change tempo so notes always sound for the same time
       with_temporary_tempo_change(120) do
         add_rest(2 * quarter_note_length)
-        play_notes_as_chord(notes, quarter_note_added)
+        play_notes_as_chord(notes, quarter_note_length)
 
         # Play the notes sequentially too
         add_rest(6 * quarter_note_length)
@@ -31,6 +33,8 @@ module Fet
     end
 
     def create_singing_midi_file(sleep_duration)
+      # Play the chord progression
+      set_progression_on_track
       # Play the note after waiting for a specified amount of time
       add_seconds_of_rest(sleep_duration) do
         play_notes_sequentially(notes, quarter_note_length)
@@ -44,7 +48,7 @@ module Fet
     attr_accessor :tempo, :progression, :notes, :info, :filename, :sequence, :track
 
     def write_sequence_to_file
-      File.open(filename, "wb") { |file| seq.write(file) }
+      File.open(filename, "wb") { |file| sequence.write(file) }
     end
 
     def add_seconds_of_rest(seconds)
@@ -88,10 +92,12 @@ module Fet
       track.events << MIDI::Tempo.new(MIDI::Tempo.bpm_to_mpq(new_tempo))
     end
 
-    def create_track_with_progression
+    def generate_instrument_track
       create_info_track
-      track = create_instrument_track
+      return create_instrument_track
+    end
 
+    def set_progression_on_track
       # Create the progression
       progression.each do |chord|
         play_notes_as_chord(chord, quarter_note_length)
@@ -120,7 +126,9 @@ module Fet
     end
 
     def quarter_note_length
-      return sequence.note_to_delta("quarter")
+      # NOTE: magic constant will freeze strings, but apparently midilib needs "quarter" to NOT be frozen,
+      # so calling dup on it will generate a non-frozen version
+      return sequence.note_to_delta("quarter".dup)
     end
   end
 end
