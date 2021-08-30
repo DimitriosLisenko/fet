@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Fet
-  class MidiMusicTheoryTest < Minitest::Test
+  class MidiNoteTest < Minitest::Test
     NOTE_MIDI_VALUES = {
       ["C", 0] => 12,
       ["C", 1] => 24,
@@ -26,7 +26,7 @@ module Fet
 
     def test_note_midi_value
       NOTE_MIDI_VALUES.each do |note_array, midi_value|
-        assert_equal(midi_value, Fet::MidiMusicTheory.note_midi_value(*note_array))
+        assert_equal(midi_value, MidiNote.from_note(*note_array).midi_value)
       end
     end
   end

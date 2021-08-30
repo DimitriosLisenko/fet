@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "degree"
-require_relative "midi_music_theory"
+require_relative "midi_note"
 
 module Fet
   # This class handles determining the degrees for a given root
@@ -16,7 +16,7 @@ module Fet
     end
 
     def root_midi_value
-      return MidiMusicTheory.note_midi_value(root_name, octave_value)
+      return MidiNote.from_note(root_name, octave_value).midi_value
     end
 
     def degree_names_of_midi_value(midi_value)
@@ -55,13 +55,7 @@ module Fet
     end
 
     def degree_index_of_midi_value(midi_value)
-      return MidiMusicTheory.degree_from_midi_values(root_midi_value, midi_value)
+      return MidiNote.new(midi_value).degree(root_midi_value)
     end
-
-    # we need the following information:
-    # - note name (E, F#...)
-    # - octave_value (0..9)
-    # - the root midi value (which we can determine from the above)
-    # - method to determine what is the Xth (#4, b5) degree for that octave
   end
 end

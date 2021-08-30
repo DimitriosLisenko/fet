@@ -75,12 +75,12 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
   selected_note = all_notes.sample
   chosen_notes << selected_note
 
-  all_notes_without_note_degree = all_notes.select { |note| Fet::MidiMusicTheory.degree_from_midi_values(root[1], note) != Fet::MidiMusicTheory.degree_from_midi_values(root[1], selected_note) }
+  all_notes_without_note_degree = all_notes.select { |note| Fet::MidiNote.new(note).degree(root[1]) != Fet::MidiNote.new(selected_note).degree(root[1]) }
   select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type, tempo)
 end
 
 def note_filename_part(root_name, note_midi_value)
-  octave_value = Fet::MidiMusicTheory.octave_value_of_midi_note(note_midi_value)
+  octave_value = Fet::MidiNote.new(note_midi_value).octave_number
   degrees_instance = Fet::Degrees.new(root_name: root_name, octave_value: octave_value)
   degree_name = degrees_instance.degree_names_of_midi_value(note_midi_value).last
   note_name = degrees_instance.note_name_of_degree(degree_name)
