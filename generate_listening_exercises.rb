@@ -23,11 +23,6 @@ MAJOR_KEY_ROOT_NOTE = {
 MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
 MINOR_KEY_ROOT_NOTE = Fet::MusicTheory::MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
 
-# MAJOR_PROGRESSION = [[0, 4, 7], [5, 9, 12], [7, 11, 14], [0, 4, 7]]
-# MINOR_PROGRESSION = [[0, 3, 7], [5, 8, 12], [7, 10, 14], [0, 3, 7]]
-MAJOR_PROGRESSION = [[0, 4, 7], [0, 5, 9], [-1, 5, 7], [0, 4, 7]]
-MINOR_PROGRESSION = [[0, 3, 7], [0, 5, 8], [-1, 5, 7], [0, 3, 7]]
-
 # PIANO_RANGE = (Fet::MidiMusicTheory.note_midi_value("A", 0)..Fet::MidiMusicTheory.note_midi_value("C", 8)).to_a
 PIANO_RANGE = (Fet::MidiMusicTheory.note_midi_value("A", 1)..Fet::MidiMusicTheory.note_midi_value("C", 7)).to_a
 # GUITAR_RANGE = (Fet::MidiMusicTheory.note_midi_value("E", 2)..Fet::MidiMusicTheory.note_midi_value("E", 6)).to_a
@@ -72,11 +67,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
     info = "Key: #{root[0]} #{key_type} Degrees: #{chosen_notes.map { |i| Fet::MusicTheory::DEGREES[(i - root[1]) % 12] }} Notes: #{chosen_notes}"
     puts info if ARGV[3] == "debug"
 
-    if key_type == "major"
-      progression = MAJOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
-    elsif key_type == "minor"
-      progression = MINOR_PROGRESSION.map { |chord| chord.map { |note| note + root[1] } }
-    end
+    progression = Fet::ChordProgression.new(offset: root[1], template_type: key_type).with_offset
 
     file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{Fet::MusicTheory::DEGREES[degree(root[1], i)]}(#{midi_note_name(root[0], degree(root[1], i), i)})" }.join("_")}.mid"
     return false if File.exists?(file_name)
