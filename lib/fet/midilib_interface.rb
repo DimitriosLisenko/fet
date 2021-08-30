@@ -48,6 +48,8 @@ module Fet
     attr_accessor :tempo, :progression, :notes, :info, :filename, :sequence, :track
 
     def write_sequence_to_file
+      directory_name = File.dirname(filename)
+      FileUtils.mkdir_p(directory_name)
       File.open(filename, "wb") { |file| sequence.write(file) }
     end
 

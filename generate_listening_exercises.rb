@@ -30,9 +30,6 @@ def main
     return
   end
 
-  FileUtils.mkdir_p("listening/minor")
-  FileUtils.mkdir_p("listening/major")
-
   number_exercises.times do
     # Create major key exercises
     root = Fet::MAJOR_ROOT_MIDI_VALUES.to_a.sample
