@@ -30,10 +30,11 @@ module Fet
     private
 
     attr_writer :root_name,
-                :octave_value,
-                :degree_to_note_name
+                :octave_value
 
-    def note_name_of_degree(degree_name)
+    attr_accessor :degree_to_note_name
+
+    def note_name_of_degree_internal(degree_name)
       degree = Degree.new(degree_name)
 
       notes_array = Fet::MusicTheory.notes_of_mode(root_name, "major")
@@ -48,7 +49,7 @@ module Fet
     def generate_degree_to_note_name
       result = {}
       Degree::DEGREE_NAMES.flatten.each do |degree_name|
-        result[degree_name] = note_name_of_degree(degree_name)
+        result[degree_name] = note_name_of_degree_internal(degree_name)
       end
       return result
     end

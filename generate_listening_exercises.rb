@@ -65,7 +65,7 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
 
     progression = Fet::ChordProgression.new(offset: root[1], template_type: key_type).with_offset
 
-    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{Fet::MusicTheory::DEGREES[Fet::MidiMusicTheory.degree_from_midi_values(root[1], i)]}(#{midi_note_name(root[0], Fet::MidiMusicTheory.degree_from_midi_values(root[1], i), i)})" }.join("_")}.mid"
+    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| note_filename_part(root[0], i) }.join("_")}.mid"
     return false if File.exists?(file_name)
 
     create_midi_file(tempo, progression, chosen_notes, info, file_name)
@@ -79,23 +79,12 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
   select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type, tempo)
 end
 
-def midi_note_name(root_name, note_degree_index, note_midi_value)
-  return degree_name(root_name, note_degree_index) + octave_value(note_midi_value).to_s
-end
-
-def degree_name(root_name, degree_index)
-  notes_array = Fet::MusicTheory.notes_of_mode(root_name, "major")
-
-  note_degree_name = Fet::MusicTheory::DEGREES[degree_index]
-  is_flattened_degree = note_degree_name[0] == "b"
-  note_degree = is_flattened_degree ? note_degree_name[1].to_i : note_degree_name[0].to_i
-
-  result = notes_array[note_degree - 1]
-  return is_flattened_degree ? Fet::Note.new(result).flattened_note.full_note : result
-end
-
-def octave_value(midi_value)
-  return (midi_value - 12) / 12
+def note_filename_part(root_name, note_midi_value)
+  octave_value = Fet::MidiMusicTheory.octave_value_of_midi_note(note_midi_value)
+  degrees_instance = Fet::Degrees.new(root_name: root_name, octave_value: octave_value)
+  degree_name = degrees_instance.degree_names_of_midi_value(note_midi_value).last
+  note_name = degrees_instance.note_name_of_degree(degree_name)
+  return "#{degree_name}(#{note_name}#{octave_value})"
 end
 
 main
