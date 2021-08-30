@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative "hardcoded_scales"
+require_relative "test_helpers/hardcoded_scales"
 
 module Fet
   class MusicTheoryTest < Minitest::Test
-    include HardcodedScales
+    include TestHelpers::HardcodedScales
 
     def test_notes_of_major_scale
       hardcoded_scales("major").each do |major_scale|

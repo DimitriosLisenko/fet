@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative "hardcoded_scales"
-require_relative "invalid_note_tester"
+require_relative "test_helpers/hardcoded_scales"
+require_relative "test_helpers/invalid_note_tester"
 
 module Fet
   class NoteTest < Minitest::Test
-    include HardcodedScales
-    include InvalidNoteTester
+    include TestHelpers::HardcodedScales
+    include TestHelpers::InvalidNoteTester
 
     def test_flatten_note
       progressively_flattened_notes.each_cons(2) do |sharpened_note, flattened_note|
