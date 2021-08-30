@@ -19,6 +19,7 @@ MAJOR_KEY_ROOT_NOTE = {
   "Db" => 49,
   "Gb" => 42
 }
+
 MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
 MINOR_KEY_ROOT_NOTE = Fet::MusicTheory::MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
 

@@ -5,6 +5,8 @@ module Fet
 
   class InvalidNote < Error; end
 
+  class InvalidChordProgression < Error; end
+
   class InvalidModeName < Error; end
 
   # TODO: this can be removed if the circle of fifths is generated dynamically
