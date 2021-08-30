@@ -2,6 +2,7 @@
 
 require_relative "music_theory"
 
+# TODO: this can be stuck into a MidiValue class
 module Fet
   # Module in charge of handling music theory concepts as they translate to MIDI
   module MidiMusicTheory
@@ -18,6 +19,10 @@ module Fet
     # what degree it actually is. However, without additional information, this is good enough.
     def self.degree_from_midi_values(root_midi_value, note_midi_value)
       return (note_midi_value - root_midi_value) % 12
+    end
+
+    def self.octave_value_of_midi_note(midi_value)
+      return (midi_value - 12) / 12
     end
   end
 end
