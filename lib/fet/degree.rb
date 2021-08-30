@@ -38,7 +38,7 @@ module Fet
     attr_writer :degree_name
 
     def validate_degree_name!
-      raise InvalidDegreeName(degree_name) unless DEGREE_NAMES.flatten.include?(degree_name)
+      raise InvalidDegreeName.new(degree_name) unless DEGREE_NAMES.flatten.include?(degree_name)
     end
   end
 end
