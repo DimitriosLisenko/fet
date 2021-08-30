@@ -23,6 +23,10 @@ module Fet
       return Degree::DEGREE_NAMES[degree_index_of_midi_value(midi_value)]
     end
 
+    def note_name_of_degree(degree_name)
+      return degree_to_note_name[Degree.new(degree_name).degree_name]
+    end
+
     private
 
     attr_writer :root_name,
