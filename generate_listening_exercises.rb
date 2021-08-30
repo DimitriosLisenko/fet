@@ -23,10 +23,6 @@ MAJOR_KEY_ROOT_NOTE = {
 MAJOR_KEY_ROOT_NOTE.each { |k, v| MAJOR_KEY_ROOT_NOTE[k] = v + 12 } # Octave higher sounds better
 MINOR_KEY_ROOT_NOTE = Fet::MusicTheory::MINOR_KEYS.zip(MAJOR_KEY_ROOT_NOTE.values.map { |i| i - 3 }).to_h
 
-# PIANO_RANGE = (Fet::MidiMusicTheory.note_midi_value("A", 0)..Fet::MidiMusicTheory.note_midi_value("C", 8)).to_a
-PIANO_RANGE = (Fet::MidiMusicTheory.note_midi_value("A", 1)..Fet::MidiMusicTheory.note_midi_value("C", 7)).to_a
-# GUITAR_RANGE = (Fet::MidiMusicTheory.note_midi_value("E", 2)..Fet::MidiMusicTheory.note_midi_value("E", 6)).to_a
-
 def main
   number_degrees = ARGV[0].to_i
   if !(1..11).to_a.include?(number_degrees)
@@ -53,11 +49,11 @@ def main
   number_exercises.times do
     # Create major key exercises
     root = MAJOR_KEY_ROOT_NOTE.to_a.sample
-    until select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "major", tempo); end
+    until select_notes_recursive(Fet::REDUCED_BY_OCTAVE_PIANO_RANGE, [], root, number_degrees, "major", tempo); end
 
     # Create minor key exercises
     root = MINOR_KEY_ROOT_NOTE.to_a.sample
-    until select_notes_recursive(PIANO_RANGE, [], root, number_degrees, "minor", tempo); end
+    until select_notes_recursive(Fet::REDUCED_BY_OCTAVE_PIANO_RANGE, [], root, number_degrees, "minor", tempo); end
   end
 end
 
@@ -69,23 +65,18 @@ def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_ty
 
     progression = Fet::ChordProgression.new(offset: root[1], template_type: key_type).with_offset
 
-    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{Fet::MusicTheory::DEGREES[degree(root[1], i)]}(#{midi_note_name(root[0], degree(root[1], i), i)})" }.join("_")}.mid"
+    file_name = "./listening/#{key_type}/#{root[0]}#{key_type == "major" ? "M" : "m"}_#{chosen_notes.map { |i| "#{Fet::MusicTheory::DEGREES[Fet::MidiMusicTheory.degree_from_midi_values(root[1], i)]}(#{midi_note_name(root[0], Fet::MidiMusicTheory.degree_from_midi_values(root[1], i), i)})" }.join("_")}.mid"
     return false if File.exists?(file_name)
 
     create_midi_file(tempo, progression, chosen_notes, info, file_name)
     return true
   end
 
-  random_note = all_notes.sample
-  chosen_notes << random_note
+  selected_note = all_notes.sample
+  chosen_notes << selected_note
 
-  degree = (random_note - root[1]) % 12
-  all_notes_without_note_degree = all_notes.select { |note| (note - root[1]) % 12 != degree }
+  all_notes_without_note_degree = all_notes.select { |note| Fet::MidiMusicTheory.degree_from_midi_values(root[1], note) != Fet::MidiMusicTheory.degree_from_midi_values(root[1], selected_note) }
   select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type, tempo)
-end
-
-def degree(root_midi_value, note_midi_value)
-  return (note_midi_value - root_midi_value) % 12
 end
 
 def midi_note_name(root_name, note_degree_index, note_midi_value)

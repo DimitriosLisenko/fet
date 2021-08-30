@@ -13,5 +13,11 @@ module Fet
 
       return result
     end
+
+    # NOTE: This is not strictly correct because e.g. the midi value of 63 can be D#4 or Eb4, which affects
+    # what degree it actually is. However, without additional information, this is good enough.
+    def self.degree_from_midi_values(root_midi_value, note_midi_value)
+      return (note_midi_value - root_midi_value) % 12
+    end
   end
 end
