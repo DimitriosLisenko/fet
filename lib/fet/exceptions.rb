@@ -9,6 +9,8 @@ module Fet
 
   class InvalidModeName < Error; end
 
+  class InvalidMidiNote < Error; end
+
   # TODO: this can be removed if the circle of fifths is generated dynamically
   class UnsupportedRootName < Error; end
 end
