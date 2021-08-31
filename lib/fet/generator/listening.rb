@@ -69,17 +69,18 @@ module Fet
         filename = root[0].to_s # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter
-        filename += chosen_notes.map { |i| note_filename_part(root[0], i) }.join("_") # chosen notes description, e.g. b7(Cb4)
+        filename += chosen_notes.map { |i| note_filename_part(root[0], root[1], i) }.join("_") # chosen notes description, e.g. b7(Cb4)
         filename += ".mid" # extension
         return File.join(result, filename)
       end
 
-      def note_filename_part(root_name, note_midi_value)
-        octave_value = Fet::MidiNote.new(note_midi_value).octave_number
-        degrees_instance = Fet::Degrees.new(root_name: root_name, octave_value: octave_value)
+      def note_filename_part(root_name, root_midi_value, note_midi_value)
+        root_octave_value = Fet::MidiNote.new(root_midi_value).octave_number
+        degrees_instance = Fet::Degrees.new(root_name: root_name, octave_value: root_octave_value)
         degree_name = degrees_instance.degree_names_of_midi_value(note_midi_value).last
         note_name = degrees_instance.note_name_of_degree(degree_name)
-        return "#{degree_name}(#{note_name}#{octave_value})" # e.g. b7(Cb4)
+        note_octave_value = Fet::MidiNote.new(note_midi_value).octave_number
+        return "#{degree_name}(#{note_name}#{note_octave_value})" # e.g. b7(Cb4)
       end
     end
   end
