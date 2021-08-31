@@ -5,7 +5,11 @@ module Fet
     module Generate
       # CLI implementation for the "generate single_note_listening" command
       module SingleNoteListening
-        def self.run(global_options, options, args); end
+        def self.run(_global_options, options, _args)
+          Fet::Generator::SingleNoteListening.new(
+            tempo: options[:tempo],
+          ).generate
+        end
       end
     end
   end
