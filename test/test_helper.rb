@@ -3,6 +3,7 @@
 require "simplecov"
 SimpleCov.start do
   enable_coverage :branch
+  track_files "lib/**/*.rb"
 end
 
 unless ENV["CODECOV_TOKEN"].nil?
