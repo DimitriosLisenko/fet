@@ -19,15 +19,12 @@ module Fet
     def create_listening_midi_file
       # Play the chord progression
       set_progression_on_track
-      # Temporarily change tempo so notes always sound for the same time
-      with_temporary_tempo_change(120) do
-        add_rest(2 * quarter_note_length)
-        play_notes_as_chord(notes, quarter_note_length)
 
-        # Play the notes sequentially too
-        add_rest(6 * quarter_note_length)
-        play_notes_sequentially(notes, quarter_note_length)
-      end
+      add_rest(2 * quarter_note_length)
+      play_notes_as_chord(notes, quarter_note_length)
+
+      add_rest(6 * quarter_note_length)
+      play_notes_sequentially(notes, quarter_note_length)
 
       write_sequence_to_file
     end
@@ -35,6 +32,7 @@ module Fet
     def create_singing_midi_file(sleep_duration)
       # Play the chord progression
       set_progression_on_track
+
       # Play the note after waiting for a specified amount of time
       add_seconds_of_rest(sleep_duration) do
         play_notes_sequentially(notes, quarter_note_length)
