@@ -59,7 +59,7 @@ module Fet
       end
 
       def full_filename(key_type, root_note_name, root_midi_value, note_midi_value)
-        result = File.join(directory_prefix, "singing", key_type)
+        result = File.join(*[directory_prefix, "singing", key_type].reject(&:empty?))
         filename = root_note_name # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter
