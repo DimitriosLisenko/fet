@@ -61,10 +61,10 @@ module Fet
         lambda do |filename|
           ["major", "minor"].each do |key_type|
             next unless filename.include?(key_type)
-            return true if hash.include?(key_type)
+            return false if hash.include?(key_type)
 
             hash[key_type] = true
-            return false
+            return true
           end
         end
       end
