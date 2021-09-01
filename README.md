@@ -1,25 +1,31 @@
 [![codecov](https://codecov.io/gh/DimitriosLisenko/fet/branch/master/graph/badge.svg?token=6W2B0Z4E4S)](https://codecov.io/gh/DimitriosLisenko/fet)
 
-# FET (Functional Ear Training)
-Create midi/mp3 files for functional ear training. Each file will contain a major/minor chord progression, followed by note(s) that you should identify the scale degree of by ear.
+# FET (Functional Ear Trainer)
+Create MIDI files for functional ear training. Each file will contain a major/minor chord progression, followed by note(s) that you should identify the scale degree of by ear.
+
+## Installation
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'fet'
+```
+
+And then execute:
+
+    $ bundle install
+
+Or install it yourself as:
+
+    $ gem install fet
 
 ## Usage
-### Listening Exercises
-```sh
-ruby generate_listening_exercises.rb {number_of_degrees} {number_of_exercises} {tempo}
-```
+Refer to [the rdoc](https://github.com/DimitriosLisenko/fet/blob/master/fet.rdoc) for detailed usage instructions and descriptions of commands.
 
-`number_of_degrees`: After the chord progression, how many distinct degrees to play. Values from 1 to 11 are allowed. Suggested value: 1.
+## Filename Format
+The generators will currently create MIDI files. The correct answer is included in the filename.
 
-`number_of_exercises`: How many exercises to generate per progression. Suggested value: 100.
-
-`tempo`: How fast the chord progression + notes play - the faster, the harder the exercise is. Suggested value: 120.
-
-For example, running the following command:
-```sh
-ruby generate_listening_exercises.rb 2 5 120
-```
-could generate the following files in the root of the project:
+### Listening exercises
+For listening exercises, here is a potential list of generated MIDI files (for 2 degrees):
 ```sh
 $ find .
 ...
@@ -48,28 +54,8 @@ The file name contains all the information required for the answer. For example,
 
 `(G#2)`: the [scientific pitch notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation) of which is G#2
 
-These midi files can then be converted to MP3 if required via:
-```
-midi_to_mp3.sh listening
-```
-
-The midi/mp3 files can then be placed on shuffle in an audio player and drilled.
-
-### Singing Exercises
-```sh
-ruby generate_singing_exercises.rb {tempo} {sleep_duration}
-```
-
-`tempo`: How fast the chord progression + notes play - the faster, the harder the exercise is. Suggested value: 120.
-
-`sleep_duration`: After the chord progression, how many seconds to wait before playing the answer so you can compare it with what you sang. Values from 1 to 60 are allowed. Suggested value: 3.
-
-
-For example, running the following command:
-```sh
-ruby generate_singing_exercises.rb 120 3
-```
-will generate all possible combinations for keys and degrees in the root of the project:
+### Singing exercises
+The singing exercises will generate all possible combinations for keys and degrees as follows:
 ```sh
 $ find .
 ...
@@ -92,15 +78,36 @@ The file name contains all the information required for the answer. For example,
 
 `3`: you should sing the 3rd degree.
 
-These midi files can then be converted to MP3 if required via:
+### Single Note Listening exercises
+For single note listening exercises, the same note is played across all possible keys:
+```sh
+$ find .
+...
+./listening_single_note/major/CM_1.mid
+./listening_single_note/major/BM_b2.mid
+./listening_single_note/major/F#M_b5.mid
+...
+./listening_single_note/minor/Am_b3.mid
+./listening_single_note/minor/G#m_3.mid
+./listening_single_note/minor/Cm_1.mid
+...
 ```
-midi_to_mp3.sh singing
-```
+The file name contains all the information required for the answer. For example, `G#m_3.mid`:
 
-The midi/mp3 files can then be placed on shuffle in an audio player and drilled.
+`G#m`: the chord progression is in G# Minor.
 
-## Installing Dependencies
-### OS X
-```
-brew install timidity lame
-```
+`3`: the note that is played is the 3rd degree in this key.
+
+## Development
+
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/DimitriosLisenko/fet.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
