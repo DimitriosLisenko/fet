@@ -1,11 +1,13 @@
 ## [Unreleased]
 
-## [0.1.0] - 2021-08-26
+## [0.2.1]
 
-- Initial release
+- Smoother singing MIDI exercises.
 
 ## [Released]
 
 ## [0.2.0] - 2021-09-01
+
+- Initial release.
 
 - Convert individual binaries to a self-contained gem and add 100% test coverage.
