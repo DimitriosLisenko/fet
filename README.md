@@ -19,7 +19,7 @@ Or install it yourself as:
     $ gem install fet
 
 ## Usage
-Refer to [https://github.com/DimitriosLisenko/fet/blob/master/fet.rdoc](the rdoc) for detailed usage instructions and descriptions of commands.
+Refer to [the rdoc](https://github.com/DimitriosLisenko/fet/blob/master/fet.rdoc) for detailed usage instructions and descriptions of commands.
 
 ## Filename Format
 The generators will currently create MIDI files. The correct answer is included in the filename.
