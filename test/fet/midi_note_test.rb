@@ -45,5 +45,10 @@ module Fet
         assert_equal(degree, MidiNote.from_note(*note_array).degree(MidiNote.from_note("C", 2).midi_value))
       end
     end
+
+    def test_invalid_midi_value
+      assert_raises(InvalidMidiNote) { MidiNote.new(-1)}
+      assert_raises(InvalidMidiNote) { MidiNote.new(128)}
+    end
   end
 end

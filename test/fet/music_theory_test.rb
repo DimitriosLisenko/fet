@@ -19,16 +19,18 @@ module Fet
       end
     end
 
-    def test_invalid_mode_name
-      assert_raises(Fet::InvalidModeName) do
-        Fet::MusicTheory.notes_of_mode("C", "doughnut")
-      end
+    def test_invalid_mode_notes
+      assert_raises(Fet::InvalidModeName) { Fet::MusicTheory.notes_of_mode("C", "doughnut") }
+      assert_raises(Fet::UnsupportedRootName) { Fet::MusicTheory.notes_of_mode("Fbbb", "major") }
     end
 
     def test_invalid_root_name
-      assert_raises(Fet::InvalidNote) do
-        Fet::MusicTheory.notes_of_mode("H", "major")
-      end
+      assert_raises(Fet::InvalidNote) { Fet::MusicTheory.notes_of_mode("H", "major") }
+    end
+
+    def test_invalid_relative_major
+      assert_raises(Fet::UnsupportedRootName) { Fet::MusicTheory.relative_major("Bbbbb", "major") }
+      assert_raises(Fet::UnsupportedRootName) { Fet::MusicTheory.relative_major("Fbbb", "minor") }
     end
 
     SEMITONES_FROM_C = {
@@ -61,6 +63,10 @@ module Fet
       SEMITONES_FROM_C.each do |note_name, semitones_from_c|
         assert_equal(semitones_from_c, Fet::MusicTheory.semitones_from_c(note_name))
       end
+    end
+
+    def test_invalid_degrees_of_mode
+      assert_raises(InvalidModeName) { Fet::MusicTheory.degrees_of_mode("Hello, world!") }
     end
   end
 end

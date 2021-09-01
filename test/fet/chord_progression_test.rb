@@ -23,17 +23,10 @@ module Fet
     end
 
     def test_invalid_chord_progression
-      assert_raises(Fet::InvalidChordProgression) do
-        Fet::ChordProgression.new(offset: "offset", template_type: Fet::ChordProgression::TEMPLATE_MINOR)
-      end
-
-      assert_raises(Fet::InvalidChordProgression) do
-        Fet::ChordProgression.new(offset: 0, template_type: "hello")
-      end
-
-      assert_raises(Fet::InvalidChordProgression) do
-        Fet::ChordProgression.new(offset: 0, template: ["hello", "world"])
-      end
+      assert_raises(Fet::InvalidChordProgression) { Fet::ChordProgression.new(offset: "offset", template_type: Fet::ChordProgression::TEMPLATE_MINOR) }
+      assert_raises(Fet::InvalidChordProgression) { Fet::ChordProgression.new(offset: 0, template_type: "hello") }
+      assert_raises(Fet::InvalidChordProgression) { Fet::ChordProgression.new(offset: 0, template: ["hello", "world"]) }
+      assert_raises(Fet::InvalidChordProgression) { Fet::ChordProgression.new(offset: 0, template: []) }
     end
   end
 end
