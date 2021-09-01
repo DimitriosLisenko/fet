@@ -1,3 +1,11 @@
-singing
-listening
-listening_single_note
+/singing/
+/listening/
+/listening_single_note/
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/

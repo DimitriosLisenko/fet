@@ -1,0 +1,6 @@
+= fet
+
+FET (Functional Ear Trainer)
+
+:include:fet.rdoc
+
