@@ -18,12 +18,22 @@ module Fet
         assert_raises(InvalidNote) { Note.new("H") }
         assert_raises(InvalidNote) { Note.new("c#") }
         assert_raises(InvalidNote) { Note.new("Ubb") }
+        assert_raises(InvalidNote) { Note.new("") }
+      end
+
+      class FakeString < String
+        def [](index)
+          return "C" if index.is_a?(Integer) && index.zero?
+
+          return nil
+        end
       end
 
       def test_invalid_types
         assert_raises(InvalidNote) { Note.new(nil) }
         assert_raises(InvalidNote) { Note.new(Note.new("C")) }
         assert_raises(InvalidNote) { Note.new(0) }
+        assert_raises(InvalidNote) { Note.new(FakeString.new) }
       end
     end
   end
