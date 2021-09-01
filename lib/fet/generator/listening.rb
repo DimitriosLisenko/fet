@@ -85,7 +85,7 @@ module Fet
       end
 
       def full_filename(key_type, root, chosen_notes)
-        result = File.join(directory_prefix, "listening", key_type)
+        result = File.join(*[directory_prefix, "listening", key_type].reject(&:empty?))
         filename = root[0].to_s # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter
