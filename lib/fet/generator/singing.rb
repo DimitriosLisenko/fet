@@ -4,10 +4,11 @@ module Fet
   module Generator
     # Class that generates MIDI files for the singing exercises
     class Singing
-      def initialize(tempo:, pause:)
+      def initialize(tempo:, pause:, directory_prefix: "")
         self.tempo = tempo
         self.pause = pause
         self.midi_range = HIGH_SINGING_OCTAVE_RANGE
+        self.directory_prefix = directory_prefix
       end
 
       def generate
@@ -17,7 +18,7 @@ module Fet
 
       private
 
-      attr_accessor :tempo, :pause, :midi_range
+      attr_accessor :tempo, :pause, :midi_range, :directory_prefix
 
       def generate_major
         MusicTheory::MAJOR_KEYS.each do |root_note_name|
@@ -58,7 +59,7 @@ module Fet
       end
 
       def full_filename(key_type, root_note_name, root_midi_value, note_midi_value)
-        result = File.join("singing", key_type)
+        result = File.join(directory_prefix, "singing", key_type)
         filename = root_note_name # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter
