@@ -34,9 +34,9 @@ module Fet
       set_progression_on_track
 
       # Play the note after waiting for a specified amount of time
-      add_seconds_of_rest(sleep_duration) do
-        play_notes_sequentially(notes, quarter_note_length)
-      end
+      add_seconds_of_rest(sleep_duration)
+      play_notes_sequentially(notes, quarter_note_length)
+      add_rest(3 * quarter_note_length)
 
       write_sequence_to_file
     end
@@ -56,7 +56,6 @@ module Fet
       with_temporary_tempo_change(60) do
         # Sleep for the requested duration
         add_rest(seconds * quarter_note_length)
-        yield
       end
     end
 
