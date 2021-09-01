@@ -9,6 +9,7 @@ module Fet
           Fet::Generator::Singing.new(
             tempo: options[:tempo],
             pause: options[:pause],
+            directory_prefix: options[:directory_prefix],
           ).generate
         end
       end
