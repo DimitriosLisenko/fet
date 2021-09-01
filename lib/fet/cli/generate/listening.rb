@@ -10,6 +10,7 @@ module Fet
             exercises: options[:exercises],
             tempo: options[:tempo],
             degrees: options[:degrees],
+            all_single_degree: options[:"all-single-degree"],
           ).generate
         end
       end

@@ -34,6 +34,10 @@ class App
       listening.default_value(200)
       listening.flag([:e, :exercises], type: Integer)
 
+      listening.desc("Generate all single degree listening exercises (ignores -e and -d flag)")
+      listening.default_value(false)
+      listening.switch [:a, :"all-single-degree"]
+
       listening.action do |global_options, options, args|
         Fet::Cli::Generate::Listening.run(global_options, options, args)
       end

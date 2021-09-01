@@ -9,14 +9,37 @@ module Fet
       # (i.e. if you chose the b2 degree, you exclude the rest of the b2 degrees too)
       # 2 degrees => 21592 (left it for a while and it seemed to stop at this value) - comparable to 64C2 * 12 = 24192
       # 3 degrees => 252398 (before I stopped it, there was more being generated)
-      def initialize(exercises:, tempo:, degrees:)
+      def initialize(exercises:, tempo:, degrees:, all_single_degree:)
         self.number_of_exercises = exercises
+        self.all_single_degree = all_single_degree
         self.tempo = tempo
         self.number_of_degrees = degrees
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
       end
 
       def generate
+        all_single_degree ? generate_all_single_degree_exercises : generate_number_of_exercises
+      end
+
+      private
+
+      attr_accessor :number_of_exercises, :tempo, :number_of_degrees, :note_range, :all_single_degree
+
+      def generate_all_single_degree_exercises
+        Fet::MAJOR_ROOT_MIDI_VALUES.each do |root|
+          note_range.each do |note|
+            select_notes_recursive([note], [], root, number_of_degrees, "major")
+          end
+        end
+
+        Fet::MINOR_ROOT_MIDI_VALUES.each do |root|
+          note_range.each do |note|
+            select_notes_recursive([note], [], root, number_of_degrees, "minor")
+          end
+        end
+      end
+
+      def generate_number_of_exercises
         number_of_exercises.times do
           # Create major key exercises
           root = Fet::MAJOR_ROOT_MIDI_VALUES.to_a.sample
@@ -27,10 +50,6 @@ module Fet
           until select_notes_recursive(note_range, [], root, number_of_degrees, "minor"); end
         end
       end
-
-      private
-
-      attr_accessor :number_of_exercises, :tempo, :number_of_degrees, :note_range
 
       def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_type)
         return create_midi_file(chosen_notes, root, key_type) if number_degrees.zero?
