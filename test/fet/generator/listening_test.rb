@@ -2,7 +2,6 @@
 
 require "test_helper"
 require "securerandom"
-require "pry-byebug"
 
 module Fet
   module Generator

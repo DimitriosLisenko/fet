@@ -4,11 +4,12 @@ module Fet
   module Generator
     # Class that generates MIDI files for the single note listening exercises
     class SingleNoteListening
-      def initialize(tempo:)
+      def initialize(tempo:, directory_prefix: "")
         self.tempo = tempo
         self.note = Fet::Note.new("C")
         self.octave_value = 4
         self.midi_value = MidiNote.from_note(note.full_note, octave_value).midi_value
+        self.directory_prefix = directory_prefix
       end
 
       def generate
@@ -25,7 +26,7 @@ module Fet
 
       private
 
-      attr_accessor :tempo, :note, :octave_value, :midi_value
+      attr_accessor :tempo, :note, :octave_value, :midi_value, :directory_prefix
 
       def create_midi_file(key_type, root_note_name, root_midi_value)
         progression = Fet::ChordProgression.new(offset: root_midi_value, template_type: key_type).with_offset
@@ -46,7 +47,7 @@ module Fet
       end
 
       def full_filename(key_type, root_note_name, root_midi_value)
-        result = File.join("listening_single_note", key_type)
+        result = File.join(directory_prefix, "listening_single_note", key_type)
         filename = root_note_name # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter
