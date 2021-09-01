@@ -97,8 +97,8 @@ module Fet
 
       result_index = index - mode_offset_from_major(mode_name)
       raise UnsupportedRootName.new(note_name) if result_index.negative?
-      result = CIRCLE_OF_FIFTHS[index - mode_offset_from_major(mode_name)]
 
+      result = CIRCLE_OF_FIFTHS[index - mode_offset_from_major(mode_name)]
       return result
     end
 

@@ -47,8 +47,8 @@ module Fet
     end
 
     def test_invalid_midi_value
-      assert_raises(InvalidMidiNote) { MidiNote.new(-1)}
-      assert_raises(InvalidMidiNote) { MidiNote.new(128)}
+      assert_raises(InvalidMidiNote) { MidiNote.new(-1) }
+      assert_raises(InvalidMidiNote) { MidiNote.new(128) }
     end
   end
 end
