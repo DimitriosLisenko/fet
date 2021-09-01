@@ -9,12 +9,13 @@ module Fet
       # (i.e. if you chose the b2 degree, you exclude the rest of the b2 degrees too)
       # 2 degrees => 21592 (left it for a while and it seemed to stop at this value) - comparable to 64C2 * 12 = 24192
       # 3 degrees => 252398 (before I stopped it, there was more being generated)
-      def initialize(exercises:, tempo:, degrees:, all_single_degree:)
+      def initialize(exercises:, tempo:, degrees:, all_single_degree:, directory_prefix: "")
         self.number_of_exercises = exercises
         self.all_single_degree = all_single_degree
         self.tempo = tempo
         self.number_of_degrees = degrees
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
+        self.directory_prefix = directory_prefix
       end
 
       def generate
@@ -23,18 +24,18 @@ module Fet
 
       private
 
-      attr_accessor :number_of_exercises, :tempo, :number_of_degrees, :note_range, :all_single_degree
+      attr_accessor :number_of_exercises, :tempo, :number_of_degrees, :note_range, :all_single_degree, :directory_prefix
 
       def generate_all_single_degree_exercises
         Fet::MAJOR_ROOT_MIDI_VALUES.each do |root|
           note_range.each do |note|
-            select_notes_recursive([note], [], root, number_of_degrees, "major")
+            select_notes_recursive([note], [], root, 1, "major")
           end
         end
 
         Fet::MINOR_ROOT_MIDI_VALUES.each do |root|
           note_range.each do |note|
-            select_notes_recursive([note], [], root, number_of_degrees, "minor")
+            select_notes_recursive([note], [], root, 1, "minor")
           end
         end
       end
@@ -84,7 +85,7 @@ module Fet
       end
 
       def full_filename(key_type, root, chosen_notes)
-        result = File.join("listening", key_type)
+        result = File.join(directory_prefix, "listening", key_type)
         filename = root[0].to_s # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter
