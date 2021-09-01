@@ -24,8 +24,7 @@ Gem::Specification.new do |spec|
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
   end
   spec.bindir = "bin"
-  spec.executables << "fet"
-  spec.executables = spec.files.grep(%r{\Abin/}) { |f| File.basename(f) }
+  spec.executables = ["fet"]
   spec.require_paths = ["lib"]
 
   # Gem runtime dependencies - place development dependencies inside Gemfile
