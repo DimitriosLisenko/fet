@@ -16,8 +16,14 @@ module Fet
       self.track = generate_instrument_track
     end
 
+    def create_single_note_midi_file
+      play_notes_as_chord(notes, quarter_note_length)
+      add_rest(1 * quarter_note_length)
+
+      write_sequence_to_file
+    end
+
     def create_listening_midi_file
-      # Play the chord progression
       set_progression_on_track
 
       add_rest(2 * quarter_note_length)
@@ -30,10 +36,8 @@ module Fet
     end
 
     def create_singing_midi_file(sleep_duration)
-      # Play the chord progression
       set_progression_on_track
 
-      # Play the note after waiting for a specified amount of time
       add_seconds_of_rest(sleep_duration)
       play_notes_sequentially(notes, quarter_note_length)
       add_rest(3 * quarter_note_length)
