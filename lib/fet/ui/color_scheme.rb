@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Fet
   module Ui
-    class ColorScheme
+    module ColorScheme
       BLACK = "#151727".deep_freeze
       GREY = "#393D56".deep_freeze
       WHITE = "#FAF9F0".deep_freeze
