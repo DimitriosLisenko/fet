@@ -77,11 +77,10 @@ class App
     end
   end
 
-  # NOTE: if you need the backtrace for an exception, this can be uncommented
-  # on_error do |exception|
-  #   puts exception.backtrace
-  #   true
-  # end
+  on_error do |exception|
+    puts exception.backtrace
+    true
+  end
 end
 
 exit App.run(ARGV)
