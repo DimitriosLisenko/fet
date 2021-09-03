@@ -7,7 +7,7 @@ module Fet
   module Ui
     # Handles drawing + events for notes
     class NoteBox
-      attr_accessor :note_boxes, :degree_name, :square, :text
+      attr_accessor :note_boxes, :degree_name, :square, :text, :selected
 
       def initialize(note_boxes:, degree_name:)
         self.note_boxes = note_boxes
@@ -27,26 +27,14 @@ module Fet
 
       def handle_update_loop; end
 
-      def degree_instance
-        return Fet::Degree.new(degree_name)
-      end
-
-      def correct
-        return note_boxes.level.degree_indices.include?(degree_instance.degree_index)
-      end
-
-      def color
-        return degree_instance.degree_accidental ? ColorScheme::GREY : ColorScheme::WHITE
-      end
-
-      def handle_event(event)
-        handle_click_event(event)
-      end
-
       private
 
       NOTE_BOX_SIZE = 70
-      private_constant :NOTE_BOX_SIZE
+      TEXT_SIZE = 36
+      TEXT_X_FOR_NATURAL_OFFSET = 26
+      TEXT_X_FOR_ACCIDENTAL_OFFSET = 16
+      TEXT_Y_OFFSET = 13
+      private_constant :NOTE_BOX_SIZE, :TEXT_SIZE, :TEXT_X_FOR_NATURAL_OFFSET, :TEXT_X_FOR_ACCIDENTAL_OFFSET, :TEXT_Y_OFFSET
 
       def generate_square
         return Ruby2D::Square.new(
@@ -58,6 +46,44 @@ module Fet
       end
 
       def generate_text
+        return Ruby2D::Text.new(
+          degree_name,
+          x: square.x + text_x_offset, y: square.y + text_y_offset,
+          font: "assets/fonts/PTSans/PTSans-Regular.ttf",
+          size: TEXT_SIZE,
+          color: text_color,
+        )
+      end
+
+      def text_x_offset
+        return degree_instance.degree_accidental ? TEXT_X_FOR_ACCIDENTAL_OFFSET : TEXT_X_FOR_NATURAL_OFFSET
+      end
+
+      def text_y_offset
+        return TEXT_Y_OFFSET
+      end
+
+      def degree_instance
+        return Fet::Degree.new(degree_name)
+      end
+
+      def correct
+        return note_boxes.level.degree_indices.include?(degree_instance.degree_index)
+      end
+
+      def color
+        return correct ? ColorScheme::GREEN : ColorScheme::RED if selected
+
+        return degree_instance.degree_accidental ? ColorScheme::GREY : ColorScheme::WHITE
+      end
+
+      def text_color
+        case color
+        when ColorScheme::GREY, ColorScheme::GREEN, ColorScheme::RED
+          return ColorScheme::WHITE
+        when ColorScheme::WHITE
+          return ColorScheme::BLACK
+        end
       end
 
       def handle_click_event(event)
@@ -66,8 +92,14 @@ module Fet
         return unless event.button == :left
         return unless square.contains?(event.x, event.y)
 
-        square.color = correct ? ColorScheme::GREEN : ColorScheme::RED
+        self.selected = true
+        update_colors
         # music.play
+      end
+
+      def update_colors
+        square.color = color
+        text.color = text_color
       end
     end
   end
