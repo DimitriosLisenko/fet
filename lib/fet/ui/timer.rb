@@ -25,6 +25,10 @@ module Fet
 
       attr_accessor :game, :text, :start_time
 
+      X_OFFSET = 284
+      Y_OFFSET = 90
+      private_constant :X_OFFSET, :Y_OFFSET
+
       def update_time_elapsed
         text.text = time_elapsed
       end
@@ -58,7 +62,7 @@ module Fet
       def generate_text
         Text.new(
           time_elapsed,
-          x: 88, y: 337,
+          x: X_OFFSET, y: Y_OFFSET,
           font: "assets/fonts/PTSans/PTSans-Regular.ttf",
           size: 36,
           color: Fet::Ui::ColorScheme::WHITE,
