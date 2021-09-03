@@ -59,7 +59,7 @@ module Fet
         Text.new(
           time_elapsed,
           x: 88, y: 337,
-          font: "assets/fonts/PTSans-Regular.ttf",
+          font: "assets/fonts/PTSans/PTSans-Regular.ttf",
           size: 36,
           color: Fet::Ui::ColorScheme::WHITE,
         )
