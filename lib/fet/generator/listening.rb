@@ -29,13 +29,13 @@ module Fet
       def generate_all_single_degree_exercises
         Fet::MAJOR_ROOT_MIDI_VALUES.each do |root|
           note_range.each do |note|
-            select_notes([note], [], root, 1, "major")
+            select_notes([note], root[0], root[1], 1, "major")
           end
         end
 
         Fet::MINOR_ROOT_MIDI_VALUES.each do |root|
           note_range.each do |note|
-            select_notes([note], [], root, 1, "minor")
+            select_notes([note], root[0], root[1], 1, "minor")
           end
         end
       end
