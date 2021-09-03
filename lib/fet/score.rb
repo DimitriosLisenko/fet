@@ -8,6 +8,10 @@ module Fet
       self.score = initialize_score
     end
 
+    def handle_event_loop(event); end
+
+    def handle_update_loop; end
+
     def answer_correctly(degree)
       key = keys.detect { |k| k.include?(degree) }
       score[key][:correct] += 1
