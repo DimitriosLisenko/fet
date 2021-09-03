@@ -29,13 +29,13 @@ module Fet
       def generate_all_single_degree_exercises
         Fet::MAJOR_ROOT_MIDI_VALUES.each do |root|
           note_range.each do |note|
-            select_notes_recursive([note], [], root, 1, "major")
+            select_notes([note], [], root, 1, "major")
           end
         end
 
         Fet::MINOR_ROOT_MIDI_VALUES.each do |root|
           note_range.each do |note|
-            select_notes_recursive([note], [], root, 1, "minor")
+            select_notes([note], [], root, 1, "minor")
           end
         end
       end
@@ -43,53 +43,50 @@ module Fet
       def generate_number_of_exercises
         number_of_exercises.times do
           # Create major key exercises
-          root = Fet::MAJOR_ROOT_MIDI_VALUES.to_a.sample
-          until select_notes_recursive(note_range, [], root, number_of_degrees, "major"); end
+          root_name, root_midi_value = Fet::MAJOR_ROOT_MIDI_VALUES.to_a.sample
+          until select_notes(note_range, root_name, root_midi_value, number_of_degrees, "major"); end
 
           # Create minor key exercises
-          root = Fet::MINOR_ROOT_MIDI_VALUES.to_a.sample
-          until select_notes_recursive(note_range, [], root, number_of_degrees, "minor"); end
+          root_name, root_midi_value = Fet::MINOR_ROOT_MIDI_VALUES.to_a.sample
+          until select_notes(note_range, root_name, root_midi_value, number_of_degrees, "minor"); end
         end
       end
 
-      def select_notes_recursive(all_notes, chosen_notes, root, number_degrees, key_type)
-        return create_midi_file(chosen_notes, root, key_type) if number_degrees.zero?
-
-        selected_note = all_notes.sample
-        chosen_notes << selected_note
-
-        all_notes_without_note_degree = all_notes.reject { |note| Fet::MidiNote.new(note).degree(root[1]) == Fet::MidiNote.new(selected_note).degree(root[1]) }
-        select_notes_recursive(all_notes_without_note_degree, chosen_notes, root, number_degrees - 1, key_type)
+      def select_notes(all_notes, root_name, root_midi_value, number_degrees, key_type)
+        root_octave_value = Fet::MidiNote.new(root_midi_value).octave_number
+        degrees_instance = Fet::Degrees.new(root_name: root_name, octave_value: root_octave_value)
+        chosen_notes = degrees_instance.select_degrees_from_midi_values(all_notes, number_degrees)
+        return create_midi_file(chosen_notes, root_name, root_midi_value, key_type)
       end
 
-      def create_midi_file(chosen_notes, root, key_type)
+      def create_midi_file(chosen_notes, root_name, root_midi_value, key_type)
         # Sort so that the file name corresponds to degree of lowest to highest
         chosen_notes = chosen_notes.sort
 
-        filename = full_filename(key_type, root, chosen_notes)
+        filename = full_filename(key_type, root_name, root_midi_value, chosen_notes)
         return false if File.exist?(filename)
 
-        progression = Fet::ChordProgression.new(offset: root[1], template_type: key_type).with_offset
+        progression = Fet::ChordProgression.new(offset: root_midi_value, template_type: key_type).with_offset
         Fet::MidilibInterface.new(
-          tempo: tempo, progression: progression, notes: chosen_notes, info: generate_midi_info(key_type, root, chosen_notes), filename: filename,
+          tempo: tempo, progression: progression, notes: chosen_notes, info: generate_midi_info(key_type, root_name, root_midi_value, chosen_notes), filename: filename,
         ).create_listening_midi_file
         return true
       end
 
-      def generate_midi_info(key_type, root, chosen_notes)
+      def generate_midi_info(key_type, root_name, root_midi_value, chosen_notes)
         return [
-          "Key: [#{root[0]} #{key_type}]",
-          "Degrees: [#{chosen_notes.map { |i| Fet::MusicTheory::DEGREES[(i - root[1]) % 12] }}]",
+          "Key: [#{root_name} #{key_type}]",
+          "Degrees: [#{chosen_notes.map { |i| Fet::MusicTheory::DEGREES[(i - root_midi_value) % 12] }}]",
           "Notes: [#{chosen_notes}]",
         ].join(" ")
       end
 
-      def full_filename(key_type, root, chosen_notes)
+      def full_filename(key_type, root_name, root_midi_value, chosen_notes)
         result = File.join(*[directory_prefix, "listening", key_type].reject(&:empty?))
-        filename = root[0].to_s # note, e.g. Db
+        filename = root_name # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter
-        filename += chosen_notes.map { |i| note_filename_part(root[0], root[1], i) }.join("_") # chosen notes description, e.g. b7(Cb4)
+        filename += chosen_notes.map { |i| note_filename_part(root_name, root_midi_value, i) }.join("_") # chosen notes description, e.g. b7(Cb4)
         filename += ".mid" # extension
         return File.join(result, filename)
       end
