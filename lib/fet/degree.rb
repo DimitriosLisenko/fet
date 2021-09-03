@@ -33,6 +33,10 @@ module Fet
       return degree_name.size == 2 ? degree_name[1].to_i : degree_name[0].to_i
     end
 
+    def degree_index
+      return DEGREE_NAMES.index { |degree_names| degree_names.include?(degree_name) }
+    end
+
     private
 
     attr_writer :degree_name

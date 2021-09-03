@@ -23,6 +23,10 @@ module Fet
       return Degree::DEGREE_NAMES[degree_index_of_midi_value(midi_value)]
     end
 
+    def degree_index_of_midi_value(midi_value)
+      return MidiNote.new(midi_value).degree(root_midi_value)
+    end
+
     def note_name_of_degree(degree_name)
       return degree_to_note_name[Degree.new(degree_name).degree_name]
     end
@@ -56,10 +60,6 @@ module Fet
         result[degree_name] = note_name_of_degree_internal(degree_name)
       end
       return result
-    end
-
-    def degree_index_of_midi_value(midi_value)
-      return MidiNote.new(midi_value).degree(root_midi_value)
     end
 
     def select_degrees_from_midi_values_recursive(all_notes, chosen_notes, number_of_degrees)
