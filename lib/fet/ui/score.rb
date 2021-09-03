@@ -72,6 +72,10 @@ module Fet
           color: ColorScheme::WHITE,
         )
       end
+
+      def level_over?
+        return game.level.correct_answer_selected?
+      end
     end
   end
 end

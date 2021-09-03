@@ -6,7 +6,7 @@ module Fet
   module Ui
     # Holds state for the current level of the game
     class Level
-      attr_accessor :game
+      attr_accessor :game, :degrees
 
       def initialize(game)
         self.game = game
@@ -14,10 +14,12 @@ module Fet
         self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
         self.accidental = ""
         self.note_boxes = NoteBoxes.new(self)
+        self.key = Key.new(self)
       end
 
       def start
         note_boxes.start
+        key.start
       end
 
       def degree_indices
@@ -36,10 +38,7 @@ module Fet
 
       private
 
-      NOTES_X_OFFSET = 0
-      NOTES_Y_OFFSET = 0
-
-      attr_accessor :degrees, :midi_values, :note_boxes,
+      attr_accessor :midi_values, :note_boxes, :key,
                     :accidental
 
       def generate_degrees
