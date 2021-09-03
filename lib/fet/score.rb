@@ -38,7 +38,7 @@ module Fet
     attr_accessor :score
 
     def initialize_score
-      Fet::Degree::DEGREE_NAMES.transform_values { |_| { correct: 0, incorrect: 0 } }
+      Fet::Degree::DEGREE_NAMES.map { |degree_names| [degree_names, { correct: 0, incorrect: 0 }] }.to_h
     end
   end
 end
