@@ -8,6 +8,8 @@ module Fet
       self.score = initialize_score
     end
 
+    def start; end
+
     def handle_event_loop(event); end
 
     def handle_update_loop; end
