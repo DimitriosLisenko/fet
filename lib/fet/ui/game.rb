@@ -28,6 +28,8 @@ module Fet
       end
 
       def start
+        score.start
+        level.start
         timer.start
         Ruby2D::Window.show
       end

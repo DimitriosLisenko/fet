@@ -23,7 +23,7 @@ white_key_root = 60
 
   ["#1", "b2"] => Fet::Ui::NoteBox.new(x: (white_key_root + (75 / 2.0) * 1), y: 250, correct: false, size: 70, color: black_key_color, text: "b2", midi_file: "./notes/CM_b2(Db4).mid"),
   ["#2", "b3"] => Fet::Ui::NoteBox.new(x: (white_key_root + (75 / 2.0) * 3), y: 250, correct: false, size: 70, color: black_key_color, text: "b3", midi_file: "./notes/CM_b3(Eb4).mid"),
-  ["#4", "#5"] => Fet::Ui::NoteBox.new(x: (white_key_root + (75 / 2.0) * 7), y: 250, correct: false, size: 70, color: black_key_color, text: "b5", midi_file: "./notes/CM_b5(Gb4).mid"),
+  ["#4", "b5"] => Fet::Ui::NoteBox.new(x: (white_key_root + (75 / 2.0) * 7), y: 250, correct: false, size: 70, color: black_key_color, text: "b5", midi_file: "./notes/CM_b5(Gb4).mid"),
   ["#5", "b6"] => Fet::Ui::NoteBox.new(x: (white_key_root + (75 / 2.0) * 9), y: 250, correct: false, size: 70, color: black_key_color, text: "b6", midi_file: "./notes/CM_b6(Ab4).mid"),
   ["#6", "b7"] => Fet::Ui::NoteBox.new(x: (white_key_root + (75 / 2.0) * 11), y: 250, correct: false, size: 70, color: black_key_color, text: "b7", midi_file: "./notes/CM_b7(Bb4).mid"),
 }
