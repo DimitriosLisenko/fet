@@ -26,9 +26,6 @@ module Fet
       def setup_window_event_loop
         Ruby2D::Window.on(:key_down) do |event|
           handle_event_loop(event)
-          score.handle_event_loop(event)
-          level.handle_event_loop(event)
-          timer.handle_event_loop(event)
         end
 
         Ruby2D::Window.on(:mouse_down) do |event|
