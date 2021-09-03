@@ -13,9 +13,14 @@ module Fet
       include GameSetupHelper
       include GameLoopHandler
 
-      attr_accessor :level, :score, :timer
+      attr_accessor :level, :score, :timer, :note_range,
+                    :tempo, :number_of_degrees, :key_type
 
       def initialize
+        self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
+        self.tempo = 200
+        self.key_type = "major"
+        self.number_of_degrees = 1
         self.score = Score.new(self)
         self.level = Level.new(self)
         self.timer = Timer.new(self)
