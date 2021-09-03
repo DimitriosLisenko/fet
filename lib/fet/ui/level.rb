@@ -13,7 +13,6 @@ module Fet
         self.degrees = generate_degrees
         self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
         self.accidental = ""
-        self.answer_chosen = false
         self.note_boxes = NoteBoxes.new(self)
       end
 
@@ -31,13 +30,17 @@ module Fet
 
       def handle_update_loop; end
 
+      def correct_answer_selected?
+        note_boxes.note_boxes.any? { |note_box| note_box.correct? && note_box.selected }
+      end
+
       private
 
       NOTES_X_OFFSET = 0
       NOTES_Y_OFFSET = 0
 
       attr_accessor :degrees, :midi_values, :note_boxes,
-                    :accidental, :answer_chosen
+                    :accidental
 
       def generate_degrees
         root_midi_values = game.key_type == "major" ? Fet::MAJOR_ROOT_MIDI_VALUES : Fet::MINOR_ROOT_MIDI_VALUES

@@ -27,6 +27,10 @@ module Fet
 
       def handle_update_loop; end
 
+      def correct?
+        return note_boxes.level.degree_indices.include?(degree_instance.degree_index)
+      end
+
       private
 
       NOTE_BOX_SIZE = 70
@@ -67,12 +71,8 @@ module Fet
         return Fet::Degree.new(degree_name)
       end
 
-      def correct
-        return note_boxes.level.degree_indices.include?(degree_instance.degree_index)
-      end
-
       def color
-        return correct ? ColorScheme::GREEN : ColorScheme::RED if selected
+        return correct? ? ColorScheme::GREEN : ColorScheme::RED if selected
 
         return degree_instance.degree_accidental ? ColorScheme::GREY : ColorScheme::WHITE
       end
@@ -86,15 +86,22 @@ module Fet
         end
       end
 
+      def level_over?
+        return note_boxes.level.correct_answer_selected?
+      end
+
       def handle_click_event(event)
         return unless event.is_a?(Ruby2D::Window::MouseEvent)
         return unless event.type == :down
         return unless event.button == :left
         return unless square.contains?(event.x, event.y)
 
-        self.selected = true
-        update_colors
-        # music.play
+        if level_over?
+          # music.play
+        else
+          self.selected = true
+          update_colors
+        end
       end
 
       def update_colors
