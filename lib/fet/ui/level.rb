@@ -35,6 +35,7 @@ module Fet
 
       def handle_event_loop(event)
         note_boxes.handle_event_loop(event)
+        handle_keyboard_event(event)
       end
 
       def handle_update_loop; end
@@ -93,6 +94,18 @@ module Fet
           info: info,
           filename: filename,
         )
+      end
+
+      def handle_keyboard_event(event)
+        return unless event.is_a?(Ruby2D::Window::KeyEvent)
+        return unless event.type == :down
+
+        case event.key
+        when "c"
+          chord_progression_music.play
+        when "n"
+          notes_music.play
+        end
       end
     end
   end
