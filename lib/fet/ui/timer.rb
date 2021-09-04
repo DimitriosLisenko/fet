@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
+require "date"
+
 module Fet
   module Ui
     # Determines and outputs the time spent playing
     class Timer
-      attr_accessor :game
+      attr_accessor :game, :started_at
 
       def initialize(game)
         self.game = game
       end
 
       def start
+        self.started_at ||= DateTime.now.new_offset(0)
         self.start_time ||= current_time
         self.text ||= generate_text
         text.text = time_elapsed
@@ -20,6 +23,10 @@ module Fet
 
       def handle_update_loop
         update_time_elapsed
+      end
+
+      def seconds_elapsed
+        current_time - start_time
       end
 
       private
@@ -35,15 +42,15 @@ module Fet
       end
 
       def time_elapsed
-        seconds_elapsed = current_time - start_time
+        current_seconds_elapsed = seconds_elapsed
 
-        minutes_elapsed = seconds_elapsed / 60
-        seconds_elapsed -= minutes_elapsed * 60
+        minutes_elapsed = current_seconds_elapsed / 60
+        current_seconds_elapsed -= minutes_elapsed * 60
 
         hours_elapsed = minutes_elapsed / 60
         minutes_elapsed -= (hours_elapsed * 60)
 
-        return format_time_elapsed(hours_elapsed, minutes_elapsed, seconds_elapsed)
+        return format_time_elapsed(hours_elapsed, minutes_elapsed, current_seconds_elapsed)
       end
 
       def format_time_elapsed(hours, minutes, seconds)

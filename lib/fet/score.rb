@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json"
+
 module Fet
   # Holds the correct/incorrect answers to questions
   class Score
@@ -29,6 +31,14 @@ module Fet
 
     def questions_asked(degree_index = nil)
       return answered_correctly(degree_index) + answered_incorrectly(degree_index)
+    end
+
+    def as_json(_options = {})
+      score
+    end
+
+    def to_json(*options)
+      as_json(*options).to_json(*options)
     end
 
     private

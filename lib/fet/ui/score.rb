@@ -8,7 +8,7 @@ module Fet
   module Ui
     # Shows the UI elements for score
     class Score
-      attr_accessor :game, :text
+      attr_accessor :game, :score, :text
 
       def initialize(game)
         self.game = game
@@ -30,7 +30,7 @@ module Fet
 
       private
 
-      attr_accessor :score, :correct_questions
+      attr_accessor :correct_questions
 
       TEXT_SIZE = 36
       X_OFFSET = 508

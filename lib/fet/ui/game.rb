@@ -14,6 +14,8 @@ module Fet
       include GameSetupHelper
       include GameLoopHandler
 
+      SCORES_FILENAME = "#{ENV["HOME"]}/.config/fet/scores".deep_freeze
+
       attr_accessor :level, :score, :timer, :note_range,
                     :tempo, :number_of_degrees, :key_type, :next_on_correct
 
@@ -34,6 +36,32 @@ module Fet
         level.start
         timer.start
         Ruby2D::Window.show
+        write_score_to_file
+      end
+
+      private
+
+      def write_score_to_file
+        new_score_entries = historic_score_entries
+        new_score_entries << current_score_entry
+        directory_name = File.dirname(SCORES_FILENAME)
+        FileUtils.mkdir_p(directory_name)
+        File.open(SCORES_FILENAME, "w") { |file| file.write(new_score_entries.to_json) }
+      end
+
+      def historic_score_entries
+        result = File.read(SCORES_FILENAME)
+        return JSON.parse(result)
+      rescue Errno::ENOENT
+        return []
+      end
+
+      def current_score_entry
+        return {
+          "started_at" => timer.started_at.to_s,
+          "seconds_elapsed" => timer.seconds_elapsed,
+          "score" => score.score,
+        }
       end
     end
   end
