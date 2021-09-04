@@ -43,6 +43,10 @@ module Fet
 
       def handle_update_loop; end
 
+      def level_completed_event
+        start if answered_correctly?
+      end
+
       def over?
         return degree_indices.all? do |degree_index|
           note_boxes.note_boxes.any? { |note_box| note_box.selected && note_box.degree_index == degree_index }

@@ -28,6 +28,7 @@ module Fet
 
       def level_completed_event
         score.level_completed_event
+        level.level_completed_event
       end
 
       private
