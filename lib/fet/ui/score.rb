@@ -64,6 +64,8 @@ module Fet
       end
 
       def update_score
+        # TODO: this is not quite right because for multiple notes *some* can be correct
+        # TODO: also, this is not right because for 2 degrees it increases the score by 2 rather than 1
         game.level.answered_correctly? ? score.answer_correctly(*game.level.degree_indices) : score.answer_incorrectly(*game.level.degree_indices)
       end
 

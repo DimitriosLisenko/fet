@@ -32,6 +32,7 @@ module Fet
         note_boxes.each(&:start)
       end
 
+      # TODO: should self be checked first or the children?
       def handle_event_loop(event)
         handle_note_selected_event(event)
         note_boxes.each { |note_box| note_box.handle_event_loop(event) }
@@ -75,6 +76,7 @@ module Fet
         return note_boxes.select(&:selected)
       end
 
+      # TODO: the set_level_complete_event_flag gets hit multiple times...
       def handle_note_selected_event(event)
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_NOTE_SELECTED
 
