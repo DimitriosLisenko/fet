@@ -15,8 +15,6 @@ module Fet
       def initialize(note_boxes:, degree_name:)
         self.note_boxes = note_boxes
         self.degree_name = degree_name
-        # self.midi_file = midi_file
-        # self.music = Ruby2D::Music.new(midi_file)
       end
 
       def start
@@ -24,6 +22,7 @@ module Fet
         self.square ||= generate_square
         self.text ||= generate_text
         self.selected = false
+        self.note_music = generate_note_music
         update_colors
       end
 
@@ -36,6 +35,8 @@ module Fet
       end
 
       private
+
+      attr_accessor :note_music
 
       NOTE_BOX_SIZE = 70
       TEXT_SIZE = 36
@@ -92,6 +93,21 @@ module Fet
 
       def level_over?
         return note_boxes.level.over?
+      end
+
+      def generate_note_music
+        degrees = note_boxes.level.degrees
+
+        filename = "tmp/#{degree_name}.mid"
+        Fet::MidilibInterface.new(
+          tempo: note_boxes.level.game.tempo,
+          progression: nil,
+          notes: [degrees.root_midi_value + degree_instance.degree_index],
+          info: degree_name,
+          filename: filename,
+        ).create_notes_only
+
+        return Ruby2D::Music.new(filename)
       end
     end
   end

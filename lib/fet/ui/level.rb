@@ -89,7 +89,7 @@ module Fet
 
       def generate_notes_music
         filename = "tmp/question.mid"
-        create_midilib_object("Question", filename).create_notes_of_question
+        create_midilib_object("Question", filename).create_notes_only
         return Ruby2D::Music.new(filename)
       end
 

@@ -24,7 +24,7 @@ module Fet
       write_sequence_to_file
     end
 
-    def create_notes_of_question
+    def create_notes_only
       play_notes_as_chord(notes, quarter_note_length)
       add_rest(1 * quarter_note_length)
       write_sequence_to_file

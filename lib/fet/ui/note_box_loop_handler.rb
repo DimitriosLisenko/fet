@@ -87,7 +87,7 @@ module Fet
         self.keyboard_accidental = ""
 
         if level_over?
-          # music.play
+          note_music.play
         else
           self.selected = true
           update_colors
