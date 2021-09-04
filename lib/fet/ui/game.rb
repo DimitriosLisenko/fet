@@ -16,11 +16,11 @@ module Fet
       attr_accessor :level, :score, :timer, :note_range,
                     :tempo, :number_of_degrees, :key_type
 
-      def initialize
+      def initialize(tempo:, degrees:, key_type:)
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
-        self.tempo = 200
-        self.key_type = "major"
-        self.number_of_degrees = 1
+        self.tempo = tempo
+        self.key_type = key_type
+        self.number_of_degrees = degrees
         self.score = Score.new(self)
         self.level = Level.new(self)
         self.timer = Timer.new(self)

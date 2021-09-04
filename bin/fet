@@ -77,6 +77,30 @@ class App
     end
   end
 
+  desc("Run the ear training application")
+  # arg_name "Describe arguments to generate here"
+  command(:play) do |c|
+    c.desc("Run the ear training application for listening")
+    c.long_desc("Each level will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause.")
+    c.command :listening do |listening|
+      listening.desc("Tempo at which the chord progression is played at")
+      listening.default_value(120)
+      listening.flag([:t, :tempo], type: Integer)
+
+      listening.desc("Number of degrees to play")
+      listening.default_value(1)
+      listening.flag([:d, :degrees], type: Integer, must_match: (1..11).map(&:to_s))
+
+      listening.desc("Type of the chord progression")
+      listening.default_value("major")
+      listening.flag([:k, :"key-type"], type: String, must_match: ["major", "minor"])
+
+      listening.action do |global_options, options, args|
+        Fet::Cli::Play::Listening.run(global_options, options, args)
+      end
+    end
+  end
+
   on_error do |exception|
     puts exception.backtrace
     true
