@@ -5,13 +5,13 @@ require_relative "color_scheme"
 
 module Fet
   module Ui
-    # Holds the correct/incorrect answers to questions for this session
+    # Shows the UI elements for score
     class Score
       attr_accessor :game, :text
 
       def initialize(game)
         self.game = game
-        self.score = initialize_score
+        self.score = Fet::Score.new
       end
 
       def start
@@ -23,32 +23,8 @@ module Fet
       def handle_update_loop; end
 
       def level_completed_event
-        game.level.answered_correctly? ? answer_correctly(*game.level.degree_indices) : answer_incorrectly(*game.level.degree_indices)
-        self.text.text = text_value
-      end
-
-      def answer_correctly(*degree_indices)
-        degree_indices.each { |degree_index| score[degree_index][:correct] += 1 }
-      end
-
-      def answer_incorrectly(*degree_indices)
-        degree_indices.each { |degree_index| score[degree_index][:incorrect] += 1 }
-      end
-
-      def answered_correctly(degree_index = nil)
-        return score.reduce(0) do |result, (score_degree_index, score_hash)|
-          degree_index.nil? || score_degree_index == degree_index ? result + score_hash[:correct] : result
-        end
-      end
-
-      def answered_incorrectly(degree_index = nil)
-        return score.reduce(0) do |result, (score_degree_index, score_hash)|
-          degree_index.nil? || score_degree_index == degree_index ? result + score_hash[:incorrect] : result
-        end
-      end
-
-      def questions_asked(degree_index = nil)
-        return answered_correctly(degree_index) + answered_incorrectly(degree_index)
+        game.level.answered_correctly? ? score.answer_correctly(*game.level.degree_indices) : score.answer_incorrectly(*game.level.degree_indices)
+        text.text = text_value
       end
 
       private
@@ -60,12 +36,8 @@ module Fet
       Y_OFFSET = 90
       private_constant :TEXT_SIZE, :X_OFFSET, :Y_OFFSET
 
-      def initialize_score
-        Fet::Degree::DEGREE_NAMES.map.with_index { |_, degree_index| [degree_index, { correct: 0, incorrect: 0 }] }.to_h
-      end
-
       def text_value
-        return "#{answered_correctly}/#{questions_asked}"
+        return "#{score.answered_correctly}/#{score.questions_asked}"
       end
 
       def generate_text
