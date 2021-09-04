@@ -59,20 +59,20 @@ module Fet
         return note_boxes.select { |note_box| !note_box.selected && note_box.correct? }
       end
 
-      private
-
-      def generate_note_boxes
-        NOTE_BOX_OFFSETS.map do |degree_name, _|
-          Fet::Ui::NoteBox.new(note_boxes: self, degree_name: degree_name)
-        end
-      end
-
       def correct_note_boxes
         return note_boxes.select(&:correct?)
       end
 
       def selected_note_boxes
         return note_boxes.select(&:selected)
+      end
+
+      private
+
+      def generate_note_boxes
+        NOTE_BOX_OFFSETS.map do |degree_name, _|
+          Fet::Ui::NoteBox.new(note_boxes: self, degree_name: degree_name)
+        end
       end
 
       def handle_note_selected_event(event)

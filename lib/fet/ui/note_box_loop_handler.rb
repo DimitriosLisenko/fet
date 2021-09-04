@@ -7,6 +7,8 @@ module Fet
   module Ui
     # Handles events for NoteBox
     module NoteBoxLoopHandler
+      attr_accessor :user_selected
+
       def handle_event_loop(event)
         handle_click_event(event)
         handle_keyboard_event(event)
@@ -15,7 +17,7 @@ module Fet
       def handle_update_loop; end
 
       def manually_select
-        handle_selected
+        handle_selected(user_selected: false)
       end
 
       private
@@ -79,12 +81,13 @@ module Fet
         return nil
       end
 
-      def handle_selected
+      def handle_selected(user_selected: true)
         self.keyboard_accidental = ""
 
         if level_over?
           note_music.play
         else
+          self.user_selected = user_selected
           self.selected = true
           update_colors
           note_boxes.level.game.set_note_selected_event_flag

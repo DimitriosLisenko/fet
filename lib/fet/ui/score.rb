@@ -13,6 +13,7 @@ module Fet
       def initialize(game)
         self.game = game
         self.score = Fet::Score.new
+        self.correct_questions = 0
       end
 
       def start
@@ -29,7 +30,7 @@ module Fet
 
       private
 
-      attr_accessor :score
+      attr_accessor :score, :correct_questions
 
       TEXT_SIZE = 36
       X_OFFSET = 508
@@ -37,7 +38,7 @@ module Fet
       private_constant :TEXT_SIZE, :X_OFFSET, :Y_OFFSET
 
       def text_value
-        return "#{score.answered_correctly}/#{game.level.question_number}"
+        return "#{correct_questions}/#{game.level.question_number}"
       end
 
       def generate_text
@@ -64,9 +65,16 @@ module Fet
       end
 
       def update_score
-        # TODO: this is not quite right because for multiple notes *some* can be correct
-        # TODO: also, this is not right because for 2 degrees it increases the score by 2 rather than 1
-        game.level.answered_correctly? ? score.answer_correctly(*game.level.degree_indices) : score.answer_incorrectly(*game.level.degree_indices)
+        note_boxes = game.level.note_boxes
+        correct_note_boxes = note_boxes.correct_note_boxes
+
+        user_selected_correct_note_boxes = correct_note_boxes.select(&:user_selected)
+        non_user_selected_correct_note_boxes = correct_note_boxes.reject(&:user_selected)
+
+        score.answer_correctly(*user_selected_correct_note_boxes.map(&:degree_index))
+        score.answer_incorrectly(*non_user_selected_correct_note_boxes.map(&:degree_index))
+
+        self.correct_questions += 1 if non_user_selected_correct_note_boxes.empty?
       end
 
       def update_text

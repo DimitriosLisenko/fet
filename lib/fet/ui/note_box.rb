@@ -22,6 +22,7 @@ module Fet
         self.square ||= generate_square
         self.text ||= generate_text
         self.selected = false
+        self.user_selected = false
         self.note_music = generate_note_music
         update_colors
       end

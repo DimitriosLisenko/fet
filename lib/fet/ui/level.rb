@@ -8,7 +8,7 @@ module Fet
   module Ui
     # Holds state for the current level of the game
     class Level
-      attr_accessor :game, :key, :degrees, :question_number
+      attr_accessor :game, :question_number, :note_boxes, :key, :degrees
 
       def initialize(game)
         self.game = game
@@ -49,7 +49,7 @@ module Fet
 
       private
 
-      attr_accessor :midi_values, :note_boxes, :full_question_music, :chord_progression_music, :notes_music
+      attr_accessor :midi_values, :full_question_music, :chord_progression_music, :notes_music
 
       def start_self
         self.question_number += 1
