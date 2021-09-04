@@ -2,6 +2,7 @@
 
 require_relative "custom_event"
 require_relative "key"
+require_relative "level_loop_handler"
 require_relative "note_boxes"
 
 module Fet
@@ -9,6 +10,8 @@ module Fet
     # Holds state for the current level of the game
     class Level
       attr_accessor :game, :question_number, :note_boxes, :key, :degrees
+
+      include LevelLoopHandler
 
       def initialize(game)
         self.game = game
@@ -28,14 +31,6 @@ module Fet
       def degree_indices
         return midi_values.map { |midi_value| degrees.degree_index_of_midi_value(midi_value) }
       end
-
-      def handle_event_loop(event)
-        handle_keyboard_event(event)
-        handle_level_complete_event(event)
-        note_boxes.handle_event_loop(event)
-      end
-
-      def handle_update_loop; end
 
       def over?
         return degree_indices.all? do |degree_index|
@@ -100,29 +95,6 @@ module Fet
           info: info,
           filename: filename,
         )
-      end
-
-      def handle_keyboard_event(event)
-        return unless event.is_a?(Ruby2D::Window::KeyEvent)
-        return unless event.type == :down
-
-        case event.key
-        when "c"
-          chord_progression_music.play
-        when "n"
-          notes_music.play
-        when "l"
-          full_question_music.loop = true
-          full_question_music.play
-        when "return"
-          start if over?
-        end
-      end
-
-      def handle_level_complete_event(event)
-        return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
-
-        start if answered_correctly?
       end
     end
   end
