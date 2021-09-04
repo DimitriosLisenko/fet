@@ -113,6 +113,9 @@ module Fet
           chord_progression_music.play
         when "n"
           notes_music.play
+        when "l"
+          full_question_music.loop = true
+          full_question_music.play
         when "return"
           start if over?
         end
