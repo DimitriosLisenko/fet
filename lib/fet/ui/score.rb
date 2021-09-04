@@ -22,6 +22,10 @@ module Fet
 
       def handle_update_loop; end
 
+      def level_started_event
+        text.text = text_value
+      end
+
       def level_completed_event
         game.level.answered_correctly? ? score.answer_correctly(*game.level.degree_indices) : score.answer_incorrectly(*game.level.degree_indices)
         text.text = text_value
@@ -37,7 +41,7 @@ module Fet
       private_constant :TEXT_SIZE, :X_OFFSET, :Y_OFFSET
 
       def text_value
-        return "#{score.answered_correctly}/#{score.questions_asked}"
+        return "#{score.answered_correctly}/#{game.level.question_number}"
       end
 
       def generate_text

@@ -6,22 +6,27 @@ module Fet
   module Ui
     # Holds state for the current level of the game
     class Level
-      attr_accessor :game, :degrees
+      attr_accessor :game, :degrees, :question_number
 
       def initialize(game)
         self.game = game
         self.degrees = generate_degrees
         self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
         self.note_boxes = NoteBoxes.new(self)
+        self.question_number = 0
         self.key = Key.new(self)
       end
 
+      # NOTE: I'm thinking that the start method should also handle generation of a new level without overwriting everything (minimize redraw)
       def start
         note_boxes.start
         key.start
 
+        self.question_number += 1
         update_music_objects
         full_question_music.play
+
+        game.level_started_event
       end
 
       def degree_indices
