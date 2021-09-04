@@ -12,7 +12,6 @@ module Fet
         self.game = game
         self.degrees = generate_degrees
         self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
-        self.accidental = ""
         self.note_boxes = NoteBoxes.new(self)
         self.key = Key.new(self)
       end
@@ -38,8 +37,7 @@ module Fet
 
       private
 
-      attr_accessor :midi_values, :note_boxes, :key,
-                    :accidental
+      attr_accessor :midi_values, :note_boxes, :key
 
       def generate_degrees
         root_midi_values = game.key_type == "major" ? Fet::MAJOR_ROOT_MIDI_VALUES : Fet::MINOR_ROOT_MIDI_VALUES
