@@ -19,6 +19,9 @@ module Fet
       def start
         note_boxes.start
         key.start
+
+        self.full_question = generate_full_question
+        full_question.play
       end
 
       def degree_indices
@@ -43,13 +46,25 @@ module Fet
 
       private
 
-      attr_accessor :midi_values, :note_boxes, :key
+      attr_accessor :midi_values, :note_boxes, :key, :full_question
 
       def generate_degrees
         root_midi_values = game.key_type == "major" ? Fet::MAJOR_ROOT_MIDI_VALUES : Fet::MINOR_ROOT_MIDI_VALUES
         root_name, root_midi_value = root_midi_values.to_a.sample
         root_octave_value = Fet::MidiNote.new(root_midi_value).octave_number
         return Degrees.new(root_name: root_name, octave_value: root_octave_value)
+      end
+
+      def generate_full_question
+        progression = Fet::ChordProgression.new(offset: degrees.root_midi_value, template_type: game.key_type).with_offset
+        Fet::MidilibInterface.new(
+          tempo: game.tempo,
+          progression: progression,
+          notes: midi_values,
+          info: "Chord Progression + Question",
+          filename: "tmp/chord_progression_and_question.mid",
+        ).create_listening_midi_file
+        return Ruby2D::Music.new("tmp/chord_progression_and_question.mid")
       end
     end
   end
