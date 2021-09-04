@@ -8,11 +8,12 @@ module Fet
     class Timer
       def initialize(game)
         self.game = game
+        self.start_time = current_time
       end
 
       def start
-        self.start_time = current_time
-        self.text = generate_text
+        self.text ||= generate_text
+        text.text = time_elapsed
       end
 
       def handle_event_loop(event); end

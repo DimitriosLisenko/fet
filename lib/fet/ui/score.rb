@@ -15,7 +15,8 @@ module Fet
       end
 
       def start
-        self.text = generate_text
+        self.text ||= generate_text
+        text.text = text_value
       end
 
       def handle_event_loop(event); end

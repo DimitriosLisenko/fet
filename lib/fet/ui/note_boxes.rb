@@ -28,7 +28,7 @@ module Fet
       end
 
       def start
-        self.note_boxes = generate_note_boxes
+        self.note_boxes ||= generate_note_boxes
         note_boxes.each(&:start)
       end
 

@@ -21,8 +21,10 @@ module Fet
 
       def start
         self.keyboard_accidental = ""
-        self.square = generate_square
-        self.text = generate_text
+        self.square ||= generate_square
+        self.text ||= generate_text
+        self.selected = false
+        update_colors
       end
 
       def correct?

@@ -10,8 +10,8 @@ module Fet
 
       def initialize(game)
         self.game = game
-        self.note_boxes = NoteBoxes.new(self)
         self.question_number = 0
+        self.note_boxes = NoteBoxes.new(self)
         self.key = Key.new(self)
       end
 
@@ -23,6 +23,7 @@ module Fet
 
         note_boxes.start
         key.start
+
         start_self
       end
 
