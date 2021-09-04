@@ -5,6 +5,7 @@ require_relative "game_loop_handler"
 require_relative "game_setup_helper"
 require_relative "level"
 require_relative "score"
+require_relative "timer"
 
 module Fet
   module Ui

@@ -32,7 +32,6 @@ module Fet
         note_boxes.each(&:start)
       end
 
-      # TODO: should self be checked first or the children?
       def handle_event_loop(event)
         handle_note_selected_event(event)
         note_boxes.each { |note_box| note_box.handle_event_loop(event) }
@@ -45,7 +44,7 @@ module Fet
       end
 
       def some_correct?
-        return selected_note_boxes.any?(&:correct?) && !any_wrong?
+        return selected_note_boxes.any?(&:correct?)
       end
 
       def any_wrong?
@@ -63,7 +62,7 @@ module Fet
       private
 
       def generate_note_boxes
-        self.note_boxes = NOTE_BOX_OFFSETS.map do |degree_name, _|
+        NOTE_BOX_OFFSETS.map do |degree_name, _|
           Fet::Ui::NoteBox.new(note_boxes: self, degree_name: degree_name)
         end
       end
@@ -81,8 +80,6 @@ module Fet
 
         if all_correct?
           level.game.set_level_complete_event_flag
-        elsif some_correct?
-          # noop
         elsif any_wrong?
           if correct_remaining?
             correct_remaining.first.manually_select

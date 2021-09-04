@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-require_relative "note_boxes"
 require_relative "custom_event"
+require_relative "key"
+require_relative "note_boxes"
 
 module Fet
   module Ui
     # Holds state for the current level of the game
     class Level
-      attr_accessor :game, :degrees, :question_number
+      attr_accessor :game, :key, :degrees, :question_number
 
       def initialize(game)
         self.game = game
@@ -16,21 +17,11 @@ module Fet
         self.key = Key.new(self)
       end
 
-      # NOTE: I'm thinking that the start method should also handle generation of a new level without overwriting everything (minimize redraw)
       def start
-        self.question_number += 1
-        self.degrees = generate_degrees
-        self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
-
+        start_self
         note_boxes.start
         key.start
 
-        start_self
-      end
-
-      def start_self
-        update_music_objects
-        full_question_music.play
         game.handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_STARTED))
       end
 
@@ -58,7 +49,16 @@ module Fet
 
       private
 
-      attr_accessor :midi_values, :note_boxes, :key, :full_question_music, :chord_progression_music, :notes_music
+      attr_accessor :midi_values, :note_boxes, :full_question_music, :chord_progression_music, :notes_music
+
+      def start_self
+        self.question_number += 1
+        self.degrees = generate_degrees
+        self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
+
+        update_music_objects
+        full_question_music.play
+      end
 
       def generate_degrees
         root_midi_values = game.key_type == "major" ? Fet::MAJOR_ROOT_MIDI_VALUES : Fet::MINOR_ROOT_MIDI_VALUES

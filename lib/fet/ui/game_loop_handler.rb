@@ -13,6 +13,7 @@ module Fet
       end
 
       def handle_event_loop(event)
+        # NOTE: score must handle event before level because level event could recreate the whole level
         score.handle_event_loop(event)
         level.handle_event_loop(event)
         timer.handle_event_loop(event)

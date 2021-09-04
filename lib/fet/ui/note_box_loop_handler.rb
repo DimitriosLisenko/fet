@@ -47,15 +47,7 @@ module Fet
 
       def determine_keyboard_input(event)
         update_keyboard_input_accidental(event)
-
-        return case event.key
-               when *(1..7).map(&:to_s)
-                 input = "#{keyboard_accidental}#{event.key}"
-                 self.keyboard_accidental = ""
-                 return input
-               else
-                 return nil
-               end
+        handle_keyboard_input_degree(event)
       end
 
       def update_keyboard_input_accidental(event)

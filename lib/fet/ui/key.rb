@@ -4,7 +4,7 @@ module Fet
   module Ui
     # Shows the current level's key in the UI
     class Key
-      attr_accessor :level, :text
+      attr_accessor :level
 
       def initialize(level)
         self.level = level
@@ -16,6 +16,8 @@ module Fet
       end
 
       private
+
+      attr_accessor :text
 
       TEXT_SIZE = 36
       X_OFFSET = 60

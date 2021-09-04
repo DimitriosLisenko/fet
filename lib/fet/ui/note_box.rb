@@ -10,7 +10,7 @@ module Fet
     class NoteBox
       include NoteBoxLoopHandler
 
-      attr_accessor :note_boxes, :degree_name, :square, :text, :selected
+      attr_accessor :note_boxes, :degree_name, :selected
 
       def initialize(note_boxes:, degree_name:)
         self.note_boxes = note_boxes
@@ -36,7 +36,7 @@ module Fet
 
       private
 
-      attr_accessor :note_music
+      attr_accessor :square, :text, :note_music
 
       NOTE_BOX_SIZE = 70
       TEXT_SIZE = 36
