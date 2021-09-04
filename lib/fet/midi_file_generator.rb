@@ -14,7 +14,7 @@ module Fet
       set_progression_on_track
       add_rest(2 * quarter_note_length)
       play_notes_as_chord(notes, quarter_note_length)
-      add_rest(2 * quarter_note_length)
+      add_rest(3 * quarter_note_length)
       write_sequence_to_file
     end
 
