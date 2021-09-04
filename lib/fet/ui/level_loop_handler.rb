@@ -42,7 +42,6 @@ module Fet
       end
 
       def handle_return_key
-        return unless game.next_on_correct
         return unless over?
 
         start
@@ -51,7 +50,7 @@ module Fet
       def handle_level_complete_event(event)
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
 
-        start if answered_correctly?
+        start if answered_correctly? && game.next_on_correct
       end
     end
   end
