@@ -33,10 +33,6 @@ module Fet
         timer.start
         Ruby2D::Window.show
       end
-
-      def next_level
-        self.level = Level.new(self)
-      end
     end
   end
 end
