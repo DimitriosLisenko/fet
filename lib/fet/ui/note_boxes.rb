@@ -33,16 +33,61 @@ module Fet
       end
 
       def handle_event_loop(event)
+        handle_note_selected_event(event)
         note_boxes.each { |note_box| note_box.handle_event_loop(event) }
       end
 
       def handle_update_loop; end
+
+      def all_correct?
+        return (correct_note_boxes.map(&:degree_name) & selected_note_boxes.map(&:degree_name)).size == correct_note_boxes.size
+      end
+
+      def some_correct?
+        return selected_note_boxes.any?(&:correct?) && !any_wrong?
+      end
+
+      def any_wrong?
+        return selected_note_boxes.any? { |note_box| !note_box.correct? }
+      end
+
+      def correct_remaining?
+        return !correct_remaining.empty?
+      end
+
+      def correct_remaining
+        return note_boxes.select { |note_box| !note_box.selected && note_box.correct? }
+      end
 
       private
 
       def generate_note_boxes
         self.note_boxes = NOTE_BOX_OFFSETS.map do |degree_name, _|
           Fet::Ui::NoteBox.new(note_boxes: self, degree_name: degree_name)
+        end
+      end
+
+      def correct_note_boxes
+        return note_boxes.select(&:correct?)
+      end
+
+      def selected_note_boxes
+        return note_boxes.select(&:selected)
+      end
+
+      def handle_note_selected_event(event)
+        return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_NOTE_SELECTED
+
+        if all_correct?
+          level.game.set_level_complete_event_flag
+        elsif some_correct?
+          # noop
+        elsif any_wrong?
+          if correct_remaining?
+            correct_remaining.first.manually_select
+          else
+            level.game.set_level_complete_event_flag
+          end
         end
       end
     end

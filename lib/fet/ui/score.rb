@@ -2,6 +2,7 @@
 
 require "ruby2d"
 require_relative "color_scheme"
+require_relative "custom_event"
 
 module Fet
   module Ui
@@ -16,21 +17,15 @@ module Fet
 
       def start
         self.text ||= generate_text
-        text.text = text_value
+        update_text
       end
 
-      def handle_event_loop(event); end
+      def handle_event_loop(event)
+        handle_level_started_event(event)
+        handle_level_complete_event(event)
+      end
 
       def handle_update_loop; end
-
-      def level_started_event
-        text.text = text_value
-      end
-
-      def level_completed_event
-        game.level.answered_correctly? ? score.answer_correctly(*game.level.degree_indices) : score.answer_incorrectly(*game.level.degree_indices)
-        text.text = text_value
-      end
 
       private
 
@@ -53,6 +48,27 @@ module Fet
           size: TEXT_SIZE,
           color: ColorScheme::WHITE,
         )
+      end
+
+      def handle_level_started_event(event)
+        return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_STARTED
+
+        update_text
+      end
+
+      def handle_level_complete_event(event)
+        return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
+
+        update_score
+        update_text
+      end
+
+      def update_score
+        game.level.answered_correctly? ? score.answer_correctly(*game.level.degree_indices) : score.answer_incorrectly(*game.level.degree_indices)
+      end
+
+      def update_text
+        text.text = text_value
       end
     end
   end

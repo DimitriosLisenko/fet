@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "pry-byebug"
-
 module Fet
   module Ui
     # Determines and outputs the time spent playing

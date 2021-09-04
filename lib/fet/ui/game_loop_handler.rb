@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "custom_event"
+
 module Fet
   module Ui
     # Handles various events and updates for the Game object
@@ -11,42 +13,51 @@ module Fet
       end
 
       def handle_event_loop(event)
-        handle_mouse_event(event)
-        handle_keyboard_event(event)
-
         score.handle_event_loop(event)
         level.handle_event_loop(event)
         timer.handle_event_loop(event)
+
+        handle_custom_events
       end
 
-      # NOTE: These are not proper events because they get called from inside another Ruby2D event.
-      # Would be ideal to make a custom event and have it be handled after the first handler completed.
-      # So far these are the only use-cases though so trying not to over-engineer.
-      def level_started_event
-        score.level_started_event
+      def set_note_selected_event_flag
+        self.note_selected_event_flag = true
       end
 
-      def level_completed_event
-        score.level_completed_event
-        level.level_completed_event
+      def set_level_started_event_flag
+        self.level_started_event_flag = true
+      end
+
+      def set_level_complete_event_flag
+        self.level_complete_event_flag = true
       end
 
       private
 
-      def handle_mouse_event(event)
-        return unless event.is_a?(Ruby2D::Window::MouseEvent)
+      attr_accessor :note_selected_event_flag, :level_started_event_flag, :level_complete_event_flag
 
-        handle_left_click_event(event)
+      def handle_custom_events
+        handle_note_selected_event
+        handle_level_started_event
+        handle_level_complete_event
       end
 
-      def handle_left_click_event(event)
-        return unless event.button == :left
-        return unless event.type == :down
+      def handle_note_selected_event
+        handle_event = note_selected_event_flag
+        self.note_selected_event_flag = false
+        handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_NOTE_SELECTED)) if handle_event
       end
 
-      def handle_keyboard_event(event)
-        return unless event.is_a?(Ruby2D::Window::KeyEvent)
-        return unless event.type == :down
+      def handle_level_started_event
+        handle_event = level_started_event_flag
+        self.level_started_event_flag = false
+        handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_STARTED)) if handle_event
+      end
+
+      def handle_level_complete_event
+        handle_event = level_complete_event_flag
+        self.level_complete_event_flag = false
+        handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_COMPLETE)) if handle_event
       end
     end
   end

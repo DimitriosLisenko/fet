@@ -14,6 +14,10 @@ module Fet
 
       def handle_update_loop; end
 
+      def manually_select
+        handle_selected
+      end
+
       private
 
       attr_accessor :keyboard_accidental
@@ -91,7 +95,7 @@ module Fet
         else
           self.selected = true
           update_colors
-          note_boxes.level.game.level_completed_event if correct?
+          note_boxes.level.game.set_note_selected_event_flag
         end
       end
 

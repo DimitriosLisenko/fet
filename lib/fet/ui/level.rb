@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "note_boxes"
+require_relative "custom_event"
 
 module Fet
   module Ui
@@ -30,7 +31,7 @@ module Fet
       def start_self
         update_music_objects
         full_question_music.play
-        game.level_started_event
+        game.handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_STARTED))
       end
 
       def degree_indices
@@ -38,15 +39,12 @@ module Fet
       end
 
       def handle_event_loop(event)
-        note_boxes.handle_event_loop(event)
         handle_keyboard_event(event)
+        handle_level_complete_event(event)
+        note_boxes.handle_event_loop(event)
       end
 
       def handle_update_loop; end
-
-      def level_completed_event
-        start if answered_correctly?
-      end
 
       def over?
         return degree_indices.all? do |degree_index|
@@ -119,6 +117,12 @@ module Fet
         when "return"
           start if over?
         end
+      end
+
+      def handle_level_complete_event(event)
+        return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
+
+        start if answered_correctly?
       end
     end
   end
