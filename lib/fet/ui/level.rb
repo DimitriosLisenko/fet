@@ -10,8 +10,6 @@ module Fet
 
       def initialize(game)
         self.game = game
-        self.degrees = generate_degrees
-        self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
         self.note_boxes = NoteBoxes.new(self)
         self.question_number = 0
         self.key = Key.new(self)
@@ -19,13 +17,18 @@ module Fet
 
       # NOTE: I'm thinking that the start method should also handle generation of a new level without overwriting everything (minimize redraw)
       def start
+        self.question_number += 1
+        self.degrees = generate_degrees
+        self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
+
         note_boxes.start
         key.start
+        start_self
+      end
 
-        self.question_number += 1
+      def start_self
         update_music_objects
         full_question_music.play
-
         game.level_started_event
       end
 
@@ -105,6 +108,8 @@ module Fet
           chord_progression_music.play
         when "n"
           notes_music.play
+        when "return"
+          start if over?
         end
       end
     end
