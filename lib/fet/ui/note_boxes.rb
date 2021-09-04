@@ -76,7 +76,6 @@ module Fet
         return note_boxes.select(&:selected)
       end
 
-      # TODO: the set_level_complete_event_flag gets hit multiple times...
       def handle_note_selected_event(event)
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_NOTE_SELECTED
 
