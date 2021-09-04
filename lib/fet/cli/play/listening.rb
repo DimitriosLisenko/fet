@@ -10,6 +10,7 @@ module Fet
             tempo: options[:tempo],
             degrees: options[:degrees],
             key_type: options[:"key-type"],
+            next_on_correct: options[:"next-on-correct"],
           ).start
         end
       end

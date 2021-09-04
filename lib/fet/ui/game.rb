@@ -19,7 +19,7 @@ module Fet
       attr_accessor :level, :score, :timer, :note_range,
                     :tempo, :number_of_degrees, :key_type, :next_on_correct
 
-      def initialize(tempo:, degrees:, key_type:, next_on_correct: true)
+      def initialize(tempo:, degrees:, key_type:, next_on_correct:)
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
         self.tempo = tempo
         self.key_type = key_type

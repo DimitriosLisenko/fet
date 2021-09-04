@@ -95,6 +95,10 @@ class App
       listening.default_value("major")
       listening.flag([:k, :"key-type"], type: String, must_match: ["major", "minor"])
 
+      listening.desc("Automatically go to the next exercise when the answer was correct")
+      listening.default_value(true)
+      listening.switch [:n, :"next-on-correct"]
+
       listening.action do |global_options, options, args|
         Fet::Cli::Play::Listening.run(global_options, options, args)
       end
