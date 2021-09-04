@@ -91,6 +91,7 @@ module Fet
         else
           self.selected = true
           update_colors
+          note_boxes.level.game.level_completed_event if correct?
         end
       end
 

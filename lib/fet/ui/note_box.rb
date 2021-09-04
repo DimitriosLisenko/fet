@@ -26,7 +26,11 @@ module Fet
       end
 
       def correct?
-        return note_boxes.level.degree_indices.include?(degree_instance.degree_index)
+        return note_boxes.level.degree_indices.include?(degree_index)
+      end
+
+      def degree_index
+        degree_instance.degree_index
       end
 
       private
@@ -85,7 +89,7 @@ module Fet
       end
 
       def level_over?
-        return note_boxes.level.correct_answer_selected?
+        return note_boxes.level.over?
       end
     end
   end

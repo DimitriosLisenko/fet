@@ -22,12 +22,17 @@ module Fet
 
       def handle_update_loop; end
 
-      def answer_correctly(degree_index)
-        score[degree_index][:correct] += 1
+      def level_completed_event
+        game.level.answered_correctly? ? answer_correctly(*game.level.degree_indices) : answer_incorrectly(*game.level.degree_indices)
+        self.text.text = text_value
       end
 
-      def answer_incorrectly(degree_index)
-        score[degree_index][:incorrect] += 1
+      def answer_correctly(*degree_indices)
+        degree_indices.each { |degree_index| score[degree_index][:correct] += 1 }
+      end
+
+      def answer_incorrectly(*degree_indices)
+        degree_indices.each { |degree_index| score[degree_index][:incorrect] += 1 }
       end
 
       def answered_correctly(degree_index = nil)
@@ -71,10 +76,6 @@ module Fet
           size: TEXT_SIZE,
           color: ColorScheme::WHITE,
         )
-      end
-
-      def level_over?
-        return game.level.correct_answer_selected?
       end
     end
   end

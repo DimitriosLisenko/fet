@@ -19,6 +19,13 @@ module Fet
         timer.handle_event_loop(event)
       end
 
+      # NOTE: This is not a proper event because it gets called from inside another Ruby2D event.
+      # Would be ideal to make a custom event and have it be handled after the first handler completed.
+      # So far it's the only use-case though so trying not to over-engineer.
+      def level_completed_event
+        score.level_completed_event
+      end
+
       private
 
       def handle_mouse_event(event)

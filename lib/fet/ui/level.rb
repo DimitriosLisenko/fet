@@ -31,8 +31,14 @@ module Fet
 
       def handle_update_loop; end
 
-      def correct_answer_selected?
-        note_boxes.note_boxes.any? { |note_box| note_box.correct? && note_box.selected }
+      def over?
+        return degree_indices.all? do |degree_index|
+          note_boxes.note_boxes.any? { |note_box| note_box.selected && note_box.degree_index == degree_index }
+        end
+      end
+
+      def answered_correctly?
+        over? && note_boxes.note_boxes.none? { |note_box| note_box.selected && !note_box.correct? }
       end
 
       private
