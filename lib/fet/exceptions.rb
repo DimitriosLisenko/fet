@@ -13,6 +13,8 @@ module Fet
 
   class InvalidDegreeName < Error; end
 
+  class InvalidCustomEventType < Error; end
+
   # TODO: this can be removed if the circle of fifths is generated dynamically
   class UnsupportedRootName < Error; end
 end

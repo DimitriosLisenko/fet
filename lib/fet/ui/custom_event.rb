@@ -9,9 +9,20 @@ module Fet
       EVENT_TYPE_NOTE_SELECTED = :note_selected
       EVENT_TYPE_LEVEL_STARTED = :level_started
       EVENT_TYPE_LEVEL_COMPLETE = :level_complete
+      EVENT_TYPES = [
+        EVENT_TYPE_NOTE_SELECTED,
+        EVENT_TYPE_LEVEL_STARTED,
+        EVENT_TYPE_LEVEL_COMPLETE,
+      ].deep_freeze
 
       def initialize(type)
         self.type = type
+      end
+
+      private
+
+      def validate_type!
+        raise InvalidCustomEventType unless EVENT_TYPES.include?(type)
       end
     end
   end
