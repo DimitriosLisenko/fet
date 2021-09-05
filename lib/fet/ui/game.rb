@@ -39,10 +39,18 @@ module Fet
         write_score_to_file
       end
 
+      def stop
+        close_window
+      end
+
       private
 
-      def draw_screen
+      def show_window
         Ruby2D::Window.show
+      end
+
+      def close_window
+        Ruby2D::Window.close
       end
 
       def write_score_to_file
