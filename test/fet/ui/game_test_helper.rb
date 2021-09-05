@@ -49,6 +49,13 @@ module Fet
         game.handle_event_loop(click_event)
       end
 
+      def keyboard_select_note_box(game, note_box)
+        degree_name_to_button_presses(note_box.degree_name).each do |key|
+          key_event = Ruby2D::Window::KeyEvent.new(:down, key)
+          game.handle_event_loop(key_event)
+        end
+      end
+
       def game_instance_test(game)
         with_stubs do
           game.start
@@ -94,6 +101,20 @@ module Fet
         assert_in_delta(expected.g, actual.g)
         assert_in_delta(expected.b, actual.b)
         assert_in_delta(expected.a, actual.a)
+      end
+
+      def degree_name_to_button_presses(degree_name)
+        degree = Degree.new(degree_name)
+
+        result = []
+        result << case degree.degree_accidental
+                  when "b"
+                    "-"
+                  when "#"
+                    "+"
+                  end
+        result << degree.degree_value.to_s
+        return result.compact
       end
     end
   end
