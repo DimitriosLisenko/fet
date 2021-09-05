@@ -35,11 +35,15 @@ module Fet
         score.start
         level.start
         timer.start
-        Ruby2D::Window.show
+        draw_screen
         write_score_to_file
       end
 
       private
+
+      def draw_screen
+        Ruby2D::Window.show
+      end
 
       def write_score_to_file
         new_score_entries = historic_score_entries

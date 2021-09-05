@@ -85,13 +85,17 @@ module Fet
         self.keyboard_accidental = ""
 
         if level_over?
-          note_music.play
+          play_note
         else
           self.user_selected = user_selected
           self.selected = true
           update_colors
           note_boxes.level.game.set_note_selected_event_flag
         end
+      end
+
+      def play_note
+        note_music.play
       end
 
       def update_colors

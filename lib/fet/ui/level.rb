@@ -52,6 +52,10 @@ module Fet
         self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees)
 
         update_music_objects
+        play_full_question
+      end
+
+      def play_full_question
         full_question_music.play
       end
 
