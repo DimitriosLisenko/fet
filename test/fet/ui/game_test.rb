@@ -35,6 +35,18 @@ module Fet
           select_wrong_note_with_tests(game, false)
         end
       end
+
+      def test_enter_goes_to_next_level
+        game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
+        game_instance_test(game) do
+          assert(1, game.level.question_number)
+          press_key(game, "enter")
+          assert(1, game.level.question_number)
+          select_wrong_note_with_tests(game, false)
+          press_key(game, "enter")
+          assert(2, game.level.question_number)
+        end
+      end
     end
   end
 end

@@ -71,10 +71,12 @@ module Fet
       end
 
       def keyboard_select_note_box(game, note_box)
-        degree_name_to_button_presses(note_box.degree_name).each do |key|
-          key_event = Ruby2D::Window::KeyEvent.new(:down, key)
-          game.handle_event_loop(key_event)
-        end
+        degree_name_to_button_presses(note_box.degree_name).each { |key| press_key(game, key) }
+      end
+
+      def press_key(game, key)
+        key_event = Ruby2D::Window::KeyEvent.new(:down, key)
+        game.handle_event_loop(key_event)
       end
 
       def game_instance_test(game)
