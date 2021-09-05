@@ -84,28 +84,32 @@ module Fet
         stub_window_show do
           stub_window_close do
             stub_music_instance_play do
-              yield
+              stub_score_writing do
+                yield
+              end
             end
           end
         end
       end
 
       def stub_window_show
-        Ruby2D::Window.stub(:show, nil) do
-          yield
-        end
+        Ruby2D::Window.stub(:show, nil) { yield }
       end
 
       def stub_window_close
-        Ruby2D::Window.stub(:close, nil) do
-          yield
-        end
+        Ruby2D::Window.stub(:close, nil) { yield }
       end
 
       def stub_music_instance_play
-        Ruby2D::Music.stub_any_instance(:play, nil) do
-          yield
-        end
+        Ruby2D::Music.stub_any_instance(:play, nil) { yield }
+      end
+
+      def stub_score_writing
+        # NOTE: in order to make this work correctly, need to make sure that
+        # the stub for Ruby2D::Window stays running until it receives a signal. However,
+        # Ruby2D really doesn't like being called from a thread (throws random exceptions),
+        # so might have to run the test inside a thread + use Queue.new for sync?
+        Fet::Ui::Game.stub_any_instance(:write_score_to_file, nil) { yield }
       end
 
       def assert_color_equal(expected, actual)
