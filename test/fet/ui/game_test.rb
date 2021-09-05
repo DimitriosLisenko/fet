@@ -11,39 +11,28 @@ module Fet
       def test_click_correct_note
         game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
         game_instance_test(game) do
-          assert(!game.level.over?)
-          correct_note_box = game.level.note_boxes.note_boxes.detect(&:correct?)
-          assert_note_box_original_color(correct_note_box)
-          click_note_box(game, correct_note_box)
-          assert_note_box_correct_color(correct_note_box)
-          assert(game.level.over?)
+          select_correct_note_with_tests(game, true)
         end
       end
 
       def test_click_wrong_note
         game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "minor", next_on_correct: false)
         game_instance_test(game) do
-          assert(!game.level.over?)
-          correct_note_box = correct_note_box(game)
-          wrong_note_box = any_wrong_note_box(game)
-          assert_note_box_original_color(correct_note_box)
-          assert_note_box_original_color(wrong_note_box)
-          click_note_box(game, wrong_note_box)
-          assert_note_box_correct_color(correct_note_box)
-          assert_note_box_wrong_color(wrong_note_box)
-          assert(game.level.over?)
+          select_wrong_note_with_tests(game, true)
         end
       end
 
       def test_keyboard_select_correct_note
         game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
         game_instance_test(game) do
-          assert(!game.level.over?)
-          correct_note_box = game.level.note_boxes.note_boxes.detect(&:correct?)
-          assert_note_box_original_color(correct_note_box)
-          keyboard_select_note_box(game, correct_note_box)
-          assert_note_box_correct_color(correct_note_box)
-          assert(game.level.over?)
+          select_correct_note_with_tests(game, false)
+        end
+      end
+
+      def test_keyboard_select_wrong_note
+        game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
+        game_instance_test(game) do
+          select_wrong_note_with_tests(game, false)
         end
       end
     end

@@ -11,6 +11,27 @@ module Fet
 
       private
 
+      def select_correct_note_with_tests(game, select_using_mouse)
+        assert(!game.level.over?)
+        correct_note_box = game.level.note_boxes.note_boxes.detect(&:correct?)
+        assert_note_box_original_color(correct_note_box)
+        select_using_mouse ? click_note_box(game, correct_note_box) : keyboard_select_note_box(game, correct_note_box)
+        assert_note_box_correct_color(correct_note_box)
+        assert(game.level.over?)
+      end
+
+      def select_wrong_note_with_tests(game, select_using_mouse)
+        assert(!game.level.over?)
+        correct_note_box = correct_note_box(game)
+        wrong_note_box = any_wrong_note_box(game)
+        assert_note_box_original_color(correct_note_box)
+        assert_note_box_original_color(wrong_note_box)
+        select_using_mouse ? click_note_box(game, wrong_note_box) : keyboard_select_note_box(game, wrong_note_box)
+        assert_note_box_correct_color(correct_note_box)
+        assert_note_box_wrong_color(wrong_note_box)
+        assert(game.level.over?)
+      end
+
       def correct_note_box(game)
         return game.level.note_boxes.note_boxes.detect(&:correct?)
       end
