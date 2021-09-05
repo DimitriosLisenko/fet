@@ -45,3 +45,6 @@ Style/RedundantReturn:
 
 Style/EmptyCaseCondition:
   Enabled: false
+
+Style/ExplicitBlockArgument:
+  Enabled: false
