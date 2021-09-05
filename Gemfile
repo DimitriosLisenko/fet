@@ -7,12 +7,12 @@ gemspec
 
 group :test do
   gem "minitest", "~> 5.0"
+  gem 'minitest-stub_any_instance', '~> 1.0', '>= 1.0.2'
   gem "simplecov", "~> 0.21.2"
 end
 
 group :test, :development do
   gem "codecov", "~> 0.6.0"
-  gem 'mocha', '~> 1.13'
   gem "pry-byebug", "~> 3.9"
   gem "rake", "~> 13.0"
   gem "rdoc", "~> 6.3", ">= 6.3.2"
