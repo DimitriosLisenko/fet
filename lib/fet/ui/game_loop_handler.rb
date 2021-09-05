@@ -13,6 +13,8 @@ module Fet
       end
 
       def handle_event_loop(event)
+        handle_keyboard_event(event)
+
         # NOTE: score must handle event before level because level event could recreate the whole level
         score.handle_event_loop(event)
         level.handle_event_loop(event)
@@ -36,6 +38,13 @@ module Fet
       private
 
       attr_accessor :note_selected_event_flag, :level_started_event_flag, :level_complete_event_flag
+
+      def handle_keyboard_event(event)
+        return unless event.is_a?(Ruby2D::Window::KeyEvent)
+        return unless event.type == :down
+
+        stop if event.key == "q"
+      end
 
       def handle_custom_events
         handle_note_selected_event
