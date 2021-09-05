@@ -35,7 +35,7 @@ module Fet
         score.start
         level.start
         timer.start
-        draw_screen
+        show_window
         write_score_to_file
       end
 
