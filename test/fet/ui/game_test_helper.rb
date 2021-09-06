@@ -5,35 +5,40 @@ require "test_helper"
 module Fet
   module Ui
     module GameTestHelper
-      def teardown
-        Ruby2D::Window.clear
-      end
-
       private
 
       def select_correct_note_with_tests(game, select_using_mouse)
         assert(!game.level.over?)
-        correct_note_box = game.level.note_boxes.note_boxes.detect(&:correct?)
-        assert_note_box_original_color(correct_note_box)
-        select_using_mouse ? click_note_box(game, correct_note_box) : keyboard_select_note_box(game, correct_note_box)
-        assert_note_box_correct_color(correct_note_box)
-        assert(game.level.over?)
+        correct_note_boxes = correct_note_boxes(game)
+        correct_note_boxes.each { |note_box| assert_note_box_original_color(note_box) }
+        select_using_mouse ? click_note_box(game, correct_note_boxes.first) : keyboard_select_note_box(game, correct_note_boxes.first)
+        assert_note_box_correct_color(correct_note_boxes.first)
+        correct_note_boxes[1..].each { |note_box| assert_note_box_original_color(note_box) }
+        if correct_note_boxes[1..].empty?
+          assert(game.level.over?)
+        else
+          assert(!game.level.over?)
+        end
       end
 
       def select_wrong_note_with_tests(game, select_using_mouse)
         assert(!game.level.over?)
-        correct_note_box = correct_note_box(game)
+        correct_note_boxes = correct_note_boxes(game)
         wrong_note_box = any_wrong_note_box(game)
-        assert_note_box_original_color(correct_note_box)
+        correct_note_boxes.each { |note_box| assert_note_box_original_color(note_box) }
         assert_note_box_original_color(wrong_note_box)
         select_using_mouse ? click_note_box(game, wrong_note_box) : keyboard_select_note_box(game, wrong_note_box)
-        assert_note_box_correct_color(correct_note_box)
+        correct_note_boxes.each { |note_box| assert_note_box_correct_color(note_box) }
         assert_note_box_wrong_color(wrong_note_box)
         assert(game.level.over?)
       end
 
-      def correct_note_box(game)
-        return game.level.note_boxes.note_boxes.detect(&:correct?)
+      def correct_note_boxes(game)
+        return game.level.note_boxes.note_boxes.select(&:correct?)
+      end
+
+      def any_correct_note_box(game)
+        return correct_note_boxes(game).first
       end
 
       def any_wrong_note_box(game)
@@ -61,13 +66,15 @@ module Fet
         assert_color_equal(Ruby2D::Color.new(Fet::Ui::ColorScheme::RED), note_box_square(note_box).color)
       end
 
-      def click_note_box(game, note_box)
-        click_event = Ruby2D::Window::MouseEvent.new(
-          :down, :left, nil,
-          note_box_square(note_box).x + (note_box_square(note_box).size / 2),
-          note_box_square(note_box).y + (note_box_square(note_box).size / 2),
-        )
-        game.handle_event_loop(click_event)
+      def click_note_box(game, note_box, click_button = :left)
+        [:down, :up].each do |click_type|
+          click_event = Ruby2D::Window::MouseEvent.new(
+            click_type, click_button, nil,
+            note_box_square(note_box).x + (note_box_square(note_box).size / 2),
+            note_box_square(note_box).y + (note_box_square(note_box).size / 2),
+          )
+          game.handle_event_loop(click_event)
+        end
       end
 
       def keyboard_select_note_box(game, note_box)
@@ -75,8 +82,10 @@ module Fet
       end
 
       def press_key(game, key)
-        key_event = Ruby2D::Window::KeyEvent.new(:down, key)
-        game.handle_event_loop(key_event)
+        [:down, :up].each do |key_type|
+          key_event = Ruby2D::Window::KeyEvent.new(key_type, key)
+          game.handle_event_loop(key_event)
+        end
       end
 
       def game_instance_test(game)
@@ -138,14 +147,9 @@ module Fet
         degree = Degree.new(degree_name)
 
         result = []
-        result << case degree.degree_accidental
-                  when "b"
-                    "-"
-                  when "#"
-                    "+"
-                  end
+        result << "-" if degree.degree_accidental
         result << degree.degree_value.to_s
-        return result.compact
+        return result
       end
     end
 
