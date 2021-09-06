@@ -39,20 +39,12 @@ module Fet
 
       def handle_update_loop; end
 
-      def all_correct?
+      def all_correct_selected?
         return (correct_note_boxes.map(&:degree_name) & selected_note_boxes.map(&:degree_name)).size == correct_note_boxes.size
       end
 
-      def some_correct?
-        return selected_note_boxes.any?(&:correct?)
-      end
-
-      def any_wrong?
+      def any_wrong_selected?
         return selected_note_boxes.any? { |note_box| !note_box.correct? }
-      end
-
-      def correct_remaining?
-        return !correct_remaining.empty?
       end
 
       def correct_remaining
@@ -78,14 +70,10 @@ module Fet
       def handle_note_selected_event(event)
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_NOTE_SELECTED
 
-        if all_correct?
+        if all_correct_selected?
           level.game.set_level_complete_event_flag
-        elsif any_wrong?
-          if correct_remaining?
-            correct_remaining.first.manually_select
-          else
-            level.game.set_level_complete_event_flag
-          end
+        elsif any_wrong_selected?
+          correct_remaining.first.manually_select
         end
       end
     end
