@@ -55,6 +55,18 @@ module Fet
         end
       end
 
+      def test_q_quits_application
+        game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
+        game_instance_test(game) do
+          mocked_method = MiniTest::Mock.new
+          mocked_method.expect :call, nil, []
+          game.stub :stop, mocked_method do
+            press_key(game, "q")
+          end
+          mocked_method.verify
+        end
+      end
+
       def test_invalid_degree_on_keyboard
         game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
         game_instance_test(game) do
