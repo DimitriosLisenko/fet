@@ -25,6 +25,8 @@ module Fet
         note_boxes.start
         key.start
 
+        # TODO: This is not ideal because we're piggybacking on the normal events at the moment,
+        # but there's no event here to piggyback on, so the handler has to be called manually.
         game.handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_STARTED))
       end
 
