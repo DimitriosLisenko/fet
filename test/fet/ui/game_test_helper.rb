@@ -109,15 +109,15 @@ module Fet
       end
 
       def stub_our_objects
-        stub_score_writing { yield }
+        stub_scores_filename { yield }
       end
 
-      def stub_score_writing
+      def stub_scores_filename
         # NOTE: in order to make this work correctly, need to make sure that
         # the stub for Ruby2D::Window stays running until it receives a signal. However,
         # Ruby2D really doesn't like being called from a thread (throws random exceptions),
         # so might have to run the test inside a thread + use Queue.new for sync?
-        Fet::Ui::Game.stub_any_instance(:write_score_to_file, nil) { yield }
+        Fet::Ui::Game.stub(:scores_filename, tmp_directory) { yield }
       end
 
       def assert_color_equal(expected, actual)

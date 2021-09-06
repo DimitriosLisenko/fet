@@ -33,10 +33,5 @@ module Fet
       options = { tempo: 120, pause: 3, directory_prefix: @directory_prefix }
       Fet::Cli::Generate::Singing.run(nil, options, nil)
     end
-
-    def test_play_listening
-      options = { tempo: 120, degrees: 1, "key-type": "major", "next-on-correct": false }
-      with_game_stubs { Fet::Cli::Play::Listening.run(nil, options, nil) }
-    end
   end
 end
