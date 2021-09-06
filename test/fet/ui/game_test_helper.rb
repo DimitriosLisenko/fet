@@ -11,38 +11,51 @@ module Fet
       private
 
       def select_correct_note_with_tests(game, select_using_mouse)
-        assert(!game.level.over?)
-        assert_equal("0/1", game.score.send(:text).text)
-
         correct_note_boxes = correct_note_boxes(game)
         correct_note_boxes.each { |note_box| assert_note_box_original_color(note_box) }
-        select_using_mouse ? click_note_box(game, correct_note_boxes.first) : keyboard_select_note_box(game, correct_note_boxes.first)
+
+        correct_selection_game_tests(game, correct_note_boxes.size == 1) do
+          select_note_box(game, correct_note_boxes.first, select_using_mouse)
+        end
+
         assert_note_box_correct_color(correct_note_boxes.first)
         correct_note_boxes[1..].each { |note_box| assert_note_box_original_color(note_box) }
-
-        if correct_note_boxes[1..].empty?
-          assert(game.level.over?)
-          assert_equal("1/1", game.score.send(:text).text)
-        else
-          assert(!game.level.over?)
-          assert_equal("0/1", game.score.send(:text).text)
-        end
       end
 
       def select_wrong_note_with_tests(game, select_using_mouse)
-        assert(!game.level.over?)
-        assert_equal("0/1", game.score.send(:text).text)
-
         correct_note_boxes = correct_note_boxes(game)
         wrong_note_box = any_wrong_note_box(game)
+
         correct_note_boxes.each { |note_box| assert_note_box_original_color(note_box) }
         assert_note_box_original_color(wrong_note_box)
-        select_using_mouse ? click_note_box(game, wrong_note_box) : keyboard_select_note_box(game, wrong_note_box)
+
+        wrong_selection_game_tests(game) do
+          select_note_box(game, wrong_note_box, select_using_mouse)
+        end
+
         correct_note_boxes.each { |note_box| assert_note_box_correct_color(note_box) }
         assert_note_box_wrong_color(wrong_note_box)
+      end
 
+      def correct_selection_game_tests(game, single_correct_note)
+        assert(!game.level.over?)
+        assert_equal("0/1", game.score.send(:text).text)
+        yield
+        score = single_correct_note ? "1/1" : "0/1"
+        assert_equal(single_correct_note, game.level.over?)
+        assert_equal(score, game.score.send(:text).text)
+      end
+
+      def wrong_selection_game_tests(game)
+        assert(!game.level.over?)
+        assert_equal("0/1", game.score.send(:text).text)
+        yield
         assert(game.level.over?)
         assert_equal("0/1", game.score.send(:text).text)
+      end
+
+      def select_note_box(game, note_box, select_using_mouse)
+        select_using_mouse ? click_note_box(game, note_box) : keyboard_select_note_box(game, note_box)
       end
 
       def correct_note_boxes(game)
