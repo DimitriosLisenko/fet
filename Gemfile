@@ -9,6 +9,7 @@ group :test do
   gem "minitest", "~> 5.0"
   gem "minitest-stub_any_instance", "~> 1.0", ">= 1.0.2"
   gem "simplecov", "~> 0.21.2"
+  gem "timecop", "~> 0.9.4"
 end
 
 group :test, :development do
