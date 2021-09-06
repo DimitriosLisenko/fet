@@ -12,24 +12,27 @@ module Fet
 
       def select_correct_note_with_tests(game, select_using_mouse)
         assert(!game.level.over?)
-        assert(game.score.send(:text).text, "0/1")
+        assert_equal("0/1", game.score.send(:text).text)
+
         correct_note_boxes = correct_note_boxes(game)
         correct_note_boxes.each { |note_box| assert_note_box_original_color(note_box) }
         select_using_mouse ? click_note_box(game, correct_note_boxes.first) : keyboard_select_note_box(game, correct_note_boxes.first)
         assert_note_box_correct_color(correct_note_boxes.first)
         correct_note_boxes[1..].each { |note_box| assert_note_box_original_color(note_box) }
+
         if correct_note_boxes[1..].empty?
-          assert(game.score.send(:text).text, "1/1")
           assert(game.level.over?)
+          assert_equal("1/1", game.score.send(:text).text)
         else
-          assert(game.score.send(:text).text, "1/2")
           assert(!game.level.over?)
+          assert_equal("0/1", game.score.send(:text).text)
         end
       end
 
       def select_wrong_note_with_tests(game, select_using_mouse)
         assert(!game.level.over?)
-        assert(game.score.send(:text).text, "0/1")
+        assert_equal("0/1", game.score.send(:text).text)
+
         correct_note_boxes = correct_note_boxes(game)
         wrong_note_box = any_wrong_note_box(game)
         correct_note_boxes.each { |note_box| assert_note_box_original_color(note_box) }
@@ -37,8 +40,9 @@ module Fet
         select_using_mouse ? click_note_box(game, wrong_note_box) : keyboard_select_note_box(game, wrong_note_box)
         correct_note_boxes.each { |note_box| assert_note_box_correct_color(note_box) }
         assert_note_box_wrong_color(wrong_note_box)
+
         assert(game.level.over?)
-        assert(game.score.send(:text).text, "0/1")
+        assert_equal("0/1", game.score.send(:text).text)
       end
 
       def correct_note_boxes(game)
