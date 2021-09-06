@@ -5,7 +5,7 @@ This is a functional ear trainer, meaning that it teaches you to identify degree
 
 Every level, a chord progression is played to identify a major/minor key, followed by random notes played harmonically. The degrees of these notes should be identified and selected.
 
-<img src="./assets/readme/demo.gif" width=75% height=75%>
+<img src="./assets/readme/demo.gif">
 
 ## Installation
 Add this line to your application's Gemfile:
