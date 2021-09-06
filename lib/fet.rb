@@ -7,4 +7,7 @@ Dir["#{__dir__}/fet/**/*.rb"].each { |file| require_relative(file.delete_prefix(
 
 # Base Gem module
 module Fet
+  def self.root
+    File.expand_path("..", __dir__)
+  end
 end
