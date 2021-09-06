@@ -89,6 +89,8 @@ module Fet
           return ColorScheme::WHITE
         when ColorScheme::WHITE
           return ColorScheme::BLACK
+        else
+          raise ImplementationError
         end
       end
 
