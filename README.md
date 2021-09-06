@@ -49,7 +49,7 @@ When using the UI, the following keyboard shortcuts are defined to allow for mou
 | c | Repeat the chord progression only. |
 | n | Repeat the notes only. |
 | l | Repeat the question (looping). |
-| 1-7 | Select the degree, e.g. "2" selects the 2nd degree. |
+| 1-7 | Select the degree, e.g. "2" selects the 2nd degree. Will also play that degree once the level is over. |
 | - | Modify the above degree to flatten it, e.g. "-" followed by "2" will select the b2nd degree. |
 | + | Modify the above degree to sharpen it, e.g. "+" followed by "4" will select the #4th degree. |
 | 0 | Make the degree natural, e.g. "+" followed by followed by "0" followed by "4" will select the 4th degree. |
