@@ -1,10 +1,9 @@
-## [Unreleased]
+## [Released]
 
-## [0.2.1]
+## [0.3.0] - 2021-09-06
 
 - Smoother singing MIDI exercises.
-
-## [Released]
+- UI for listening exercises.
 
 ## [0.2.0] - 2021-09-01
 
