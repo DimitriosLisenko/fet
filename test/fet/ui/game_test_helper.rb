@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require_relative "ruby2d_object_faker"
 
 module Fet
   module Ui
     module GameTestHelper
+      include Ruby2dObjectFaker
+
       private
 
       def select_correct_note_with_tests(game, select_using_mouse)
@@ -94,14 +97,14 @@ module Fet
       end
 
       def game_instance_test(game)
-        with_stubs do
+        with_game_stubs do
           game.start
           yield
           game.stop
         end
       end
 
-      def with_stubs
+      def with_game_stubs
         stub_ruby2d_objects { stub_our_objects { yield } }
       end
 
