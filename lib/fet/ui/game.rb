@@ -19,6 +19,13 @@ module Fet
       attr_accessor :level, :score, :timer, :note_range,
                     :tempo, :number_of_degrees, :key_type, :next_on_correct
 
+      # NOTE: this is explicitly changed in tests, so no need to check for coverage
+      # :nocov:
+      def self.scores_filename
+        return SCORES_FILENAME
+      end
+      # :nocov:
+
       def initialize(tempo:, degrees:, key_type:, next_on_correct:)
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
         self.tempo = tempo
@@ -51,17 +58,6 @@ module Fet
 
       def close_window
         Ruby2D::Window.close
-      end
-
-      class << self
-        private
-
-        # NOTE: this is explicitly changed in tests, so no need to check for coverage
-        # :nocov:
-        def scores_filename
-          return SCORES_FILENAME
-        end
-        # :nocov:
       end
 
       def write_score_to_file
