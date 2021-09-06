@@ -53,16 +53,24 @@ module Fet
         Ruby2D::Window.close
       end
 
+      class << self
+        private
+
+        def scores_filename
+          return SCORES_FILENAME
+        end
+      end
+
       def write_score_to_file
         new_score_entries = historic_score_entries
         new_score_entries << current_score_entry
-        directory_name = File.dirname(SCORES_FILENAME)
+        directory_name = File.dirname(self.class.scores_filename)
         FileUtils.mkdir_p(directory_name)
-        File.open(SCORES_FILENAME, "w") { |file| file.write(new_score_entries.to_json) }
+        File.open(self.class.scores_filename, "w") { |file| file.write(new_score_entries.to_json) }
       end
 
       def historic_score_entries
-        result = File.read(SCORES_FILENAME)
+        result = File.read(self.class.scores_filename)
         return JSON.parse(result)
       rescue Errno::ENOENT
         return []
