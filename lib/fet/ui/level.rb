@@ -27,7 +27,8 @@ module Fet
 
         # TODO: This is not ideal because we're piggybacking on the normal events at the moment,
         # but there's no event here to piggyback on, so the handler has to be called manually.
-        game.handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_STARTED))
+        game.set_level_started_event_flag
+        game.handle_event_loop(nil)
       end
 
       def degree_indices
