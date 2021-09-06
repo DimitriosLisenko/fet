@@ -18,3 +18,10 @@ require "fet"
 
 require "minitest/autorun"
 require "minitest/stub_any_instance"
+
+def assert_difference(value_lambda, difference)
+  old_value = value_lambda.call
+  yield
+  new_value = value_lambda.call
+  assert_equal(old_value + difference, new_value)
+end

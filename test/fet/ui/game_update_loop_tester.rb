@@ -4,7 +4,7 @@ require "test_helper"
 
 module Fet
   module Ui
-    module GameUpdateLoopTestHelper
+    module GameUpdateLoopTester
       def test_timer_update_loop
         now = DateTime.now
         Timecop.freeze(now)
