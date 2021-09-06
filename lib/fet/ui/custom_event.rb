@@ -17,6 +17,7 @@ module Fet
 
       def initialize(type)
         self.type = type
+        validate_type!
       end
 
       private
