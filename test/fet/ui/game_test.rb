@@ -3,12 +3,14 @@
 require "test_helper"
 require_relative "game_test_helper"
 require_relative "game_update_loop_test_helper"
+require_relative "ruby2d_object_faker"
 
 module Fet
   module Ui
     class GameTest < Minitest::Test
       include GameTestHelper
       include GameUpdateLoopTestHelper
+      include Ruby2dObjectFaker
 
       def teardown
         Ruby2D::Window.clear
