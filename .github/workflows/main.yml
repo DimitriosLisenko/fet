@@ -14,8 +14,6 @@ jobs:
       with:
         ruby-version: 3.0.2
         bundler-cache: true
-    - name: Set XDG_RUNTIME_DIR
-      run: echo "XDG_RUNTIME_DIR=/run/user/$UID" >> $GITHUB_ENV
     - name: Run the default task
       run: bundle exec rake
       env:
