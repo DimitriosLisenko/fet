@@ -124,6 +124,8 @@ module Fet
         assert_in_delta(expected.a, actual.a)
       end
 
+      # NOTE: there may be no keys generated this test run with accidentals, so exclude from coverage
+      # :nocov:
       def degree_name_to_button_presses(degree_name)
         degree = Degree.new(degree_name)
 
@@ -132,6 +134,7 @@ module Fet
         result << degree.degree_value.to_s
         return result
       end
+      # :nocov:
     end
   end
 end
