@@ -3,13 +3,6 @@
 module Fet
   # Use MidilibInterface to create concrete MIDI files
   module MidiFileGenerator
-    def create_single_note_midi_file
-      play_notes_as_chord(notes, quarter_note_length)
-      add_rest(1 * quarter_note_length)
-
-      write_sequence_to_file
-    end
-
     def create_full_question
       set_progression_on_track
       add_rest(2 * quarter_note_length)
