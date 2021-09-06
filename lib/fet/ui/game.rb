@@ -56,9 +56,12 @@ module Fet
       class << self
         private
 
+        # NOTE: this is explicitly changed in tests, so no need to check for coverage
+        # :nocov:
         def scores_filename
           return SCORES_FILENAME
         end
+        # :nocov:
       end
 
       def write_score_to_file
