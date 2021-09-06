@@ -2,12 +2,9 @@
 
 require "test_helper"
 require "securerandom"
-require_relative "../ui/game_test_helper"
 
 module Fet
   class GenerateTest < Minitest::Test
-    include ::Fet::Ui::GameTestHelper
-
     def setup
       @directory_prefix = File.join("tmp", SecureRandom.uuid)
     end
