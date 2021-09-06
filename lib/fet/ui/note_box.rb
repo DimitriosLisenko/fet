@@ -59,7 +59,7 @@ module Fet
         return Ruby2D::Text.new(
           degree_name,
           x: square.x + text_x_offset, y: square.y + text_y_offset,
-          font: "assets/fonts/PTSans/PTSans-Regular.ttf",
+          font: File.join(Fet.root, "assets/fonts/PTSans/PTSans-Regular.ttf"),
           size: TEXT_SIZE,
           color: text_color,
         )

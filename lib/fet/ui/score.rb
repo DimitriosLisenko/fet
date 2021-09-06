@@ -45,7 +45,7 @@ module Fet
         return Ruby2D::Text.new(
           text_value,
           x: X_OFFSET, y: Y_OFFSET,
-          font: "assets/fonts/PTSans/PTSans-Regular.ttf",
+          font: File.join(Fet.root, "assets/fonts/PTSans/PTSans-Regular.ttf"),
           size: TEXT_SIZE,
           color: ColorScheme::WHITE,
         )

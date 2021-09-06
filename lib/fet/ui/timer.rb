@@ -71,7 +71,7 @@ module Fet
         Text.new(
           time_elapsed,
           x: X_OFFSET, y: Y_OFFSET,
-          font: "assets/fonts/PTSans/PTSans-Regular.ttf",
+          font: File.join(Fet.root, "assets/fonts/PTSans/PTSans-Regular.ttf"),
           size: 36,
           color: Fet::Ui::ColorScheme::WHITE,
         )
