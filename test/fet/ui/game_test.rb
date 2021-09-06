@@ -35,6 +35,15 @@ module Fet
         options = { tempo: 120, degrees: 1, "key-type": "major", "next-on-correct": false }
         with_game_stubs { Fet::Cli::Play::Listening.run(nil, options, nil) }
       end
+
+      def test_write_score_to_file
+        game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
+        game_instance_test(game) do
+          select_correct_note_with_tests(game, false)
+          # TODO: this is only needed because Game#start_window is mocked to return immediately rather than wait for a signal, can be fixed
+          game.send(:write_score_to_file)
+        end
+      end
     end
   end
 end
