@@ -19,7 +19,7 @@ module Fet
     def test_generate_listening
       options = {
         exercises: 1, degrees: 1, tempo: 120,
-        all_single_degree: false, directory_prefix: @directory_prefix,
+        "all-single-degree": false, directory_prefix: @directory_prefix,
       }
       Fet::Cli::Generate::Listening.run(nil, options, nil)
     end
