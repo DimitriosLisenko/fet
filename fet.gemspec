@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "gli", "~> 2.20", ">= 2.20.1"
   spec.add_dependency "ice_nine", "~> 0.11.2"
   spec.add_dependency "midilib", "~> 2.0", ">= 2.0.5"
+  spec.add_dependency "ruby2d", "~> 0.10.0"
 
   # RDoc configuration
   spec.extra_rdoc_files = ["README.rdoc", "fet.rdoc"]

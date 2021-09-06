@@ -1,0 +1,57 @@
+# frozen_string_literal: true
+
+require_relative "custom_event"
+require_relative "key"
+require_relative "note_boxes"
+
+module Fet
+  module Ui
+    # Handles events for the Level class
+    module LevelLoopHandler
+      def handle_event_loop(event)
+        handle_keyboard_event(event)
+        handle_level_complete_event(event)
+        note_boxes.handle_event_loop(event)
+      end
+
+      def handle_update_loop; end
+
+      private
+
+      def handle_keyboard_event(event)
+        return unless event.is_a?(Ruby2D::Window::KeyEvent)
+        return unless event.type == :down
+
+        handle_c_key if event.key == "c"
+        handle_n_key if event.key == "n"
+        handle_l_key if event.key == "l"
+        handle_return_key if event.key == "return"
+      end
+
+      def handle_c_key
+        chord_progression_music.play
+      end
+
+      def handle_n_key
+        notes_music.play
+      end
+
+      def handle_l_key
+        full_question_music.loop = true
+        full_question_music.play
+      end
+
+      def handle_return_key
+        return unless over?
+
+        start
+      end
+
+      def handle_level_complete_event(event)
+        return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
+
+        start if answered_correctly? && game.next_on_correct
+      end
+    end
+  end
+end

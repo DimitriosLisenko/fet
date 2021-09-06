@@ -92,3 +92,41 @@ List commands one per line, to assist with shell completion
 
 
 
+==== Command: <tt>play </tt>
+Run the ear training application
+
+
+===== Commands
+====== Command: <tt>listening </tt>
+Run the ear training application for listening
+
+Each level will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause.
+======= Options
+======= -d|--degrees arg
+
+Number of degrees to play
+
+[Default Value] 1
+[Must Match] ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
+
+
+======= -k|--key-type arg
+
+Type of the chord progression
+
+[Default Value] major
+[Must Match] ["major", "minor"]
+
+
+======= -t|--tempo arg
+
+Tempo at which the chord progression is played at
+
+[Default Value] 120
+
+
+======= -n|--[no-]next-on-correct
+Automatically go to the next exercise when the answer was correct
+
+
+
