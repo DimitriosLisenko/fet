@@ -1,7 +1,11 @@
 [![codecov](https://codecov.io/gh/DimitriosLisenko/fet/branch/master/graph/badge.svg?token=6W2B0Z4E4S)](https://codecov.io/gh/DimitriosLisenko/fet)
 
 # FET (Functional Ear Trainer)
-Create MIDI files for functional ear training. Each file will contain a major/minor chord progression, followed by note(s) that you should identify the scale degree of by ear.
+This is a functional ear trainer, meaning that it teaches you to identify degrees in a key.
+
+Every level, a chord progression is played to identify a major/minor key, followed by random notes played harmonically. The degrees of these notes should be identified and selected.
+
+<img src="./assets/readme/demo.gif">
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -19,12 +23,42 @@ Or install it yourself as:
     $ gem install fet
 
 ## Usage
-Refer to [the rdoc](https://github.com/DimitriosLisenko/fet/blob/master/fet.rdoc) for detailed usage instructions and descriptions of commands.
 
-## Filename Format
+### Ear Training via the UI
+The UI currently supports listening exercises, where a chord progression is played to establish a key, followed by notes played harmonically. The degrees of these notes should be identified by selecting them in the UI.
+
+The binary can be executed as follows:
+```sh
+fet play listening --degrees 1 --key-type major --next-on-correct --tempo 200
+```
+
+All flags are optional, and serve the following purposes:
+
+| Flag | Description |
+| ------------- | ------------- |
+| --degrees | How many unique degrees to play for the random notes - maximum of 11. |
+| --key-type | Type of key to play, can be "major" or "minor". |
+| --[no-]next-on-correct | Go to the next level automatically when answered correctly. |
+| --tempo | The tempo at which the chord progression is played. |
+
+When using the UI, the following keyboard shortcuts are defined to allow for mouse-free interaction:
+| Keyboard Shortcut | Description |
+| ------------- | ------------- |
+| ENTER | Go to the next level once this level is over. |
+| q | Quit the application. |
+| c | Repeat the chord progression only. |
+| n | Repeat the notes only. |
+| l | Repeat the question (looping). |
+| 1-7 | Select the degree, e.g. "2" selects the 2nd degree. |
+| - | Modify the above degree to flatten it, e.g. "-" followed by "2" will select the b2nd degree. |
+| + | Modify the above degree to sharpen it, e.g. "+" followed by "4" will select the #4th degree. |
+| 0 | Make the degree natural, e.g. "+" followed by followed by "0" followed by "4" will select the 4th degree. |
+
+### Ear Training via MIDI files
+#### Filename Format
 The generators will currently create MIDI files. The correct answer is included in the filename.
 
-### Listening exercises
+#### Listening exercises
 For listening exercises, here is a potential list of generated MIDI files (for 2 degrees):
 ```sh
 $ find .
@@ -54,7 +88,7 @@ The file name contains all the information required for the answer. For example,
 
 `(G#2)`: the [scientific pitch notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation) of which is G#2
 
-### Singing exercises
+#### Singing exercises
 The singing exercises will generate all possible combinations for keys and degrees as follows:
 ```sh
 $ find .
@@ -78,7 +112,7 @@ The file name contains all the information required for the answer. For example,
 
 `3`: you should sing the 3rd degree.
 
-### Single Note Listening exercises
+#### Single Note Listening exercises
 For single note listening exercises, the same note is played across all possible keys:
 ```sh
 $ find .
@@ -97,6 +131,9 @@ The file name contains all the information required for the answer. For example,
 `G#m`: the chord progression is in G# Minor.
 
 `3`: the note that is played is the 3rd degree in this key.
+
+### More Information
+Refer to [the rdoc](https://github.com/DimitriosLisenko/fet/blob/master/fet.rdoc) for detailed usage instructions and descriptions of commands.
 
 ## Development
 
