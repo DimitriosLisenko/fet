@@ -90,7 +90,7 @@ module Fet
           self.user_selected = user_selected
           self.selected = true
           update_colors
-          note_boxes.level.game.set_note_selected_event_flag
+          note_boxes.level.game.note_selected_event
         end
       end
 

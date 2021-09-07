@@ -25,10 +25,7 @@ module Fet
         note_boxes.start
         key.start
 
-        # TODO: This is not ideal because we're piggybacking on the normal events at the moment,
-        # but there's no event here to piggyback on, so the handler has to be called manually.
-        game.set_level_started_event_flag
-        game.handle_event_loop(nil)
+        game.level_started_event
       end
 
       def degree_indices
