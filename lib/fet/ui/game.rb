@@ -35,6 +35,7 @@ module Fet
         self.score = Score.new(self)
         self.level = Level.new(self)
         self.timer = Timer.new(self)
+        initialize_synchronization_primitives
         setup_window
       end
 

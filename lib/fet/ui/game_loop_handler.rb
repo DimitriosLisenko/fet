@@ -36,7 +36,7 @@ module Fet
       private
 
       def push_custom_event(custom_event)
-        Game::CUSTOM_EVENT_QUEUE.push(custom_event)
+        custom_event_queue.push(custom_event)
       end
 
       def handle_keyboard_event(event)
