@@ -85,12 +85,12 @@ module Fet
           )
           game.handle_event_loop(click_event)
         end
-        game.wait_for_custom_events
+        wait_for_custom_events(game)
       end
 
       def keyboard_select_note_box(game, note_box)
         degree_name_to_button_presses(note_box.degree_name).each { |key| press_key(game, key) }
-        game.wait_for_custom_events
+        wait_for_custom_events(game)
       end
 
       def press_key(game, key)
@@ -103,10 +103,14 @@ module Fet
       def game_instance_test(game)
         with_game_stubs do
           game.start
-          game.wait_for_custom_events
+          wait_for_custom_events(game)
           yield
           game.stop
         end
+      end
+
+      def wait_for_custom_events(game)
+        game.send(:custom_event_queue).wait_until_all_items_processed
       end
 
       def with_game_stubs

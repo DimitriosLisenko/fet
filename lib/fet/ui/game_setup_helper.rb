@@ -6,24 +6,13 @@ module Fet
   module Ui
     # Handles setting up the game before starting
     module GameSetupHelper
-      def wait_for_custom_events
-        processing_custom_event_mutex.synchronize do
-          processing_custom_event_condition_variable.wait(processing_custom_event_mutex) while custom_events_processing?
-        end
-      end
-
       private
 
-      attr_accessor :event_loop_mutex, :custom_event_queue,
-                    :processing_custom_event, :processing_custom_event_mutex, :processing_custom_event_condition_variable
+      attr_accessor :event_loop_mutex, :custom_event_queue
 
       def initialize_synchronization_primitives
         self.event_loop_mutex = Mutex.new
-        self.custom_event_queue = Queue.new
-
-        self.processing_custom_event_mutex = Mutex.new
-        self.processing_custom_event_condition_variable = ConditionVariable.new
-        self.processing_custom_event = nil
+        self.custom_event_queue = ProcessingQueue.new
       end
 
       def setup_window
@@ -45,30 +34,11 @@ module Fet
       def setup_custom_event_loop
         Thread.abort_on_exception = true
         Thread.new do
-          while set_processing_custom_event
-            event_loop_mutex.synchronize { handle_event_loop(processing_custom_event) }
-            reset_processing_custom_event
+          while custom_event_queue.set_processing_item
+            event_loop_mutex.synchronize { handle_event_loop(custom_event_queue.processing_item) }
+            custom_event_queue.reset_processing_item
           end
         end
-      end
-
-      def set_processing_custom_event
-        processing_custom_event_mutex.synchronize do
-          processing_custom_event_condition_variable.wait(processing_custom_event_mutex) until processing_custom_event.nil? && !custom_event_queue.empty?
-          self.processing_custom_event = custom_event_queue.pop
-        end
-      end
-
-      def reset_processing_custom_event
-        processing_custom_event_mutex.synchronize do
-          self.processing_custom_event = nil
-          processing_custom_event_condition_variable.broadcast
-        end
-      end
-
-      # WARNING: should be checked inside the processing_custom_event_mutex
-      def custom_events_processing?
-        return !custom_event_queue.empty? || !processing_custom_event.nil?
       end
 
       # NOTE: don't test coverage for these methods because this is more of a test of the Ruby2D library
