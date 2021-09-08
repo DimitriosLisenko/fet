@@ -6,9 +6,9 @@ module Fet
   module Ui
     # Handles setting up the game before starting
     module GameSetupHelper
-      def custom_events_processing?
+      def wait_for_custom_events
         processing_custom_event_mutex.synchronize do
-          return !custom_event_queue.empty? || !processing_custom_event.nil?
+          processing_custom_event_condition_variable.wait(processing_custom_event_mutex) while custom_events_processing?
         end
       end
 
@@ -64,6 +64,11 @@ module Fet
           self.processing_custom_event = nil
           processing_custom_event_condition_variable.signal
         end
+      end
+
+      # WARNING: should be checked inside the processing_custom_event_mutex
+      def custom_events_processing?
+        return !custom_event_queue.empty? || !processing_custom_event.nil?
       end
 
       # NOTE: don't test coverage for these methods because this is more of a test of the Ruby2D library
