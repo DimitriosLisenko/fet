@@ -34,6 +34,7 @@ module Fet
         self.next_on_correct = next_on_correct
         self.limit_degrees = limit_degrees
         initialize_ui_objects
+        validate!
         setup_window
       end
 
@@ -55,6 +56,16 @@ module Fet
         self.score = Score.new(self)
         self.level = Level.new(self)
         self.timer = Timer.new(self)
+      end
+
+      def validate!
+        validate_degrees!
+      end
+
+      def validate_degrees!
+        return unless !limit_degrees.empty? && number_of_degrees > limit_degrees.uniq.size
+
+        raise ArgumentError.new("Can not select #{number_of_degrees} degrees from set of #{limit_degrees}")
       end
 
       def show_window
