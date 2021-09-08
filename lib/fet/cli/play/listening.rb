@@ -11,6 +11,7 @@ module Fet
             degrees: options[:degrees],
             key_type: options[:"key-type"],
             next_on_correct: options[:"next-on-correct"],
+            limit_degrees: options[:"limit-degrees"],
           ).start
         end
       end

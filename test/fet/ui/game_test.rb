@@ -32,7 +32,7 @@ module Fet
 
       # NOTE: this is not the ideal place for this, but running the game does require a fair bit of mocking
       def test_cli_play_listening
-        options = { tempo: 120, degrees: 1, "key-type": "major", "next-on-correct": false }
+        options = { tempo: 120, degrees: 1, "key-type": "major", "next-on-correct": false, "limit-degrees": [] }
         with_game_stubs { Fet::Cli::Play::Listening.run(nil, options, nil) }
       end
 

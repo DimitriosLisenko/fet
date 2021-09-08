@@ -17,7 +17,7 @@ module Fet
       SCORES_FILENAME = "#{ENV["HOME"]}/.config/fet/scores".deep_freeze
 
       attr_accessor :level, :score, :timer, :note_range,
-                    :tempo, :number_of_degrees, :key_type, :next_on_correct
+                    :tempo, :number_of_degrees, :key_type, :next_on_correct, :limit_degrees
 
       # NOTE: this is explicitly changed in tests, so no need to check for coverage
       # :nocov:
@@ -26,15 +26,14 @@ module Fet
       end
       # :nocov:
 
-      def initialize(tempo:, degrees:, key_type:, next_on_correct:)
+      def initialize(tempo:, degrees:, key_type:, next_on_correct:, limit_degrees: [])
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
         self.tempo = tempo
         self.key_type = key_type
         self.number_of_degrees = degrees
         self.next_on_correct = next_on_correct
-        self.score = Score.new(self)
-        self.level = Level.new(self)
-        self.timer = Timer.new(self)
+        self.limit_degrees = limit_degrees
+        initialize_ui_objects
         setup_window
       end
 
@@ -51,6 +50,12 @@ module Fet
       end
 
       private
+
+      def initialize_ui_objects
+        self.score = Score.new(self)
+        self.level = Level.new(self)
+        self.timer = Timer.new(self)
+      end
 
       def show_window
         Ruby2D::Window.show

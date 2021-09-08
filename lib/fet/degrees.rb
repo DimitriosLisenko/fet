@@ -31,8 +31,8 @@ module Fet
       return degree_to_note_name[Degree.new(degree_name).degree_name]
     end
 
-    def select_degrees_from_midi_values(midi_value_range, number_of_degrees)
-      return select_degrees_from_midi_values_recursive(midi_value_range, [], number_of_degrees)
+    def select_degrees_from_midi_values(midi_value_range, number_of_degrees, degrees_filter)
+      return select_degrees_from_midi_values_recursive(filtered_midi_values(midi_value_range, degrees_filter), [], number_of_degrees)
     end
 
     private
@@ -41,6 +41,16 @@ module Fet
                 :octave_value
 
     attr_accessor :degree_to_note_name
+
+    def filtered_midi_values(midi_value_range, degrees_filter)
+      return midi_value_range if degrees_filter.empty?
+
+      filter_degree_indices = degrees_filter.map { |degree_name| Degree.new(degree_name).degree_index }
+      return midi_value_range.select do |midi_value|
+        degree_index = degree_index_of_midi_value(midi_value)
+        filter_degree_indices.include?(degree_index)
+      end
+    end
 
     def note_name_of_degree_internal(degree_name)
       degree = Degree.new(degree_name)
