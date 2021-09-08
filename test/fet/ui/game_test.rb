@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "securerandom"
+require_relative "game_degree_limit_tester"
 require_relative "game_keyboard_input_tester"
 require_relative "game_mouse_input_tester"
 require_relative "game_test_helper"
@@ -15,6 +16,7 @@ module Fet
       include GameKeyboardInputTester
       include GameMouseInputTester
       include GameUpdateLoopTester
+      include GameDegreeLimitTester
 
       def setup
         @uuid = SecureRandom.uuid
@@ -32,7 +34,7 @@ module Fet
 
       # NOTE: this is not the ideal place for this, but running the game does require a fair bit of mocking
       def test_cli_play_listening
-        options = { tempo: 120, degrees: 1, "key-type": "major", "next-on-correct": false }
+        options = { tempo: 120, degrees: 1, "key-type": "major", "next-on-correct": false, "limit-degrees": [] }
         with_game_stubs { Fet::Cli::Play::Listening.run(nil, options, nil) }
       end
 

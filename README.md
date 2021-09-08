@@ -29,7 +29,7 @@ The UI currently supports listening exercises, where a chord progression is play
 
 The binary can be executed as follows:
 ```sh
-fet play listening --degrees 1 --key-type major --next-on-correct --tempo 200
+fet play listening --degrees 1 --key-type major --next-on-correct --tempo 200 --limit-degrees b6 --limit-degrees 5
 ```
 
 All flags are optional, and serve the following purposes:
@@ -40,6 +40,7 @@ All flags are optional, and serve the following purposes:
 | --key-type | Type of key to play, can be "major" or "minor". |
 | --[no-]next-on-correct | Go to the next level automatically when answered correctly. |
 | --tempo | The tempo at which the chord progression is played. |
+| --limit-degrees | Limit to specific degrees. Can be supplied multiple times. |
 
 When using the UI, the following keyboard shortcuts are defined to allow for mouse-free interaction:
 | Keyboard Shortcut | Description |
