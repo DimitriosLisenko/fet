@@ -6,13 +6,24 @@ module Fet
   module Ui
     # Handles setting up the game before starting
     module GameSetupHelper
+      def custom_events_processing?
+        processing_custom_event_mutex.synchronize do
+          return !custom_event_queue.empty? || !processing_custom_event.nil?
+        end
+      end
+
       private
 
-      attr_accessor :event_loop_mutex, :custom_event_queue
+      attr_accessor :event_loop_mutex, :custom_event_queue,
+                    :processing_custom_event, :processing_custom_event_mutex, :processing_custom_event_condition_variable
 
       def initialize_synchronization_primitives
         self.event_loop_mutex = Mutex.new
         self.custom_event_queue = Queue.new
+
+        self.processing_custom_event_mutex = Mutex.new
+        self.processing_custom_event_condition_variable = ConditionVariable.new
+        self.processing_custom_event = nil
       end
 
       def setup_window
@@ -32,12 +43,26 @@ module Fet
       end
 
       def setup_custom_event_loop
+        Thread.abort_on_exception = true
         Thread.new do
-          while (event = custom_event_queue.pop)
-            event_loop_mutex.synchronize do
-              handle_event_loop(event)
-            end
+          while set_processing_custom_event
+            event_loop_mutex.synchronize { handle_event_loop(processing_custom_event) }
+            reset_processing_custom_event
           end
+        end
+      end
+
+      def set_processing_custom_event
+        processing_custom_event_mutex.synchronize do
+          processing_custom_event_condition_variable.wait(processing_custom_event_mutex) until processing_custom_event.nil? && !custom_event_queue.empty?
+          self.processing_custom_event = custom_event_queue.pop
+        end
+      end
+
+      def reset_processing_custom_event
+        processing_custom_event_mutex.synchronize do
+          self.processing_custom_event = nil
+          processing_custom_event_condition_variable.signal
         end
       end
 

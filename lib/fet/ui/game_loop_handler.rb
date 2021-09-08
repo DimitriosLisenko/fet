@@ -37,6 +37,7 @@ module Fet
 
       def push_custom_event(custom_event)
         custom_event_queue.push(custom_event)
+        processing_custom_event_condition_variable.signal
       end
 
       def handle_keyboard_event(event)
