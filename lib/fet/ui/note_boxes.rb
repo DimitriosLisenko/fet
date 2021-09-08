@@ -71,7 +71,7 @@ module Fet
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_NOTE_SELECTED
 
         if all_correct_selected?
-          level.game.set_level_complete_event_flag
+          level.game.level_complete_event
         elsif any_wrong_selected?
           correct_remaining.first.manually_select
         end

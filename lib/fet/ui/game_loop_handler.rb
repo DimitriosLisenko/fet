@@ -19,55 +19,31 @@ module Fet
         score.handle_event_loop(event)
         level.handle_event_loop(event)
         timer.handle_event_loop(event)
-
-        handle_custom_events
       end
 
-      def set_note_selected_event_flag
-        self.note_selected_event_flag = true
+      def note_selected_event
+        push_custom_event(CustomEvent.new(CustomEvent::EVENT_TYPE_NOTE_SELECTED))
       end
 
-      def set_level_started_event_flag
-        self.level_started_event_flag = true
+      def level_started_event
+        push_custom_event(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_STARTED))
       end
 
-      def set_level_complete_event_flag
-        self.level_complete_event_flag = true
+      def level_complete_event
+        push_custom_event(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_COMPLETE))
       end
 
       private
 
-      attr_accessor :note_selected_event_flag, :level_started_event_flag, :level_complete_event_flag
+      def push_custom_event(custom_event)
+        custom_event_queue.push(custom_event)
+      end
 
       def handle_keyboard_event(event)
         return unless event.is_a?(Ruby2D::Window::KeyEvent)
         return unless event.type == :down
 
         stop if event.key == "q"
-      end
-
-      def handle_custom_events
-        handle_note_selected_event
-        handle_level_started_event
-        handle_level_complete_event
-      end
-
-      def handle_note_selected_event
-        handle_event = note_selected_event_flag
-        self.note_selected_event_flag = false
-        handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_NOTE_SELECTED)) if handle_event
-      end
-
-      def handle_level_started_event
-        handle_event = level_started_event_flag
-        self.level_started_event_flag = false
-        handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_STARTED)) if handle_event
-      end
-
-      def handle_level_complete_event
-        handle_event = level_complete_event_flag
-        self.level_complete_event_flag = false
-        handle_event_loop(CustomEvent.new(CustomEvent::EVENT_TYPE_LEVEL_COMPLETE)) if handle_event
       end
     end
   end
