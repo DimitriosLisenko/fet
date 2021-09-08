@@ -62,7 +62,7 @@ module Fet
       def reset_processing_custom_event
         processing_custom_event_mutex.synchronize do
           self.processing_custom_event = nil
-          processing_custom_event_condition_variable.signal
+          processing_custom_event_condition_variable.broadcast
         end
       end
 
