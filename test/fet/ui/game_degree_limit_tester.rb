@@ -13,6 +13,12 @@ module Fet
           end
         end
       end
+
+      def test_invalid_degree_limits
+        assert_raises(ArgumentError) do
+          Fet::Ui::Game.new(tempo: 200, degrees: 2, key_type: "major", next_on_correct: false, limit_degrees: ["1"])
+        end
+      end
     end
   end
 end
