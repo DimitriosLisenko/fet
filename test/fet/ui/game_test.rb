@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "securerandom"
+require_relative "game_degree_limit_tester"
 require_relative "game_keyboard_input_tester"
 require_relative "game_mouse_input_tester"
 require_relative "game_test_helper"
@@ -15,6 +16,7 @@ module Fet
       include GameKeyboardInputTester
       include GameMouseInputTester
       include GameUpdateLoopTester
+      include GameDegreeLimitTester
 
       def setup
         @uuid = SecureRandom.uuid
