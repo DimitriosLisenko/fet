@@ -99,6 +99,10 @@ class App
       listening.default_value(true)
       listening.switch [:n, :"next-on-correct"]
 
+      listening.desc("Limit which degrees can play")
+      listening.default_value([])
+      listening.flag([:l, :"limit-degrees"], type: String, must_match: Fet::Degree::DEGREE_NAMES.flatten, multiple: true)
+
       listening.action do |global_options, options, args|
         Fet::Cli::Play::Listening.run(global_options, options, args)
       end
