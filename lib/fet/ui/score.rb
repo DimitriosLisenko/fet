@@ -35,6 +35,7 @@ module Fet
       TEXT_SIZE = 36
       X_OFFSET = 508
       Y_OFFSET = 90
+      X_CORRECTION = 20
       private_constant :TEXT_SIZE, :X_OFFSET, :Y_OFFSET
 
       def text_value
@@ -79,6 +80,9 @@ module Fet
 
       def update_text
         text.text = text_value
+        # NOTE: keep "/" character in the same position as score increases
+        characters = text_value.split("/")[0].size
+        text.x = X_OFFSET - (characters - 1) * X_CORRECTION
       end
     end
   end
