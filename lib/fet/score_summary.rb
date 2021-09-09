@@ -58,7 +58,7 @@ module Fet
       score_instance.percentages.each do |degree_index, percentage|
         puts "#{Fet::Degree::DEGREE_NAMES[degree_index].last}\t#{percentage}%"
       end
-      puts "Total\t#{score_instance.total_percentage}%"
+      puts "All\t#{score_instance.total_percentage}%"
     end
   end
 end
