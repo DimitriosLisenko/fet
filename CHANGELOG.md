@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - Allow limiting questions to specific degrees.
+- Improve positioning of the score element in the UI.
 
 ## [Released]
 
