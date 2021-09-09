@@ -2,6 +2,7 @@
 
 require "date"
 require "json"
+require "terminal-table"
 
 module Fet
   # Responsible for showing the score summary to the user
@@ -53,12 +54,47 @@ module Fet
       return Fet::Score.merge(*score_instances)
     end
 
-    def percentage_summary
-      score_instance = merged_score_instance
-      score_instance.percentages.each do |degree_index, percentage|
-        puts "#{Fet::Degree::DEGREE_NAMES[degree_index].last}\t#{percentage}%"
+    def generate_table(score_instance)
+      Terminal::Table.new do |t|
+        generate_table_header(t)
+        t.add_separator
+        generate_table_main(t, score_instance)
+        t.add_separator
+        generate_table_footer(t, score_instance)
       end
-      puts "All\t#{score_instance.total_percentage}%"
+    end
+
+    def generate_table_header(table)
+      table.add_row(["Degree", "Answered Correctly", "Total Answered", "Percentage"])
+    end
+
+    def generate_table_main(table, score_instance)
+      score_instance.percentages.each do |degree_index, percentage|
+        table.add_row(
+          [
+            Fet::Degree::DEGREE_NAMES[degree_index].last,
+            score_instance.answered_correctly(degree_index),
+            score_instance.questions_asked(degree_index),
+            "#{percentage}%",
+          ],
+        )
+      end
+    end
+
+    def generate_table_footer(table, score_instance)
+      table.add_row(
+        [
+          "All",
+          score_instance.answered_correctly,
+          score_instance.questions_asked,
+          "#{score_instance.total_percentage}%",
+        ],
+      )
+    end
+
+    def percentage_summary
+      table = generate_table(merged_score_instance)
+      puts table
     end
   end
 end
