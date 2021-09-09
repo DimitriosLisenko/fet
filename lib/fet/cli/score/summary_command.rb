@@ -17,7 +17,7 @@ module Fet
                 summary.flag([:f, :"from-date"], type: DateTime)
 
                 summary.desc("Include games prior to this date (YYYY/MM/DD)")
-                summary.default_value(Date.today.to_s)
+                summary.default_value(nil)
                 summary.flag([:u, :"until-date"], type: DateTime)
 
                 summary.action do |global_options, options, args|

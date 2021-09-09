@@ -166,6 +166,6 @@ Only include games that had more playtime than the specified amount (seconds)
 
 Include games prior to this date (YYYY/MM/DD)
 
-[Default Value] 2021-09-09
+[Default Value] None
 
 
