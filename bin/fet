@@ -16,8 +16,11 @@ class App
   subcommand_option_handling(:normal)
   arguments(:strict)
 
+  accept(DateTime) do |string|
+    DateTime.parse(string)
+  end
+
   desc("Generate MIDI files for ear training")
-  # arg_name "Describe arguments to generate here"
   command(:generate) do |c|
     c.desc("Generate MIDI files for listening")
     c.long_desc("Each MIDI file will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause.")
@@ -78,10 +81,9 @@ class App
   end
 
   desc("Run the ear training application")
-  # arg_name "Describe arguments to generate here"
   command(:play) do |c|
     c.desc("Run the ear training application for listening")
-    c.long_desc("Each level will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause.")
+    c.long_desc("Each level will play a chord progression, followed by the specified number of degrees harmonically. The correct degrees should be selected.")
     c.command :listening do |listening|
       listening.desc("Tempo at which the chord progression is played at")
       listening.default_value(120)
@@ -105,6 +107,28 @@ class App
 
       listening.action do |global_options, options, args|
         Fet::Cli::Play::Listening.run(global_options, options, args)
+      end
+    end
+  end
+
+  desc("Score commands")
+  command(:score) do |c|
+    c.desc("Show the score summary")
+    c.command :summary do |summary|
+      summary.desc("Only include games that had more playtime than the specified amount (seconds)")
+      summary.default_value(0)
+      summary.flag([:s, :seconds], type: Integer)
+
+      summary.desc("Include games from this date onwards (YYYY/MM/DD)")
+      summary.default_value(nil)
+      summary.flag([:f, :"from-date"], type: DateTime)
+
+      summary.desc("Include games prior to this date (YYYY/MM/DD)")
+      summary.default_value(Date.today.to_s)
+      summary.flag([:u, :"until-date"], type: DateTime)
+
+      summary.action do |global_options, options, args|
+        Fet::Cli::Score::Summary.run(global_options, options, args)
       end
     end
   end
