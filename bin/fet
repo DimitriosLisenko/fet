@@ -16,10 +16,6 @@ class App
   subcommand_option_handling(:normal)
   arguments(:strict)
 
-  accept(DateTime) do |string|
-    DateTime.parse(string)
-  end
-
   include ::Fet::Cli::Generate::ListeningCommand
   include ::Fet::Cli::Generate::SingleNoteListeningCommand
   include ::Fet::Cli::Generate::SingingCommand

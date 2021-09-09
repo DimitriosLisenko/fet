@@ -14,11 +14,11 @@ module Fet
 
                 summary.desc("Include games from this date onwards (YYYY/MM/DD)")
                 summary.default_value(nil)
-                summary.flag([:f, :"from-date"], type: DateTime)
+                summary.flag([:f, :"from-date"], type: String)
 
                 summary.desc("Include games prior to this date (YYYY/MM/DD)")
                 summary.default_value(nil)
-                summary.flag([:u, :"until-date"], type: DateTime)
+                summary.flag([:u, :"until-date"], type: String)
 
                 summary.action do |global_options, options, args|
                   Fet::Cli::Score::Summary.run(global_options, options, args)
