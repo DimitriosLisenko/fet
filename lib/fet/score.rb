@@ -5,8 +5,16 @@ require "json"
 module Fet
   # Holds the correct/incorrect answers to questions
   class Score
-    def initialize
-      self.score = initialize_score
+    def initialize(score: nil)
+      score_hash = score || initialize_score
+      score_hash = score_hash.map do |k, v|
+        [k.to_i, v.transform_keys(&:to_sym)]
+      end.to_h
+      self.score = score_hash
+    end
+
+    def self.merge(*scores)
+      scores.each_with_object(Fet::Score.new) { |x, res| res.merge(x) }
     end
 
     def answer_correctly(*degree_indices)
@@ -41,9 +49,30 @@ module Fet
       as_json(*options).to_json(*options)
     end
 
-    private
+    def merge(other)
+      score.each do |k, v|
+        v[:correct] += other.answered_correctly(k)
+        v[:incorrect] += other.answered_incorrectly(k)
+      end
+    end
+
+    def percentages
+      score.map do |k, _|
+        percentage = answered_correctly(k).fdiv(questions_asked(k)) * 100
+        next([k, percentage.to_i])
+      end.to_h
+    end
+
+    def total_percentage
+      percentage = answered_correctly.fdiv(questions_asked) * 100
+      return percentage.to_i
+    end
+
+    protected
 
     attr_accessor :score
+
+    private
 
     def initialize_score
       Fet::Degree::DEGREE_NAMES.map.with_index { |_, degree_index| [degree_index, { correct: 0, incorrect: 0 }] }.to_h
