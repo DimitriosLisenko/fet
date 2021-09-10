@@ -22,8 +22,7 @@ module Fet
 
           def define_listening_command(command)
             command.desc("Generate MIDI files for listening")
-            command.long_desc("Each MIDI file will contain a chord progression, followed by the specified number of degrees - first harmonically,\
-                               then melodically after a pause.")
+            command.long_desc(long_listening_command_description)
             command.command :listening do |listening|
               define_tempo_flag(listening)
               define_degrees_flag(listening)
@@ -31,6 +30,10 @@ module Fet
               define_all_single_degree_flag(listening)
               define_action(listening)
             end
+          end
+
+          def long_listening_command_description
+            return "Each MIDI file will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause."
           end
 
           def define_tempo_flag(command)

@@ -3,38 +3,70 @@
 module Fet
   module Cli
     module Play
+      # Defines the CLI "play listening" command
       module ListeningCommand
         def self.included(klass)
           klass.class_eval do
+            klass.extend(ClassMethods)
+
             desc("Run the ear training application")
             command(:play) do |c|
-              c.desc("Run the ear training application for listening")
-              c.long_desc("Each level will play a chord progression, followed by the specified number of degrees harmonically. The correct degrees should be selected.")
-              c.command :listening do |listening|
-                listening.desc("Tempo at which the chord progression is played at")
-                listening.default_value(120)
-                listening.flag([:t, :tempo], type: Integer)
+              define_listening_command(c)
+            end
+          end
+        end
 
-                listening.desc("Number of degrees to play")
-                listening.default_value(1)
-                listening.flag([:d, :degrees], type: Integer, must_match: (1..11).map(&:to_s))
+        # Internal methods for the "play listening" command
+        module ClassMethods
+          private
 
-                listening.desc("Type of the chord progression")
-                listening.default_value("major")
-                listening.flag([:k, :"key-type"], type: String, must_match: ["major", "minor"])
+          def define_listening_command(command)
+            command.desc("Run the ear training application for listening")
+            command.long_desc("Each level will play a chord progression, followed by the specified number of degrees harmonically. The correct degrees should be selected.")
+            command.command :listening do |listening|
+              define_tempo_flag(listening)
+              define_degrees_flag(listening)
+              define_key_type_flag(listening)
+              define_next_on_correct_flag(listening)
+              define_limit_degrees_flag(listening)
 
-                listening.desc("Automatically go to the next exercise when the answer was correct")
-                listening.default_value(true)
-                listening.switch [:n, :"next-on-correct"]
+              define_listening_action(listening)
+            end
+          end
 
-                listening.desc("Limit which degrees can play")
-                listening.default_value([])
-                listening.flag([:l, :"limit-degrees"], type: String, must_match: Fet::Degree::DEGREE_NAMES.flatten, multiple: true)
+          def define_tempo_flag(command)
+            command.desc("Tempo at which the chord progression is played at")
+            command.default_value(120)
+            command.flag([:t, :tempo], type: Integer)
+          end
 
-                listening.action do |global_options, options, args|
-                  Fet::Cli::Play::Listening.run(global_options, options, args)
-                end
-              end
+          def define_degrees_flag(command)
+            command.desc("Number of degrees to play")
+            command.default_value(1)
+            command.flag([:d, :degrees], type: Integer, must_match: (1..11).map(&:to_s))
+          end
+
+          def define_key_type_flag(command)
+            command.desc("Type of the chord progression")
+            command.default_value("major")
+            command.flag([:k, :"key-type"], type: String, must_match: ["major", "minor"])
+          end
+
+          def define_next_on_correct_flag(command)
+            command.desc("Automatically go to the next exercise when the answer was correct")
+            command.default_value(true)
+            command.switch [:n, :"next-on-correct"]
+          end
+
+          def define_limit_degrees_flag(command)
+            command.desc("Limit which degrees can play")
+            command.default_value([])
+            command.flag([:l, :"limit-degrees"], type: String, must_match: Fet::Degree::DEGREE_NAMES.flatten, multiple: true)
+          end
+
+          def define_listening_action(command)
+            command.action do |global_options, options, args|
+              Fet::Cli::Play::Listening.run(global_options, options, args)
             end
           end
         end

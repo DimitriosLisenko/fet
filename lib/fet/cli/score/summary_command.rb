@@ -3,29 +3,54 @@
 module Fet
   module Cli
     module Score
+      # Defines the CLI "score summary" command
       module SummaryCommand
         def self.included(klass)
           klass.class_eval do
+            klass.extend(ClassMethods)
+
             desc("Score commands")
             command(:score) do |c|
-              c.desc("Show the score summary")
-              c.command :summary do |summary|
-                summary.desc("Only include games that had more playtime than the specified amount (seconds)")
-                summary.default_value(0)
-                summary.flag([:s, :seconds], type: Integer)
+              define_summary_command(c)
+            end
+          end
+        end
 
-                summary.desc("Include games from this date onwards (YYYY/MM/DD)")
-                summary.default_value(nil)
-                summary.flag([:f, :"from-date"], type: String)
+        # Internal methods for the "score summary" command
+        module ClassMethods
+          private
 
-                summary.desc("Include games prior to this date (YYYY/MM/DD)")
-                summary.default_value(nil)
-                summary.flag([:u, :"until-date"], type: String)
+          def define_summary_command(command)
+            command.desc("Show the score summary")
+            command.command :summary do |summary|
+              define_seconds_flag(summary)
+              define_from_date_flag(summary)
+              define_until_date_flag(summary)
+              define_score_action(summary)
+            end
+          end
 
-                summary.action do |global_options, options, args|
-                  Fet::Cli::Score::Summary.run(global_options, options, args)
-                end
-              end
+          def define_seconds_flag(command)
+            command.desc("Only include games that had more playtime than the specified amount (seconds)")
+            command.default_value(0)
+            command.flag([:s, :seconds], type: Integer)
+          end
+
+          def define_from_date_flag(command)
+            command.desc("Include games from this date onwards (YYYY/MM/DD)")
+            command.default_value(nil)
+            command.flag([:f, :"from-date"], type: String)
+          end
+
+          def define_until_date_flag(command)
+            command.desc("Include games prior to this date (YYYY/MM/DD)")
+            command.default_value(nil)
+            command.flag([:u, :"until-date"], type: String)
+          end
+
+          def define_score_action(command)
+            command.action do |global_options, options, args|
+              Fet::Cli::Score::Summary.run(global_options, options, args)
             end
           end
         end
