@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module Fet
   module Cli
     module Generate
+      # Defines the CLI "generate single_note_listening" command
       module SingleNoteListeningCommand
         def self.included(klass)
           klass.class_eval do
