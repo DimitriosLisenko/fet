@@ -7,7 +7,7 @@ module Fet
       module ListeningCommand
         def self.included(klass)
           klass.class_eval do
-            klass.extend(ClassMethods)
+            extend ClassMethods
 
             desc("Run the ear training application")
             command(:play) do |c|

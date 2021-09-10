@@ -7,7 +7,7 @@ module Fet
       module SingleNoteListeningCommand
         def self.included(klass)
           klass.class_eval do
-            klass.extend(ClassMethods)
+            extend ClassMethods
 
             command(:generate) do |c|
               define_single_note_listening_command(c)

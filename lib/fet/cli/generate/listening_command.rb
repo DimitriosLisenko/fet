@@ -7,7 +7,7 @@ module Fet
       module ListeningCommand
         def self.included(klass)
           klass.class_eval do
-            klass.extend(ClassMethods)
+            extend ClassMethods
 
             desc("Generate MIDI files for ear training")
             command(:generate) do |c|

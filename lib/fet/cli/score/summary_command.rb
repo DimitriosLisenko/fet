@@ -7,7 +7,7 @@ module Fet
       module SummaryCommand
         def self.included(klass)
           klass.class_eval do
-            klass.extend(ClassMethods)
+            extend ClassMethods
 
             desc("Score commands")
             command(:score) do |c|

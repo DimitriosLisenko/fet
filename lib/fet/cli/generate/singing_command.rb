@@ -7,7 +7,7 @@ module Fet
       module SingingCommand
         def self.included(klass)
           klass.class_eval do
-            klass.extend(ClassMethods)
+            extend ClassMethods
 
             command(:generate) do |c|
               define_singing_command(c)
