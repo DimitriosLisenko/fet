@@ -7,10 +7,11 @@ require "terminal-table"
 module Fet
   # Responsible for showing the score summary to the user
   class ScoreSummary
-    def initialize(minimum_session_length: 0, date_from: nil, date_until: nil)
+    def initialize(minimum_session_length: 0, date_from: nil, date_until: nil, last: nil)
       self.minimum_session_length = minimum_session_length
       self.date_from = date_from.nil? ? date_from : DateTime.parse(date_from)
       self.date_until = date_until.nil? ? DateTime.now.new_offset(0) : DateTime.parse(date_until)
+      self.last = last
     end
 
     def summary
@@ -21,7 +22,7 @@ module Fet
 
     private
 
-    attr_accessor :minimum_session_length, :date_from, :date_until
+    attr_accessor :minimum_session_length, :date_from, :date_until, :last
 
     def filename
       return Fet::Ui::Game.scores_filename
@@ -40,10 +41,32 @@ module Fet
     end
 
     def games_array_with_constraints
-      result = games_array.select { |game_details| game_details["seconds_elapsed"] > minimum_session_length }
-      result = result.select { |game_details| DateTime.parse(game_details["started_at"]) >= date_from } unless date_from.nil?
-      result = result.select { |game_details| DateTime.parse(game_details["started_at"]) <= date_until }
+      result = games_array
+      result = filter_by_seconds_elapsed(result)
+      result = filter_by_last(result)
+      result = filter_by_date_from(result)
+      result = filter_by_date_until(result)
       return result
+    end
+
+    def filter_by_last(games_array)
+      return games_array if last.nil?
+
+      return games_array.last(last)
+    end
+
+    def filter_by_seconds_elapsed(games_array)
+      return games_array.select { |game_details| game_details["seconds_elapsed"] > minimum_session_length }
+    end
+
+    def filter_by_date_from(games_array)
+      return games_array if date_from.nil?
+
+      return games_array.select { |game_details| DateTime.parse(game_details["started_at"]) >= date_from }
+    end
+
+    def filter_by_date_until(games_array)
+      return games_array.select { |game_details| DateTime.parse(game_details["started_at"]) <= date_until }
     end
 
     def score_instances

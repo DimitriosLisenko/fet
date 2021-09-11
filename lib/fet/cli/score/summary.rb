@@ -10,6 +10,7 @@ module Fet
             minimum_session_length: options[:seconds],
             date_from: options[:"from-date"],
             date_until: options[:"until-date"],
+            last: options[:last],
           ).summary
         end
       end

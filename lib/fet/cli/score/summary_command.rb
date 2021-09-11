@@ -27,6 +27,7 @@ module Fet
               define_from_date_flag(summary)
               define_until_date_flag(summary)
               define_score_action(summary)
+              define_last_flag(summary)
             end
           end
 
@@ -46,6 +47,12 @@ module Fet
             command.desc("Include games prior to this date (YYYY/MM/DD)")
             command.default_value(nil)
             command.flag([:u, :"until-date"], type: String)
+          end
+
+          def define_last_flag(command)
+            command.desc("Include the last X number of games")
+            command.default_value(nil)
+            command.flag([:l, :last], type: Integer)
           end
 
           def define_score_action(command)
