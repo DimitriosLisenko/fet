@@ -95,6 +95,9 @@ module Fet
         return {
           "started_at" => timer.started_at.to_s,
           "seconds_elapsed" => timer.seconds_elapsed,
+          "number_of_degrees" => number_of_degrees,
+          "tempo" => tempo,
+          "key_type" => key_type,
           "score" => score.score,
         }
       end
