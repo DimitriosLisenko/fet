@@ -58,7 +58,7 @@ module Fet
 
     def percentages
       score.map do |k, _|
-        percentage = safe_division(k, questions_asked(k)) * 100
+        percentage = safe_division(answered_correctly(k), questions_asked(k)) * 100
         next([k, percentage.to_i])
       end.to_h
     end
