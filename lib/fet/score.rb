@@ -58,14 +58,12 @@ module Fet
 
     def percentages
       score.map do |k, _|
-        percentage = safe_division(answered_correctly(k), questions_asked(k)) * 100
-        next([k, percentage.to_i])
+        next([k, percentage(answered_correctly(k), questions_asked(k)).to_i])
       end.to_h
     end
 
     def total_percentage
-      percentage = safe_division(answered_correctly, questions_asked) * 100
-      return percentage.to_i
+      return percentage(answered_correctly, questions_asked).to_i
     end
 
     protected
@@ -78,9 +76,10 @@ module Fet
       Fet::Degree::DEGREE_NAMES.map.with_index { |_, degree_index| [degree_index, { correct: 0, incorrect: 0 }] }.to_h
     end
 
-    def safe_division(dividend, divisor)
-      return 0.0 if divisor.zero?
-      return dividend.fdiv(divisor)
+    def percentage(correct, total)
+      return 0.0 if total.zero?
+
+      return correct.fdiv(total) * 100
     end
   end
 end
