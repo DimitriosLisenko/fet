@@ -3,10 +3,13 @@
 require "date"
 require "json"
 require "terminal-table"
+require_relative "score_summary_writer"
 
 module Fet
-  # Responsible for showing the score summary to the user
+  # Responsible for writing + showing the score summary to the user
   class ScoreSummary
+    extend ScoreSummaryWriter
+
     def initialize(minimum_session_length: 0, date_from: nil, date_until: nil, last: nil)
       self.minimum_session_length = minimum_session_length
       self.date_from = date_from.nil? ? date_from : DateTime.parse(date_from)
@@ -25,7 +28,7 @@ module Fet
     attr_accessor :minimum_session_length, :date_from, :date_until, :last
 
     def filename
-      return Fet::Ui::Game.scores_filename
+      return self.class.scores_filename
     end
 
     def file_exists?

@@ -119,7 +119,7 @@ module Fet
         # the stub for Ruby2D::Window stays running until it receives a signal. However,
         # Ruby2D really doesn't like being called from a thread (throws random exceptions),
         # so might have to run the test inside a thread + use Queue.new for sync?
-        Fet::Ui::Game.stub(:scores_filename, tmp_directory) { yield }
+        Fet::ScoreSummary.stub(:scores_filename, tmp_directory) { yield }
       end
 
       # NOTE: there may be no keys generated this test run with accidentals, so exclude from coverage

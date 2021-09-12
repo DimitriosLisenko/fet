@@ -43,7 +43,7 @@ module Fet
         game_instance_test(game) do
           select_correct_note_with_tests(game, false)
           # TODO: this is only needed because Game#start_window is mocked to return immediately rather than wait for a signal, can be fixed
-          game.send(:write_score_to_file)
+          Fet::ScoreSummary.add_entry(game)
         end
       end
     end
