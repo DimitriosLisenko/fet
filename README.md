@@ -8,6 +8,18 @@ Every level, a chord progression is played to identify a major/minor key, follow
 <img src="./assets/readme/demo.gif">
 
 ## Installation
+### Prerequisites
+Install TiMidity++ for required performance improvements when converting MIDI to other formats.
+#### OS X
+```sh
+brew install timidity
+```
+#### Ubuntu
+```sh
+apt install timidity
+```
+
+### Gem
 Add this line to your application's Gemfile:
 
 ```ruby
