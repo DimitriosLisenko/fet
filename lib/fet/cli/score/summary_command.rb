@@ -24,10 +24,11 @@ module Fet
             command.desc("Show the score summary")
             command.command :summary do |summary|
               define_seconds_flag(summary)
-              define_from_date_flag(summary)
-              define_until_date_flag(summary)
+              define_degrees_flag(summary)
+              define_key_type_flag(summary)
+              define_begin_offset_flag(summary)
+              define_end_offset_flag(summary)
               define_score_action(summary)
-              define_last_flag(summary)
             end
           end
 
@@ -37,22 +38,28 @@ module Fet
             command.flag([:s, :seconds], type: Integer)
           end
 
-          def define_from_date_flag(command)
-            command.desc("Include games from this date onwards (YYYY/MM/DD)")
-            command.default_value(nil)
-            command.flag([:f, :"from-date"], type: String)
+          def define_degrees_flag(command)
+            command.desc("Number of degrees to play")
+            command.default_value(1)
+            command.flag([:d, :degrees], type: Integer, must_match: (1..11).map(&:to_s))
           end
 
-          def define_until_date_flag(command)
-            command.desc("Include games prior to this date (YYYY/MM/DD)")
-            command.default_value(nil)
-            command.flag([:u, :"until-date"], type: String)
+          def define_key_type_flag(command)
+            command.desc("Type of the chord progression")
+            command.default_value("major")
+            command.flag([:k, :"key-type"], type: String, must_match: ["major", "minor"])
           end
 
-          def define_last_flag(command)
-            command.desc("Include the last X number of games")
-            command.default_value(nil)
-            command.flag([:l, :last], type: Integer)
+          def define_begin_offset_flag(command)
+            command.desc("Offset beginning index of resulting array")
+            command.default_value(0)
+            command.flag([:b, :"begin-offset"], type: Integer)
+          end
+
+          def define_end_offset_flag(command)
+            command.desc("Offset end index of resulting array")
+            command.default_value(0)
+            command.flag([:e, :"end-offset"], type: Integer)
           end
 
           def define_score_action(command)

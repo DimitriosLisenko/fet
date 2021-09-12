@@ -8,9 +8,10 @@ module Fet
         def self.run(_global_options, options, _args)
           Fet::ScoreSummary.new(
             minimum_session_length: options[:seconds],
-            date_from: options[:"from-date"],
-            date_until: options[:"until-date"],
-            last: options[:last],
+            number_of_degrees: options[:degrees],
+            key_type: options[:"key-type"],
+            begin_offset: options[:"begin-offset"],
+            end_offset: options[:"end-offset"],
           ).summary
         end
       end

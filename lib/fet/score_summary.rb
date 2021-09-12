@@ -10,11 +10,12 @@ module Fet
   class ScoreSummary
     extend ScoreSummaryWriter
 
-    def initialize(minimum_session_length: 0, date_from: nil, date_until: nil, last: nil)
+    def initialize(minimum_session_length: 0, number_of_degrees: nil, key_type: nil, begin_offset: 0, end_offset: 0)
       self.minimum_session_length = minimum_session_length
-      self.date_from = date_from.nil? ? date_from : DateTime.parse(date_from)
-      self.date_until = date_until.nil? ? DateTime.now.new_offset(0) : DateTime.parse(date_until)
-      self.last = last
+      self.number_of_degrees = number_of_degrees
+      self.key_type = key_type
+      self.begin_offset = begin_offset
+      self.end_offset = end_offset
     end
 
     def summary
@@ -25,7 +26,7 @@ module Fet
 
     private
 
-    attr_accessor :minimum_session_length, :date_from, :date_until, :last
+    attr_accessor :minimum_session_length, :number_of_degrees, :key_type, :begin_offset, :end_offset
 
     def filename
       return self.class.scores_filename
@@ -46,30 +47,32 @@ module Fet
     def games_array_with_constraints
       result = games_array
       result = filter_by_seconds_elapsed(result)
-      result = filter_by_last(result)
-      result = filter_by_date_from(result)
-      result = filter_by_date_until(result)
+      result = filter_by_number_of_degrees(result)
+      result = filter_by_key_type(result)
+      result = filter_by_offsets(result)
       return result
-    end
-
-    def filter_by_last(games_array)
-      return games_array if last.nil?
-
-      return games_array.last(last)
     end
 
     def filter_by_seconds_elapsed(games_array)
       return games_array.select { |game_details| game_details["seconds_elapsed"] > minimum_session_length }
     end
 
-    def filter_by_date_from(games_array)
-      return games_array if date_from.nil?
+    def filter_by_number_of_degrees(games_array)
+      return games_array if number_of_degrees.nil?
 
-      return games_array.select { |game_details| DateTime.parse(game_details["started_at"]) >= date_from }
+      return games_array.select { |game_details| game_details["number_of_degrees"] == number_of_degrees }
     end
 
-    def filter_by_date_until(games_array)
-      return games_array.select { |game_details| DateTime.parse(game_details["started_at"]) <= date_until }
+    def filter_by_key_type(games_array)
+      return games_array if key_type.nil?
+
+      return games_array.select { |game_details| game_details["key_type"] == key_type }
+    end
+
+    def filter_by_offsets(games_array)
+      begin_index = 0
+      end_index = games_array.size
+      return games_array[(begin_index + begin_offset)...(end_index + end_offset)]
     end
 
     def score_instances
