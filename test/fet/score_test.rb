@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Fet
-  class DegreeTest < Minitest::Test
+  class ScoreTest < Minitest::Test
     def test_score_changes
       score = predefined_score_object
 
