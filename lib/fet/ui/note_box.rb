@@ -101,16 +101,19 @@ module Fet
       def generate_note_music
         degrees = note_boxes.level.degrees
 
-        filename = File.join(note_boxes.level.game.tmp_directory, "#{degree_name}.mid")
         Fet::MidilibInterface.new(
           tempo: note_boxes.level.game.tempo,
           progression: nil,
           notes: [degrees.root_midi_value + degree_instance.degree_index],
           info: degree_name,
-          filename: filename,
+          filename: midi_filename,
         ).create_notes_only
 
-        return Ruby2D::Music.new(filename)
+        return Ruby2D::Music.new(midi_filename)
+      end
+
+      def midi_filename
+        return File.join(note_boxes.level.game.tmp_directory, "#{degree_name}.mid")
       end
     end
   end
