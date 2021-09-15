@@ -12,6 +12,14 @@ module Fet
       end
     end
 
+    def test_nonexistent_score_summary
+      stub_puts do
+        stub_scores_filename(nonexistent_scores_fixture) do
+          assert_nil(Fet::ScoreSummary.new.summary)
+        end
+      end
+    end
+
     private
 
     def stub_puts
@@ -30,7 +38,7 @@ module Fet
       return File.join(Fet.root, "test", "fet", "fixtures", "scores")
     end
 
-    def nonexistent_scores_filename
+    def nonexistent_scores_fixture
       return File.join(Fet.root, "test", "fet", "fixtures", "chores")
     end
   end

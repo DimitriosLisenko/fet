@@ -10,6 +10,8 @@ module Fet
   class ScoreSummary
     extend ScoreSummaryWriter
 
+    NO_SCORES_MESSAGE = "No scores available yet!".deep_freeze
+
     def initialize(minimum_session_length: 0, number_of_degrees: nil, key_type: nil, begin_offset: 0, end_offset: 0)
       self.minimum_session_length = minimum_session_length
       self.number_of_degrees = number_of_degrees
@@ -19,7 +21,7 @@ module Fet
     end
 
     def summary
-      puts "No scores available yet!" and return unless file_exists?
+      puts NO_SCORES_MESSAGE and return unless file_exists?
 
       percentage_summary
     end
