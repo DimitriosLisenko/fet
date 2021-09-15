@@ -14,16 +14,6 @@ module Fet
 
     private
 
-    def load_bin
-      # can't load the binary multiple times
-      return if Object.const_defined?("App")
-
-      # load the binary so that we can test it as well (will be available as App)
-      load(File.join(Fet.root, "bin", "fet"))
-    rescue SystemExit
-      # don't fail test when exit is called from within the binary
-    end
-
     def test_help_command
       assert_equal(0, App.run(["help"]))
     end
