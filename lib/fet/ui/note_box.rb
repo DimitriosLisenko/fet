@@ -99,12 +99,10 @@ module Fet
       end
 
       def generate_note_music
-        degrees = note_boxes.level.degrees
-
         Fet::MidilibInterface.new(
           tempo: note_boxes.level.game.tempo,
           progression: nil,
-          notes: [degrees.root_midi_value + degree_instance.degree_index],
+          notes: [note_boxes.level.degrees.root_midi_value + degree_instance.degree_index],
           info: degree_name,
           filename: midi_filename,
         ).create_notes_only
