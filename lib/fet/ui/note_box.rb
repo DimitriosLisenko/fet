@@ -101,7 +101,7 @@ module Fet
       def generate_note_music
         degrees = note_boxes.level.degrees
 
-        filename = "tmp/#{degree_name}.mid"
+        filename = File.join(note_boxes.level.game.tmp_directory, "#{degree_name}.mid")
         Fet::MidilibInterface.new(
           tempo: note_boxes.level.game.tempo,
           progression: nil,

@@ -20,6 +20,7 @@ module Fet
 
       def setup
         @uuid = SecureRandom.uuid
+        FileUtils.mkdir_p(tmp_directory)
       end
 
       def teardown
@@ -29,7 +30,7 @@ module Fet
       end
 
       def tmp_directory
-        return "tmp/#{@uuid}"
+        return File.join("tmp", @uuid)
       end
 
       # NOTE: this is not the ideal place for this, but running the game does require a fair bit of mocking
