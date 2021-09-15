@@ -39,6 +39,16 @@ module Fet
         with_game_stubs { Fet::Cli::Play::Listening.run(nil, options, nil) }
       end
 
+      # NOTE: this is not the ideal place for this, but running the game does require a fair bit of mocking
+      def test_bin_play_listening
+        with_game_stubs do
+          capture_subprocess_io do
+            load_bin
+            App.run(["play", "listening"])
+          end
+        end
+      end
+
       def test_write_score_to_file
         game = Fet::Ui::Game.new(tempo: 200, degrees: 1, key_type: "major", next_on_correct: false)
         game_instance_test(game) do
