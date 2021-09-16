@@ -180,7 +180,7 @@ Type of the chord progression
 
 ======= -s|--seconds arg
 
-Only include games that had more playtime than the specified amount (seconds)
+Only include games that had greater or equal playtime to the specified amount (in seconds)
 
 [Default Value] 0
 

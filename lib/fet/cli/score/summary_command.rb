@@ -33,7 +33,7 @@ module Fet
           end
 
           def define_seconds_flag(command)
-            command.desc("Only include games that had more playtime than the specified amount (seconds)")
+            command.desc("Only include games that had greater or equal playtime to the specified amount (in seconds)")
             command.default_value(0)
             command.flag([:s, :seconds], type: Integer)
           end

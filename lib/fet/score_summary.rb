@@ -58,7 +58,7 @@ module Fet
     end
 
     def filter_by_seconds_elapsed(games_array)
-      return games_array.select { |game_details| game_details["seconds_elapsed"] > minimum_session_length }
+      return games_array.select { |game_details| game_details["seconds_elapsed"] >= minimum_session_length }
     end
 
     def filter_by_number_of_degrees(games_array)
