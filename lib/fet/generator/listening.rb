@@ -9,14 +9,20 @@ module Fet
       # (i.e. if you chose the b2 degree, you exclude the rest of the b2 degrees too)
       # 2 degrees => 21592 (left it for a while and it seemed to stop at this value) - comparable to 64C2 * 12 = 24192
       # 3 degrees => 252398 (before I stopped it, there was more being generated)
-      def initialize(exercises:, tempo:, degrees:, all_single_degree:, directory_prefix: "")
+      def initialize(exercises:, tempo:, degrees:, all_single_degree:)
         self.number_of_exercises = exercises
         self.all_single_degree = all_single_degree
         self.tempo = tempo
         self.number_of_degrees = degrees
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
-        self.directory_prefix = directory_prefix
       end
+
+      # NOTE: this is explicitly changed in tests, so no need to check for coverage
+      # :nocov:
+      def self.directory_prefix
+        return ""
+      end
+      # :nocov:
 
       def generate
         all_single_degree ? generate_all_single_degree_exercises : generate_number_of_exercises
@@ -24,7 +30,7 @@ module Fet
 
       private
 
-      attr_accessor :number_of_exercises, :tempo, :number_of_degrees, :note_range, :all_single_degree, :directory_prefix
+      attr_accessor :number_of_exercises, :tempo, :number_of_degrees, :note_range, :all_single_degree
 
       def generate_all_single_degree_exercises
         Fet::MAJOR_ROOT_MIDI_VALUES.each do |root|
@@ -82,7 +88,7 @@ module Fet
       end
 
       def full_filename(key_type, root_name, root_midi_value, chosen_notes)
-        result = File.join(*[directory_prefix, "listening", key_type].reject(&:empty?))
+        result = File.join(*[self.class.directory_prefix, "listening", key_type].reject(&:empty?))
         filename = root_name # note, e.g. Db
         filename += key_type == "major" ? "M" : "m" # type of note, M or m
         filename += "_" # delimiter

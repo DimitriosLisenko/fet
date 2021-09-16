@@ -40,6 +40,9 @@ Layout/CaseIndentation:
 Layout/LineLength:
   Max: 175
 
+Style/Lambda:
+  EnforcedStyle: lambda
+
 Style/RedundantReturn:
   Enabled: false
 

@@ -2,12 +2,13 @@
 
 require "test_helper"
 require "securerandom"
+require "tmpdir"
 
 module Fet
   module Generator
     class SingingTest < Minitest::Test
       def setup
-        @directory_prefix = File.join("tmp", SecureRandom.uuid)
+        @directory_prefix = Dir.mktmpdir
       end
 
       def teardown
@@ -15,7 +16,9 @@ module Fet
       end
 
       def test_generate_singing_exercises
-        Fet::Generator::Singing.new(tempo: 120, pause: 3, directory_prefix: @directory_prefix).generate
+        stub_directory_prefix do
+          Fet::Generator::Singing.new(tempo: 120, pause: 3).generate
+        end
         assert_number_of_exercises(expected_number_of_exercises)
       end
 
@@ -30,6 +33,10 @@ module Fet
           exercise_count = Dir[File.join(@directory_prefix, "singing", key_type, "**", "*")].count { |file| File.file?(file) }
           assert_equal(expected_exercise_count, exercise_count)
         end
+      end
+
+      def stub_directory_prefix
+        Fet::Generator::Singing.stub(:directory_prefix, @directory_prefix) { yield }
       end
     end
   end
