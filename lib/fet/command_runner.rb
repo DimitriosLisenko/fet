@@ -11,7 +11,7 @@ module Fet
         exit_status = wait_thr.value
         stdout_value = stdout.read
         stderr_value = stderr.read
-        raise CommandRunFailed.new("Failed command: #{command}: #{stderr_value}") unless exit_status.exited?
+        raise CommandRunFailed.new("Failed command: #{command}: #{stderr_value}") unless exit_status.success?
 
         return [stdout_value, stderr_value]
       end
