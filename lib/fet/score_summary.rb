@@ -77,7 +77,7 @@ module Fet
     def filter_by_offsets(games_array)
       begin_index = 0
       end_index = games_array.size
-      return games_array[(begin_index + begin_offset)...(end_index + end_offset)]
+      return games_array[(begin_index + begin_offset)...(end_index + end_offset)] || []
     end
 
     def score_instances
