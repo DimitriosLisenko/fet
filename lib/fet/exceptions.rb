@@ -17,6 +17,8 @@ module Fet
 
   class ImplementationError < Error; end
 
+  class CommandRunFailed < Error; end
+
   # TODO: this can be removed if the circle of fifths is generated dynamically
   class UnsupportedRootName < Error; end
 end

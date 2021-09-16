@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "open3"
+require_relative "command_runner"
+
 module Fet
   # Class responsible for interfacing with sox
   class SoxInterface
@@ -13,5 +16,13 @@ module Fet
     # sox 1.wav -n stat
     # SOX: library for audio
     # LibSDL: library Ruby2D uses for audio, can record sound
+
+    def self.rough_frequency_of_file(filename)
+      _, result = CommandRunner.run("sox #{filename} -n stat")
+      return result.split("\n")
+                   .detect { |s| s.include?("Rough") && s.include?("frequency") }
+                   .split(":")
+                   .last.strip.to_i
+    end
   end
 end
