@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "securerandom"
+require "tmpdir"
 
 module Fet
   module Generator
