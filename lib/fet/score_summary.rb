@@ -21,12 +21,11 @@ module Fet
     end
 
     def summary
-      unless file_exists?
+      if file_exists?
+        percentage_summary
+      else
         puts NO_SCORES_MESSAGE
-        return
       end
-
-      percentage_summary
     end
 
     private
