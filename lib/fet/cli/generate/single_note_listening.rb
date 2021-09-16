@@ -8,7 +8,6 @@ module Fet
         def self.run(_global_options, options, _args)
           Fet::Generator::SingleNoteListening.new(
             tempo: options[:tempo],
-            directory_prefix: options[:directory_prefix] || "",
           ).generate
         end
       end

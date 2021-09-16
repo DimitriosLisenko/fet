@@ -76,19 +76,19 @@ module Fet
       end
 
       def generate_full_question_music
-        filename = "tmp/chord_progression_and_question.mid"
+        filename = File.join(game.tmp_directory, "chord_progression_and_question.mid")
         create_midilib_object("Chord Progression + Question", filename).create_full_question
         return Ruby2D::Music.new(filename)
       end
 
       def generate_chord_progression_music
-        filename = "tmp/chord_progression.mid"
+        filename = File.join(game.tmp_directory, "chord_progression.mid")
         create_midilib_object("Chord Progression", filename).create_chord_progression_of_question
         return Ruby2D::Music.new(filename)
       end
 
       def generate_notes_music
-        filename = "tmp/question.mid"
+        filename = File.join(game.tmp_directory, "question.mid")
         create_midilib_object("Question", filename).create_notes_only
         return Ruby2D::Music.new(filename)
       end

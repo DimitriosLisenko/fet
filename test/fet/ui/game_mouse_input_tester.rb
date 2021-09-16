@@ -60,7 +60,7 @@ module Fet
           select_correct_note_with_tests(game, false)
           correct_note_box = any_correct_note_box(game)
           assert_equal(0, correct_note_box.send(:note_music).number_of_times_played)
-          assert_difference(-> { correct_note_box.send(:note_music).number_of_times_played }, 1) do
+          assert_difference(lambda { correct_note_box.send(:note_music).number_of_times_played }, 1) do
             click_note_box(game, correct_note_box)
           end
         end

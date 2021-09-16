@@ -11,7 +11,6 @@ module Fet
             tempo: options[:tempo],
             degrees: options[:degrees],
             all_single_degree: options[:"all-single-degree"],
-            directory_prefix: options[:directory_prefix] || "",
           ).generate
         end
       end

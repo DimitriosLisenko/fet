@@ -47,6 +47,10 @@ module Fet
         start
       end
 
+      # NOET: It seems that until the event loop finishes, the window updates don't happen.
+      #       Specifically here, selecting the correct answer will set color on a note box, but that change
+      #       does not take effect until we're out of the event loop, but by then we've already started a
+      #       new level, so the color change never shows.
       def handle_level_complete_event(event)
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
 

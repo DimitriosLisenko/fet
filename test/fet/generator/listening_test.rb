@@ -2,12 +2,13 @@
 
 require "test_helper"
 require "securerandom"
+require "tmpdir"
 
 module Fet
   module Generator
     class ListeningTest < Minitest::Test
       def setup
-        @directory_prefix = File.join("tmp", SecureRandom.uuid)
+        @directory_prefix = Dir.mktmpdir
       end
 
       def teardown
@@ -15,10 +16,12 @@ module Fet
       end
 
       def test_generate_50_exercises
-        Fet::Generator::Listening.new(
-          exercises: 50, degrees: 1, tempo: 120,
-          all_single_degree: false, directory_prefix: @directory_prefix,
-        ).generate
+        stub_directory_prefix do
+          Fet::Generator::Listening.new(
+            exercises: 50, degrees: 1, tempo: 120,
+            all_single_degree: false,
+          ).generate
+        end
         assert_number_of_exercises(50)
       end
 
@@ -26,19 +29,23 @@ module Fet
         # NOTE: this is required because the search space of files is potentially huge,
         # so they are generated randomly, and skipped if they already exist via File.exist?
         File.stub(:exist?, file_stub) do
-          Fet::Generator::Listening.new(
-            exercises: 1, degrees: 2, tempo: 200,
-            all_single_degree: false, directory_prefix: @directory_prefix,
-          ).generate
+          stub_directory_prefix do
+            Fet::Generator::Listening.new(
+              exercises: 1, degrees: 2, tempo: 200,
+              all_single_degree: false,
+            ).generate
+          end
           assert_number_of_exercises(1)
         end
       end
 
       def test_generate_all_single_degree_exercises
-        Fet::Generator::Listening.new(
-          exercises: 200, degrees: 2, tempo: 120,
-          all_single_degree: true, directory_prefix: @directory_prefix,
-        ).generate
+        stub_directory_prefix do
+          Fet::Generator::Listening.new(
+            exercises: 200, degrees: 2, tempo: 120,
+            all_single_degree: true,
+          ).generate
+        end
         assert_number_of_exercises(max_number_of_single_degree_exercises)
       end
 
@@ -46,6 +53,10 @@ module Fet
 
       def max_number_of_single_degree_exercises
         return Fet::MusicTheory::MAJOR_KEYS.size * Fet::REDUCED_BY_OCTAVE_PIANO_RANGE.size
+      end
+
+      def stub_directory_prefix
+        Fet::Generator::Listening.stub(:directory_prefix, @directory_prefix) { yield }
       end
 
       def assert_number_of_exercises(expected_exercise_count)

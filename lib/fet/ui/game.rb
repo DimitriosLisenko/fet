@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "ruby2d"
+require "tmpdir"
 require_relative "game_loop_handler"
 require_relative "game_setup_helper"
 require_relative "level"
@@ -14,17 +15,8 @@ module Fet
       include GameSetupHelper
       include GameLoopHandler
 
-      SCORES_FILENAME = "#{ENV["HOME"]}/.config/fet/scores".deep_freeze
-
-      attr_accessor :level, :score, :timer, :note_range,
+      attr_accessor :level, :score, :timer, :note_range, :tmp_directory,
                     :tempo, :number_of_degrees, :key_type, :next_on_correct, :limit_degrees
-
-      # NOTE: this is explicitly changed in tests, so no need to check for coverage
-      # :nocov:
-      def self.scores_filename
-        return SCORES_FILENAME
-      end
-      # :nocov:
 
       def initialize(tempo:, degrees:, key_type:, next_on_correct:, limit_degrees: [])
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
@@ -33,6 +25,7 @@ module Fet
         self.number_of_degrees = degrees
         self.next_on_correct = next_on_correct
         self.limit_degrees = limit_degrees
+        self.tmp_directory = Dir.mktmpdir
         initialize_ui_objects
         validate!
         setup_window
@@ -43,7 +36,7 @@ module Fet
         level.start
         timer.start
         show_window
-        write_score_to_file
+        Fet::ScoreSummary.add_entry(self)
       end
 
       def stop
@@ -74,29 +67,6 @@ module Fet
 
       def close_window
         Ruby2D::Window.close
-      end
-
-      def write_score_to_file
-        new_score_entries = historic_score_entries
-        new_score_entries << current_score_entry
-        directory_name = File.dirname(self.class.scores_filename)
-        FileUtils.mkdir_p(directory_name)
-        File.open(self.class.scores_filename, "w") { |file| file.write(new_score_entries.to_json) }
-      end
-
-      def historic_score_entries
-        result = File.read(self.class.scores_filename)
-        return JSON.parse(result)
-      rescue Errno::ENOENT
-        return []
-      end
-
-      def current_score_entry
-        return {
-          "started_at" => timer.started_at.to_s,
-          "seconds_elapsed" => timer.seconds_elapsed,
-          "score" => score.score,
-        }
       end
     end
   end

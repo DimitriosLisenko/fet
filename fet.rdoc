@@ -100,7 +100,7 @@ Run the ear training application
 ====== Command: <tt>listening </tt>
 Run the ear training application for listening
 
-Each level will contain a chord progression, followed by the specified number of degrees - first harmonically, then melodically after a pause.
+Each level will play a chord progression, followed by the specified number of degrees harmonically. The correct degrees should be selected.
 ======= Options
 ======= -d|--degrees arg
 
@@ -136,5 +136,52 @@ Tempo at which the chord progression is played at
 ======= -n|--[no-]next-on-correct
 Automatically go to the next exercise when the answer was correct
 
+
+
+==== Command: <tt>score </tt>
+Score commands
+
+
+===== Commands
+====== Command: <tt>summary </tt>
+Show the score summary
+
+
+======= Options
+======= -b|--begin-offset arg
+
+Offset beginning index of resulting array
+
+[Default Value] 0
+
+
+======= -d|--degrees arg
+
+Number of degrees to play
+
+[Default Value] 1
+[Must Match] ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
+
+
+======= -e|--end-offset arg
+
+Offset end index of resulting array
+
+[Default Value] 0
+
+
+======= -k|--key-type arg
+
+Type of the chord progression
+
+[Default Value] major
+[Must Match] ["major", "minor"]
+
+
+======= -s|--seconds arg
+
+Only include games that had greater or equal playtime to the specified amount (in seconds)
+
+[Default Value] 0
 
 
