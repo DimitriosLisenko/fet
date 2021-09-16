@@ -43,9 +43,14 @@ module Fet
       frequency_to_bucket_value(frequency)
     end.deep_freeze
 
-    # This function returns the frequency of the given midi value
-    def self.midi_value_to_frequency(note_name, octave_number)
-      return MIDI_VALUE_TO_FREQUENCY[MidiNote.from_note(note_name, octave_number).midi_value]
+    # This function returns the frequency of the given midi value, e.g 123
+    def self.midi_value_to_frequency(midi_value)
+      return MIDI_VALUE_TO_FREQUENCY[midi_value]
+    end
+
+    # This function returns the frequency of the given note, e.g. E8
+    def self.note_to_frequency(note_name, octave_number)
+      return midi_value_to_frequency(MidiNote.from_note(note_name, octave_number).midi_value)
     end
 
     # This function returns:
