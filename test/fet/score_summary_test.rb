@@ -15,6 +15,17 @@ module Fet
       end
     end
 
+    def test_overflow_offset_summary
+      stub_scores_filename(scores_fixture) do
+        out, err = capture_io { Fet::ScoreSummary.new(begin_offset: 1000).summary }
+        assert_empty(err)
+        _, correct, total, percentage = parse_table(out, "All")
+        assert_equal(0, correct.to_i)
+        assert_equal(0, total.to_i)
+        assert_equal("0%", percentage)
+      end
+    end
+
     def test_minor_summary
       stub_scores_filename(scores_fixture) do
         out, err = capture_io { Fet::ScoreSummary.new(key_type: "minor").summary }
