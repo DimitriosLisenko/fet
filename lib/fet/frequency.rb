@@ -5,7 +5,7 @@ require_relative "midi_note"
 module Fet
   # Class responsible for calculating frequencies of a note and vice versa
   class Frequency
-    # Reference: https://en.wikipedia.org/wiki/Piano_key_frequencies
+    # REFERENCE: https://en.wikipedia.org/wiki/Piano_key_frequencies
     ZEROTH_OCTAVE_MIDI_VALUE_TO_FREQUENCY = {
       MidiNote.from_note("C", 0).midi_value => 16.35160,
       MidiNote.from_note("Db", 0).midi_value => 17.32391,
@@ -28,28 +28,40 @@ module Fet
       end
     end.flatten(1).to_h.deep_freeze
 
-    FREQUENCY_TO_MIDI_VALUE = MIDI_VALUE_TO_FREQUENCY.invert.deep_freeze
+    MIDI_VALUES = MIDI_VALUE_TO_FREQUENCY.keys.deep_freeze
+    FREQUENCIES = MIDI_VALUE_TO_FREQUENCY.values.deep_freeze
 
     # NOTE: this divides the frequencies into equal buckets with distance of 1 between them
-    # https://en.wikipedia.org/wiki/Equal_temperament
     # NOTE: round to 2 decimal places because we only care about dividing notes into 100 equal buckets
+    # REFERENCE: https://en.wikipedia.org/wiki/Equal_temperament
     TWELFTH_ROOT_OF_TWO = 2 ** (1.0 / 12.0)
     def self.frequency_to_bucket_value(frequency)
       return Math.log(frequency, TWELFTH_ROOT_OF_TWO).round(2)
     end
 
-    FREQUENCY_LOGARITHMS = MIDI_VALUE_TO_FREQUENCY.values.map do |frequency|
+    FREQUENCY_LOGARITHMS = FREQUENCIES.map do |frequency|
       frequency_to_bucket_value(frequency)
     end.deep_freeze
 
-    # returns the frequency of the given midi value
+    # This function returns the frequency of the given midi value
     def self.midi_value_to_frequency(note_name, octave_number)
       return MIDI_VALUE_TO_FREQUENCY[MidiNote.from_note(note_name, octave_number).midi_value]
     end
 
-    # returns the midi value and offset (in cents) for the given frequency
+    # This function returns:
+    # 1) the midi value the frequency represents and
+    # 2) the offset (in cents) for the given frequency in range [-50, 50)
     def self.frequency_to_midi_value(frequency)
-      # frequency_bucket_value = frequency_to_bucket_value(frequency)
+      frequency_bucket_value = frequency_to_bucket_value(frequency)
+      difference = frequency_bucket_value - FREQUENCY_LOGARITHMS[0]
+      midi_index = difference.to_i
+      cents = ((difference - midi_index) * 100).to_i
+      if cents >= 50
+        midi_index += 1
+        cents -= 100
+      end
+      midi_value = MIDI_VALUES[midi_index]
+      return midi_value, cents
     end
   end
 end
