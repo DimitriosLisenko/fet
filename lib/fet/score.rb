@@ -66,11 +66,9 @@ module Fet
       return percentage(answered_correctly, questions_asked).to_i
     end
 
-    protected
+    private
 
     attr_accessor :score
-
-    private
 
     def initialize_score
       Fet::Degree::DEGREE_NAMES.map.with_index { |_, degree_index| [degree_index, { correct: 0, incorrect: 0 }] }.to_h
