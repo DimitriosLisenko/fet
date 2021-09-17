@@ -18,8 +18,8 @@ module Fet
           filename = File.join(directory, "output#{format("%03d", file_number)}.wav")
           next_filename = File.join(directory, "output#{format("%03d", file_number + 1)}.wav")
           if File.exist?(next_filename)
-            begin
-              frequency = rough_frequency_of_file(filename)
+            frequency = rough_frequency_of_file(filename)
+            if frequency
               midi_value, cents = Fet::Frequency.frequency_to_midi_value(frequency)
               note_names = Fet::Degrees.new(root_name: "C", octave_value: 4).note_names_of_midi_value(midi_value)
               octave_number = Fet::MidiNote.new(midi_value).octave_number
@@ -35,11 +35,14 @@ module Fet
 
     # TODO: "Rough frequency" doesn't seem to return the correct value, going to need to get the full frequency analysis via "sox ... -n stat -freq" and compute it
     def self.rough_frequency_of_file(filename)
-      _, result = CommandRunner.run("sox #{filename} -n stat")
+      _, result, _ = Open3.capture3("sox #{filename} -n stat -freq")
+      # _, result = CommandRunner.run("sox #{filename} -n stat -freq")
       return result.split("\n")
-                   .detect { |s| s.include?("Rough") && s.include?("frequency") }
-                   .split(":")
-                   .last.strip.to_i
+                   .reject { |s| s.include?(":") }
+                   .map { |s| s.split.map(&:to_f) }
+                   .reject { |arr| arr[1] < 2000 }
+                   .reduce(Hash.new(0)) { |res, arr| res[arr[0]] += arr[1]; res }
+                   .max_by { |_, v| v }&.dig(0)
     end
   end
 end
