@@ -16,5 +16,17 @@ module Fet
         return [stdout_value, stderr_value]
       end
     end
+
+    def self.run_with_yield(command)
+      stdin, stdout, stderr, wait_thr = Open3.popen3(command)
+      yield [stdin, stdout, stderr, wait_thr]
+    ensure
+      stdin.close
+      stdout.close
+      stderr.close
+      Process.kill("TERM", wait_thr.pid)
+      exit_status = wait_thr.value
+      raise CommandRunFailed.new("Failed command: #{command}: #{stderr.read}") unless exit_status.success?
+    end
   end
 end
