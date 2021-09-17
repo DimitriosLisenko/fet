@@ -3,6 +3,10 @@
 require "open3"
 require_relative "command_runner"
 
+# NOTE: https://stackoverflow.com/questions/15031544/extract-fast-fourier-transform-data-from-file - alternative fourier transform
+# The −freq option calculates the input’s p ower spectrum (4096 point DFT) instead of the statistics
+# listed above. T his should only be used with a single channel audio file.
+
 module Fet
   # Class responsible for interfacing with sox
   class SoxInterface
