@@ -1,32 +1,19 @@
 # frozen_string_literal: true
 
-require "open3"
+require "pty"
 
 module Fet
   # Class responsible for running external commands
   class CommandRunner
+    # REFERENCE: https://stackoverflow.com/questions/1154846/continuously-read-from-stdout-of-external-process-in-ruby
+    # REFERENCE: https://stackoverflow.com/questions/43208040/ruby-continuously-output-stdout-of-a-long-running-shell-command
+    # REFERENCE: https://stackoverflow.com/questions/7212573/when-to-use-each-method-of-launching-a-subprocess-in-ruby
     def self.run(command)
-      Open3.popen3(command) do |_, stdout, stderr, wait_thr|
-        # wait for the process to finish running
-        exit_status = wait_thr.value
-        stdout_value = stdout.read
-        stderr_value = stderr.read
-        raise CommandRunFailed.new("Failed command: #{command}: #{stderr_value}") unless exit_status.success?
-
-        return [stdout_value, stderr_value]
+      PTY.spawn(command) do |stdout, stdin, pid|
+        yield stdout, stdin, pid
+      ensure
+        Process.kill("TERM", pid)
       end
-    end
-
-    def self.run_with_yield(command)
-      stdin, stdout, stderr, wait_thr = Open3.popen3(command)
-      yield [stdin, stdout, stderr, wait_thr]
-    ensure
-      stdin.close
-      stdout.close
-      stderr.close
-      Process.kill("TERM", wait_thr.pid)
-      exit_status = wait_thr.value
-      raise CommandRunFailed.new("Failed command: #{command}: #{stderr.read}") unless exit_status.success?
     end
   end
 end
