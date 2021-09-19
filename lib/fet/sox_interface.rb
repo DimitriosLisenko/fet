@@ -19,7 +19,7 @@ module Fet
     def start_recording
       Thread.abort_on_exception = true
       self.recording_thread = Thread.new do
-        CommandRunner.run("rec -t wav - 2>/dev/null | sox -t .wav - -n stat -freq") do |stdout, _, pid|
+        CommandRunner.run("rec -c 1 -t wav - 2>/dev/null | sox -t .wav - -n stat -freq") do |stdout, _, pid|
           loop do
             frequency_queue.push(calculate_frequency(stdout))
           end
