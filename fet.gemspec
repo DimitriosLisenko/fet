@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "midilib", "~> 2.0", ">= 2.0.5"
   spec.add_dependency "ruby2d", "~> 0.10.0"
   spec.add_dependency "terminal-table", "~> 3.0", ">= 3.0.1"
+  spec.add_dependency "wavefile", "~> 1.1", ">= 1.1.1"
 
   # RDoc configuration
   spec.extra_rdoc_files = ["README.rdoc", "fet.rdoc"]
