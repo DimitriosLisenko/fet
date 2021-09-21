@@ -14,6 +14,8 @@ module Fet
     extend FFI::Library
 
     # NOTE: passing array will load one of them or fail - use to provide .so and .dylib
+    # TODO: perhaps delay ffi_lib call until it is required (which is only during the singing exercises),
+    #       otherwise if the user doesn't have the required dependencies for this library, it will fail to even run the console
     ffi_lib([File.join(Fet.root, "ext", "fet", "libpitch_detection.dylib")])
 
     attach_function :yin, "_ZN5pitch3yinEPKdmi", [:pointer, :size_t, :int], :double
