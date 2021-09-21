@@ -37,7 +37,32 @@ module Fet
         note_boxes.each { |note_box| note_box.handle_event_loop(event) }
       end
 
-      def handle_update_loop; end
+      def handle_update_loop
+        # latest_frequency = nil
+        # loop do
+        #   puts latest_frequency
+        # rescue ThreadError
+        #   break
+        # end
+        latest_frequency = level.game.recorder.read_frequency
+
+        puts latest_frequency
+        return if latest_frequency.nil?
+
+        note_boxes.each { |note_box| note_box.sung = false }
+
+        unless latest_frequency.negative?
+          begin
+            midi_value, _cents = Fet::Frequency.frequency_to_midi_value(latest_frequency)
+            sung_degree_index = level.degrees.degree_index_of_midi_value(midi_value)
+            sung_degree_name = Fet::Degree.from_degree_index(sung_degree_index, accidental_type: "b").degree_name
+            note_boxes.detect { |note_box| note_box.degree_name == sung_degree_name }.sung = true
+          rescue InvalidMidiNote
+          end
+        end
+
+        note_boxes.each { |note_box| note_box.send(:update_colors) }
+      end
 
       def all_correct_selected?
         return (correct_note_boxes.map(&:degree_name) & selected_note_boxes.map(&:degree_name)).size == correct_note_boxes.size

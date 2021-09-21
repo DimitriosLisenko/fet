@@ -10,7 +10,7 @@ module Fet
     class NoteBox
       include NoteBoxLoopHandler
 
-      attr_accessor :note_boxes, :degree_name, :selected
+      attr_accessor :note_boxes, :degree_name, :selected, :sung
 
       def initialize(note_boxes:, degree_name:)
         self.note_boxes = note_boxes
@@ -78,6 +78,7 @@ module Fet
       end
 
       def color
+        return ColorScheme::ORANGE if sung
         return correct? ? ColorScheme::GREEN : ColorScheme::RED if selected
 
         return degree_instance.degree_accidental ? ColorScheme::GREY : ColorScheme::WHITE
@@ -85,7 +86,7 @@ module Fet
 
       def text_color
         case color
-        when ColorScheme::GREY, ColorScheme::GREEN, ColorScheme::RED
+        when ColorScheme::GREY, ColorScheme::GREEN, ColorScheme::RED, ColorScheme::ORANGE
           return ColorScheme::WHITE
         when ColorScheme::WHITE
           return ColorScheme::BLACK

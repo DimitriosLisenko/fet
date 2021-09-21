@@ -25,6 +25,21 @@ module Fet
       validate_degree_name!
     end
 
+    def self.from_degree_index(degree_index, accidental_type:)
+      degree_names = DEGREE_NAMES[degree_index]
+      degree_name = if degree_names.size == 1
+                      degree_names[0]
+                    else
+                      case accidental_type
+                      when "#"
+                        degree_names[0]
+                      when "b"
+                        degree_names[1]
+                      end
+                    end
+      return new(degree_name)
+    end
+
     def degree_accidental
       return degree_name.size == 2 ? degree_name[0] : nil
     end
