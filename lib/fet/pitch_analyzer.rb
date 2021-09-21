@@ -16,5 +16,11 @@ module Fet
     ffi_lib("/Users/dima/programming/pitch-detection/lib/libpitch_detection.so")
 
     attach_function :yin, "_ZN5pitch3yinEPKdmi", [:pointer, :size_t, :int], :double
+
+    def self.frequency(samples, sample_rate)
+      pointer = FFI::MemoryPointer.new(:double, samples.size)
+      pointer.put_array_of_double(0, samples)
+      return yin(pointer, samples.size, sample_rate)
+    end
   end
 end
