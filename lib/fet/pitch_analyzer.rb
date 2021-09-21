@@ -14,7 +14,7 @@ module Fet
     extend FFI::Library
 
     # NOTE: passing array will load one of them or fail - use to provide .so and .dylib
-    ffi_lib("/Users/dima/programming/pitch-detection/lib/libpitch_detection.so")
+    ffi_lib([File.join(Fet.root, "ext", "fet", "libpitch_detection.dylib")])
 
     attach_function :yin, "_ZN5pitch3yinEPKdmi", [:pointer, :size_t, :int], :double
 
