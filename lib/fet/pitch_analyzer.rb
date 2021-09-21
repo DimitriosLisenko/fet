@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-# nm -gU /usr/local/lib/libpitch_detection.so
+# NOTE: To attach function, you need to know its symbol, which can be determined like so:
+#       nm -gU /usr/local/lib/libpitch_detection.so (or whatever shared library object)
+# Other references:
 # https://github.com/ffi/ffi/issues/554
-# OK so probably there's gonna be an intermediate layer of converting a C array to a C++ vector before calling the method???
 # https://stackoverflow.com/questions/32904417/how-to-wrap-stdvector-of-custom-structure-with-ffi
 # https://stackoverflow.com/questions/29389334/how-do-i-handle-ruby-arrays-in-ruby-ffi-gem
-# => do it in the C++ code and recompile the binary???
 
 require "ffi"
 
