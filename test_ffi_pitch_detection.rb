@@ -57,10 +57,9 @@ end
 # Fet::CommandRunner.run("cat aaa.wav") { |io, _, _| puts io.size } => 0
 IO.popen("cat aaa.wav") { |io| puts io.size }
 
-# IO.popen("rec -c 1 -t f32 - 2>/dev/null") do |stdout|
 # io_samples = []
 # IO.popen("sox correct.wav -t s32 - 2>/dev/null") do |stdout|
-IO.popen("rec -c 1 -t f32 - 2>/dev/null") do |stdout|
+IO.popen("rec -c 1 -t s32 - 2>/dev/null") do |stdout|
   sample_rate = 44100 # TODO: specify in the command line args to rec
   buffer_size = sample_rate / 10 # 0.1 seconds
   loop do
@@ -91,3 +90,14 @@ end
 # => 88761
 # 
 # PTY.spawn("cat aaa.wav") { |io, _, _| puts io.read.size }
+
+x = Fet::SoxInterface.new
+x.start_recording
+loop do
+  frequency = x.read_frequency
+  next if frequency < 0
+  midi_value, cents = Fet::Frequency.frequency_to_midi_value(frequency)
+  note_names = Fet::Degrees.new(root_name: "C", octave_value: 4).note_names_of_midi_value(midi_value)
+  octave_number = Fet::MidiNote.new(midi_value).octave_number
+  puts "#{note_names.join("/")} #{octave_number} #{cents} cents (#{frequency} Hz)"
+end

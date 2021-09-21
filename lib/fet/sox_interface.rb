@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-require_relative "command_runner"
-
-# NOTE: https://stackoverflow.com/questions/15031544/extract-fast-fourier-transform-data-from-file - alternative fourier transform
-
 module Fet
   # Class responsible for interfacing with sox
   class SoxInterface
     def initialize
       self.frequency_queue = Queue.new
       self.recording_thread = nil
+      self.sample_rate = 44_100
+      # NOTE: analyze 0.1 seconds
+      self.buffer_size = sample_rate / 10
     end
 
     def read_frequency
@@ -19,9 +18,18 @@ module Fet
     def start_recording
       Thread.abort_on_exception = true
       self.recording_thread = Thread.new do
-        CommandRunner.run("rec -c 1 -t wav - 2>/dev/null | sox -t .wav - -n stat -freq") do |stdout, _, pid|
+        # NOTE: Record with 44.1K sample rate (-r) to a single mono channel (-c) and output
+        #       the amplitudes of the wave file as 32-bit signed integers (-t) to STDOUT (-)
+        #       and disregard STDERR. Mono recording is required for pitch detection to work.
+        # REFERENCE: https://stackoverflow.com/questions/1154846/continuously-read-from-stdout-of-external-process-in-ruby
+        # REFERENCE: https://stackoverflow.com/questions/43208040/ruby-continuously-output-stdout-of-a-long-running-shell-command
+        # REFERENCE: https://stackoverflow.com/questions/7212573/when-to-use-each-method-of-launching-a-subprocess-in-ruby
+        # REFERENCE: https://stackoverflow.com/questions/42541588/any-way-i-can-get-sox-to-just-print-the-amplitude-values-from-a-wav-file
+        # NOTE: PTY.spawn doesn't work because it converts \n to \r\n for some reason, which is bad when outputting a binary file.
+        IO.popen("rec -r #{sample_rate} -c 1 -t s32 - 2>/dev/null") do |stdout|
           loop do
             frequency_queue.push(calculate_frequency(stdout))
+            # break if stdout.eof?
           end
         end
       end
@@ -29,35 +37,23 @@ module Fet
 
     private
 
-    attr_accessor :frequency_queue, :recording_thread
+    attr_accessor :frequency_queue, :recording_thread, :sample_rate, :buffer_size
 
     def calculate_frequency(io)
-      strongest_frequency = 0.0
-      strongest_power = 0.0
-      loop do
-        frequency_bin, power = io.gets.split.map(&:to_f)
-        if power > strongest_power
-          strongest_frequency = frequency_bin
-          strongest_power = power
-        end
-        break if (frequency_bin - "22039.234375".to_f).abs < Float::EPSILON
+      # NOTE: I originally wanted to use the "wavefile" gem to analyze the wav file; however, it doesn't work with pipes because it uses
+      #       IO#seek (doesn't work on pipes). So instead going to manually extract the amplitude values.
+      samples = []
+      buffer_size.times do
+        # break if io.eof?
+        # NOTE: unpacking with "l" means converting a string that looks like "\x00\xdf\xa0..." to "32-bit signed, native endian (int32_t)"
+        samples << io.read(4).unpack1("l")
       end
-      return strongest_frequency
+      return Fet::PitchAnalyzer.frequency(samples, sample_rate)
     end
 
     # midi_value, cents = Fet::Frequency.frequency_to_midi_value(frequency)
     # note_names = Fet::Degrees.new(root_name: "C", octave_value: 4).note_names_of_midi_value(midi_value)
     # octave_number = Fet::MidiNote.new(midi_value).octave_number
     # puts "#{note_names.join("/")} #{octave_number} #{cents} cents (#{frequency} Hz)"
-
-    # def self.rough_frequency_of_file(filename)
-    #   _, result, _ = Open3.capture3("sox #{filename} -n stat -freq")
-    #   return result.split("\n")
-    #                .reject { |s| s.include?(":") }
-    #                .map { |s| s.split.map(&:to_f) }
-    #                .reject { |arr| arr[1] < 2000 }
-    #                .reduce(Hash.new(0)) { |res, arr| res[arr[0]] += arr[1]; res }
-    #                .max_by { |_, v| v }&.dig(0)
-    # end
   end
 end
