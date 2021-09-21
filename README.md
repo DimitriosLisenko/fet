@@ -29,6 +29,16 @@ brew install sox
 apt install sox
 ```
 
+Install dependencies for pitch detection.
+#### OS X
+```sh
+brew install armadillo mlpack
+```
+#### Ubuntu
+```sh
+apt install libarmadillo-dev libmlpack-dev
+```
+
 ### Gem
 Add this line to your application's Gemfile:
 
