@@ -19,12 +19,27 @@ module Fet
     ffi_lib([File.join(Fet.root, "ext", "fet", "libpitch_detection.dylib")])
 
     attach_function :yin, "_ZN5pitch3yinEPKdmi", [:pointer, :size_t, :int], :double
+    attach_function :mpm, "_ZN5pitch3mpmEPKdmi", [:pointer, :size_t, :int], :double
+    attach_function :pyin, "_ZN5pitch4pyinEPKdmi", [:pointer, :size_t, :int], :double
+    attach_function :pmpm, "_ZN5pitch4pmpmEPKdmi", [:pointer, :size_t, :int], :double
+    attach_function :swipe, "_ZN5pitch5swipeEPKdmi", [:pointer, :size_t, :int], :double
 
     def self.frequency(samples, sample_rate)
       FFI::MemoryPointer.new(:double, samples.size) do |pointer|
         pointer.put_array_of_double(0, samples)
-        return yin(pointer, samples.size, sample_rate)
+        result = yin(pointer, samples.size, sample_rate)
+        return nil if result.negative?
+
+        return result
       end
     end
+
+    # need another class that's responsible for also:
+    # 1. analyzing average amplitude and returning nil below a certain threshold
+    # 2. returning nil if the frequency is outside the human voice spectrum
+    # Vocal range is E2-C6 => 80Hz-1100Hz
+    # REFERENCE: https://en.wikipedia.org/wiki/List_of_basses_in_non-classical_music
+    # REFERENCE: https://en.wikipedia.org/wiki/List_of_sopranos_in_non-classical_music
+    # REFERENCE: https://en.wikipedia.org/wiki/Scientific_pitch_notation
   end
 end

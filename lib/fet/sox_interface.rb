@@ -48,12 +48,25 @@ module Fet
         # NOTE: unpacking with "l" means converting a string that looks like "\x00\xdf\xa0..." to "32-bit signed, native endian (int32_t)"
         samples << io.read(4).unpack1("l")
       end
-      return Fet::PitchAnalyzer.frequency(samples, sample_rate)
+      result = Fet::PitchAnalyzer.frequency(samples, sample_rate)
+      result = filter_frequency_by_range(result)
+      result = filter_frequency_by_amplitude(result, samples)
+      return result
     end
 
-    # midi_value, cents = Fet::Frequency.frequency_to_midi_value(frequency)
-    # note_names = Fet::Degrees.new(root_name: "C", octave_value: 4).note_names_of_midi_value(midi_value)
-    # octave_number = Fet::MidiNote.new(midi_value).octave_number
-    # puts "#{note_names.join("/")} #{octave_number} #{cents} cents (#{frequency} Hz)"
+    def filter_frequency_by_range(frequency)
+      return nil if frequency.nil?
+      return nil if frequency < 80 || frequency > 1100
+
+      return frequency
+    end
+
+    # TODO: convert to dB
+    def filter_frequency_by_amplitude(frequency, samples)
+      return nil if samples.min.abs < 80_000_000
+      return nil if samples.max.abs < 80_000_000
+
+      return frequency
+    end
   end
 end

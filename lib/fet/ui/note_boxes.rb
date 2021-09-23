@@ -46,19 +46,14 @@ module Fet
         # end
         latest_frequency = level.game.recorder.read_frequency
 
-        puts latest_frequency
-        return if latest_frequency.nil?
-
         note_boxes.each { |note_box| note_box.sung = false }
 
-        unless latest_frequency.negative?
-          begin
-            midi_value, _cents = Fet::Frequency.frequency_to_midi_value(latest_frequency)
-            sung_degree_index = level.degrees.degree_index_of_midi_value(midi_value)
-            sung_degree_name = Fet::Degree.from_degree_index(sung_degree_index, accidental_type: "b").degree_name
-            note_boxes.detect { |note_box| note_box.degree_name == sung_degree_name }.sung = true
-          rescue InvalidMidiNote
-          end
+        # NOTE: there are filters in place that ensure the frequency we get here is a valid MIDI note
+        unless latest_frequency.nil?
+          midi_value, _cents = Fet::Frequency.frequency_to_midi_value(latest_frequency)
+          sung_degree_index = level.degrees.degree_index_of_midi_value(midi_value)
+          sung_degree_name = Fet::Degree.from_degree_index(sung_degree_index, accidental_type: "b").degree_name
+          note_boxes.detect { |note_box| note_box.degree_name == sung_degree_name }.sung = true
         end
 
         note_boxes.each { |note_box| note_box.send(:update_colors) }
