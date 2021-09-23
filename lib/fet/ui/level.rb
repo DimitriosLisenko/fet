@@ -49,6 +49,7 @@ module Fet
 
       attr_accessor :midi_values, :full_question_music, :chord_progression_music, :notes_music
 
+      # TODO: to allow for single-note listening exercises, the only change required is to set self.midi_values = [SOME_VALUE] here
       def start_self
         self.question_number += 1
         self.degrees = generate_degrees
