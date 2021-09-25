@@ -78,7 +78,8 @@ module Fet
       end
 
       def color
-        return ColorScheme::ORANGE if sung
+        return ColorScheme::ORANGE if sung # for singing exercises
+        return ColorScheme::GREEN if correct? # for singing exercises
         return correct? ? ColorScheme::GREEN : ColorScheme::RED if selected
 
         return degree_instance.degree_accidental ? ColorScheme::GREY : ColorScheme::WHITE
