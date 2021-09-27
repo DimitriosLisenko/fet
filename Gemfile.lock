@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fet (0.3.0)
+    fet (0.3.1)
       gli (~> 2.20, >= 2.20.1)
       ice_nine (~> 0.11.2)
       midilib (~> 2.0, >= 2.0.5)
