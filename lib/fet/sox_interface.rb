@@ -50,7 +50,7 @@ module Fet
       end
       result = Fet::PitchAnalyzer.frequency(samples, sample_rate)
       result = filter_frequency_by_range(result)
-      result = filter_frequency_by_amplitude(result, samples)
+      # result = filter_frequency_by_amplitude(result, samples)
       return result
     end
 
@@ -63,6 +63,7 @@ module Fet
 
     # TODO: convert to dB
     def filter_frequency_by_amplitude(frequency, samples)
+      return nil if frequency.nil?
       return nil if samples.min.abs < 80_000_000
       return nil if samples.max.abs < 80_000_000
 
