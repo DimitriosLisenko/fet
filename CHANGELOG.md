@@ -1,11 +1,12 @@
-## [Unreleased]
+# [Unreleased]
 
+# [Released]
+
+## [0.3.1] - 2021-09-27
 - Allow limiting questions to specific degrees.
 - Improve positioning of the score element in the UI.
 - Add ability to show score summary over multiple games.
 - Write game files to system temporary directory.
-
-## [Released]
 
 ## [0.3.0] - 2021-09-06
 
