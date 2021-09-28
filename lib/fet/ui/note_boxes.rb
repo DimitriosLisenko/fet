@@ -39,6 +39,7 @@ module Fet
 
       def handle_update_loop
         @nil_put = false if @nil_put.nil?
+        @sung_times ||= 0
         # latest_frequency = nil
         # loop do
         #   puts latest_frequency
@@ -50,16 +51,29 @@ module Fet
         note_boxes.each { |note_box| note_box.sung = false }
 
         # NOTE: there are filters in place that ensure the frequency we get here is a valid MIDI note
-        unless latest_frequency.nil?
+        if latest_frequency.nil?
+          @sung_times = [0, @sung_times - 1].max
+          puts unless @nil_put
+          @nil_put = true
+        else
           midi_value, cents = Fet::Frequency.frequency_to_midi_value(latest_frequency)
           sung_degree_index = level.degrees.degree_index_of_midi_value(midi_value)
           sung_degree_name = Fet::Degree.from_degree_index(sung_degree_index, accidental_type: "b").degree_name
           puts "#{sung_degree_name}\t#{latest_frequency}\t#{midi_value}#{"+" if cents.positive? || cents.zero?}#{cents}"
+          # if cents.abs <= 30 # can do this to require more strict singing
           @nil_put = false
-          note_boxes.detect { |note_box| note_box.degree_name == sung_degree_name }.sung = true
-        else
-          puts unless @nil_put
-          @nil_put = true
+          sung_note_box = note_boxes.detect { |note_box| note_box.degree_name == sung_degree_name }
+          sung_note_box.sung = true
+          if @sung_degree == sung_degree_name
+            @sung_times = [10, @sung_times + 1].min
+            if @sung_times == 10 && !all_correct_selected?
+              sung_note_box.select_by_singing
+              level.game.handle_event_loop(nil) # piggy backing
+            end
+          else
+            @sung_times = 1
+            @sung_degree = sung_degree_name
+          end
         end
 
         note_boxes.each { |note_box| note_box.send(:update_colors) }
