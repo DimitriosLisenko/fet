@@ -48,7 +48,7 @@ module Fet
         # NOTE: unpacking with "l" means converting a string that looks like "\x00\xdf\xa0..." to "32-bit signed, native endian (int32_t)"
         samples << io.read(4).unpack1("l")
       end
-      result = Fet::PitchAnalyzer.frequency(samples, sample_rate)
+      result = Fet::PitchDetector.frequency(samples, sample_rate)
       result = filter_frequency_by_range(result)
       # result = filter_frequency_by_amplitude(result, samples)
       return result

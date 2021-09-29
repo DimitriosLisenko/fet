@@ -10,7 +10,7 @@
 require "ffi"
 
 module Fet
-  class PitchAnalyzer
+  class PitchDetector
     extend FFI::Library
 
     # NOTE: passing array will load one of them or fail - use to provide .so and .dylib

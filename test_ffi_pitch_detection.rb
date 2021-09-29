@@ -10,7 +10,7 @@ WaveFile::Reader.new("./voice_mono.wav") do |reader|
     samples = buffer.samples
     pointer = FFI::MemoryPointer.new(:double, samples.size)
     pointer.put_array_of_double(0, samples)
-    frequency = Fet::PitchAnalyzer.yin(pointer, samples.size, sample_rate)
+    frequency = Fet::PitchDetector.yin(pointer, samples.size, sample_rate)
     puts frequency
   end
 end
@@ -46,7 +46,7 @@ WaveFile::Reader.new(stdout) do |reader|
   buffer_size = sample_rate / 10
   reader.each_buffer(buffer_size) do |buffer|
     wavefile_samples << buffer.samples
-    puts Fet::PitchAnalyzer.frequency(buffer.samples, sample_rate)
+    puts Fet::PitchDetector.frequency(buffer.samples, sample_rate)
   end
 end
 # end; nil
@@ -69,7 +69,7 @@ IO.popen("rec -c 1 -t s32 - 2>/dev/null") do |stdout|
       samples << stdout.read(4).unpack("l").first
     end
     # io_samples << samples
-    puts Fet::PitchAnalyzer.frequency(samples, sample_rate)
+    puts Fet::PitchDetector.frequency(samples, sample_rate)
     break if stdout.eof?
   end
 end
