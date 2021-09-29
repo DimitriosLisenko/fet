@@ -13,10 +13,10 @@ module Fet
   class PitchDetector
     extend FFI::Library
 
-    # NOTE: passing array will load one of them or fail - use to provide .so and .dylib
+    # NOTE: passing array will load one of them or fail - used to provide .so and .dylib
     # TODO: perhaps delay ffi_lib call until it is required (which is only during the singing exercises),
     #       otherwise if the user doesn't have the required dependencies for this library, it will fail to even run the console
-    ffi_lib([File.join(Fet.root, "ext", "fet", "libpitch_detection.dylib")])
+    ffi_lib([File.join(Fet.root, "ext", "fet", "libpitch_detection.dylib"), File.join(Fet.root, "ext", "fet", "libpitch_detection.so")])
 
     attach_function :yin, "_ZN5pitch3yinEPKdmi", [:pointer, :size_t, :int], :double
     attach_function :mpm, "_ZN5pitch3mpmEPKdmi", [:pointer, :size_t, :int], :double
@@ -33,13 +33,5 @@ module Fet
         return result
       end
     end
-
-    # need another class that's responsible for also:
-    # 1. analyzing average amplitude and returning nil below a certain threshold
-    # 2. returning nil if the frequency is outside the human voice spectrum
-    # Vocal range is E2-C6 => 80Hz-1100Hz
-    # REFERENCE: https://en.wikipedia.org/wiki/List_of_basses_in_non-classical_music
-    # REFERENCE: https://en.wikipedia.org/wiki/List_of_sopranos_in_non-classical_music
-    # REFERENCE: https://en.wikipedia.org/wiki/Scientific_pitch_notation
   end
 end

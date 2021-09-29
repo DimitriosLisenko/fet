@@ -50,22 +50,18 @@ module Fet
       end
       result = Fet::PitchDetector.frequency(samples, sample_rate)
       result = filter_frequency_by_range(result)
-      # result = filter_frequency_by_amplitude(result, samples)
       return result
     end
 
+    # Vocal range is E2-C6 => 80Hz-1100Hz
+    # REFERENCE: https://en.wikipedia.org/wiki/List_of_basses_in_non-classical_music
+    # REFERENCE: https://en.wikipedia.org/wiki/List_of_sopranos_in_non-classical_music
+    # REFERENCE: https://en.wikipedia.org/wiki/Scientific_pitch_notation
+    # NOTE: I was also thinking of filtering by amplitude, but that doesn't seem
+    #       to be necessary from my tests.
     def filter_frequency_by_range(frequency)
       return nil if frequency.nil?
       return nil if frequency < 80 || frequency > 1100
-
-      return frequency
-    end
-
-    # TODO: convert to dB
-    def filter_frequency_by_amplitude(frequency, samples)
-      return nil if frequency.nil?
-      return nil if samples.min.abs < 80_000_000
-      return nil if samples.max.abs < 80_000_000
 
       return frequency
     end
