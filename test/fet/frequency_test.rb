@@ -137,5 +137,17 @@ module Fet
         assert_equal(Rational(1, 1), higher - lower)
       end
     end
+
+    def test_frequency_to_midi_note_boundary
+      frequency = 4066.0
+      midi_value, cents = Frequency.frequency_to_midi_value(frequency)
+      assert_equal(107, midi_value)
+      assert_equal(49, cents)
+
+      frequency = 4067.0
+      midi_value, cents = Frequency.frequency_to_midi_value(frequency)
+      assert_equal(108, midi_value)
+      assert_equal(-50, cents)
+    end
   end
 end
