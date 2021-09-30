@@ -131,5 +131,11 @@ module Fet
         assert_equal(0, cents, "Frequency: #{frequency}")
       end
     end
+
+    def test_frequency_logarithms
+      Fet::Frequency::FREQUENCY_LOGARITHMS.each_cons(2) do |lower, higher|
+        assert_equal(Rational(1, 1), higher - lower)
+      end
+    end
   end
 end
