@@ -68,6 +68,7 @@ module Fet
             @sung_times = [10, @sung_times + 1].min
             if @sung_times == 10 && !all_correct_selected?
               sung_note_box.select_by_singing
+              # TODO: reset @sung_times when NEW LEVEL EVENT happens, not here
             end
           else
             @sung_times = 1
