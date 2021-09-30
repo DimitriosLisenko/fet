@@ -36,7 +36,8 @@ module Fet
     # REFERENCE: https://en.wikipedia.org/wiki/Equal_temperament
     TWELFTH_ROOT_OF_TWO = 2 ** (1.0 / 12.0)
     def self.frequency_to_bucket_value(frequency)
-      return Math.log(frequency, TWELFTH_ROOT_OF_TWO).round(2)
+      rounded_value = Math.log(frequency, TWELFTH_ROOT_OF_TWO).round(2)
+      return Rational((rounded_value * 100).round, 100)
     end
 
     FREQUENCY_LOGARITHMS = FREQUENCIES.map do |frequency|
