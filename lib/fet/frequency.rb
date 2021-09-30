@@ -59,12 +59,8 @@ module Fet
     def self.frequency_to_midi_value(frequency)
       frequency_bucket_value = frequency_to_bucket_value(frequency)
       difference = frequency_bucket_value - FREQUENCY_LOGARITHMS[0]
-      midi_index = difference.to_i
+      midi_index = difference.round
       cents = ((difference - midi_index) * 100).to_i
-      if cents >= 50
-        midi_index += 1
-        cents -= 100
-      end
       midi_value = MIDI_VALUES[midi_index]
       return midi_value, cents
     end
