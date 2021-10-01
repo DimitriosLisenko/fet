@@ -59,6 +59,8 @@ module Fet
     # 2) the offset (in cents) for the given frequency in range [-50, 50)
     # TODO: here the frequency is not distributed equally between notes, so -50 cents
     # does not necessarily mean the halfway point between the freuqencies - figure out if this is correct
+    # I think it might actually be the LINEAR distance between frequencies... no wait, once you convert it becomes a linear
+    # distance, and then that linear distance is divided into 100, so this is correct
     def self.frequency_to_midi_value(frequency)
       frequency_bucket_value = frequency_to_bucket_value(frequency)
       difference = frequency_bucket_value - FREQUENCY_LOGARITHMS[0]
