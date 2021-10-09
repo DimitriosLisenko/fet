@@ -32,12 +32,12 @@ module Fet
     FREQUENCIES = MIDI_VALUE_TO_FREQUENCY.values.deep_freeze
 
     # NOTE: this divides the frequencies into equal buckets with distance of 1 between them
-    # NOTE: round to 2 decimal places because we only care about dividing notes into 100 equal buckets
+    # NOTE: round to 3 decimal places: we only care about dividing notes into 100 equal buckets, additional decimal place allows for rounding
     # REFERENCE: https://en.wikipedia.org/wiki/Equal_temperament
     TWELFTH_ROOT_OF_TWO = 2 ** (1.0 / 12.0)
     def self.frequency_to_bucket_value(frequency)
-      rounded_value = Math.log(frequency, TWELFTH_ROOT_OF_TWO).round(2)
-      return Rational((rounded_value * 100).round, 100)
+      rounded_value = Math.log(frequency, TWELFTH_ROOT_OF_TWO).round(3)
+      return Rational((rounded_value * 1000).round, 1000)
     end
 
     FREQUENCY_LOGARITHMS = FREQUENCIES.map do |frequency|
@@ -57,16 +57,16 @@ module Fet
     # This function returns:
     # 1) the midi value the frequency represents and
     # 2) the offset (in cents) for the given frequency in range [-50, 50)
-    # TODO: here the frequency is not distributed equally between notes, so -50 cents
-    # does not necessarily mean the halfway point between the freuqencies - figure out if this is correct
-    # I think it might actually be the LINEAR distance between frequencies... no wait, once you convert it becomes a linear
-    # distance, and then that linear distance is divided into 100, so this is correct
     def self.frequency_to_midi_value(frequency)
       frequency_bucket_value = frequency_to_bucket_value(frequency)
       difference = frequency_bucket_value - FREQUENCY_LOGARITHMS[0]
       midi_index = difference.round
-      cents = ((difference - midi_index) * 100).to_i
+      cents = ((difference - midi_index) * 100).round
       midi_value = MIDI_VALUES[midi_index]
+      if cents == 50
+        midi_value += 1
+        cents -= 100
+      end
       return midi_value, cents
     end
   end
