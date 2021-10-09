@@ -139,9 +139,9 @@ module Fet
     end
 
     def test_frequency_to_midi_note_boundary
-      assert_frequency_midi_value(4065.0, 107, 49) # 1200 * Math.log(4065.0 / 3951.07, 2) => 49.214335121446915
-      assert_frequency_midi_value(4066.0, 108, -50) # 1200 * Math.log(4066.0 / 3951.07, 2) => 49.640170580257674
-      assert_frequency_midi_value(4067.0, 108, -50) # 1200 * Math.log(4067.0 / 3951.07, 2) => 50.06590132113825
+      assert_frequency_midi_value(4065.0, 107, 49) # both implementations agree it should round to 49
+      assert_frequency_midi_value(4066.0, 108, -50) # both implementations agree it should round to -50
+      assert_frequency_midi_value(4067.0, 108, -50) # both implementations agree it should round to -50
       assert_frequency_midi_value(450.0, 69, 39)
       assert_frequency_midi_value(11_000.0, 125, -27)
     end
