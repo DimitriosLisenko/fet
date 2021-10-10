@@ -147,8 +147,11 @@ module Fet
     end
 
     def test_with_alternative_implementation
-      (700..200_000).each do |val|
-        frequency = val / 10.0
+      lower_frequency = 70
+      upper_frequency = 20_000
+      multiplier = 10
+      ((lower_frequency * multiplier)..(upper_frequency * multiplier)).each do |val|
+        frequency = val / multiplier.to_f
         midi_value, cents = Frequency.frequency_to_midi_value(frequency)
         alternative_midi_value, alternative_cents = alternative_cents_implementation(frequency)
         assert_at_most_cent_difference(midi_value, alternative_midi_value, cents, alternative_cents, "Frequency: #{frequency}")
@@ -202,10 +205,25 @@ module Fet
       frequency_below_cents = cents_difference(frequency, frequency_below)
       frequency_above_cents = cents_difference(frequency, frequency_above)
 
-      return Fet::Frequency::MIDI_VALUES[frequency_below_index], frequency_below_cents if frequency_below_cents >= -50 && frequency_below_cents <= 49
-      return Fet::Frequency::MIDI_VALUES[frequency_above_index], frequency_above_cents if frequency_above_cents >= -50 && frequency_above_cents <= 49
-
-      raise "Invalid value for cents"
+      if frequency_below_cents >= -50 && frequency_below_cents <= 50
+        midi_value = Fet::Frequency::MIDI_VALUES[frequency_below_index]
+        cents = frequency_below_cents
+        if cents == 50
+          midi_value += 1
+          cents -= 100
+        end
+        return midi_value, cents
+      elsif frequency_above_cents >= -50 && frequency_above_cents <= 50
+        midi_value = Fet::Frequency::MIDI_VALUES[frequency_above_index]
+        cents = frequency_above_cents
+        if cents == 50
+          midi_value += 1
+          cents -= 100
+        end
+        return midi_value, cents
+      else
+        raise "Invalid value for cents"
+      end
     end
 
     # The formula to calculate the cents difference between two known frequencies: 1200 * log2(f1, f2)
