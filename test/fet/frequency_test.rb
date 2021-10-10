@@ -147,7 +147,7 @@ module Fet
     end
 
     def test_with_alternative_implementation
-      (800..200_000).each do |val|
+      (700..200_000).each do |val|
         frequency = val / 10.0
         midi_value, cents = Frequency.frequency_to_midi_value(frequency)
         alternative_midi_value, alternative_cents = alternative_cents_implementation(frequency)
