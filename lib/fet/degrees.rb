@@ -23,6 +23,11 @@ module Fet
       return Degree::DEGREE_NAMES[degree_index_of_midi_value(midi_value)]
     end
 
+    def note_names_of_midi_value(midi_value)
+      degree_names = degree_names_of_midi_value(midi_value)
+      return degree_names.map { |degree_name| note_name_of_degree(degree_name) }
+    end
+
     def degree_index_of_midi_value(midi_value)
       return MidiNote.new(midi_value).degree(root_midi_value)
     end

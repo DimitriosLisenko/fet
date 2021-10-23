@@ -14,7 +14,9 @@ module Fet
         note_boxes.handle_event_loop(event)
       end
 
-      def handle_update_loop; end
+      def handle_update_loop
+        note_boxes.handle_update_loop
+      end
 
       private
 

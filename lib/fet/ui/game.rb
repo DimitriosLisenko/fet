@@ -7,6 +7,7 @@ require_relative "game_setup_helper"
 require_relative "level"
 require_relative "score"
 require_relative "timer"
+require_relative "../sox_interface"
 
 module Fet
   module Ui
@@ -15,7 +16,7 @@ module Fet
       include GameSetupHelper
       include GameLoopHandler
 
-      attr_accessor :level, :score, :timer, :note_range, :tmp_directory,
+      attr_accessor :level, :score, :timer, :note_range, :tmp_directory, :recorder,
                     :tempo, :number_of_degrees, :key_type, :next_on_correct, :limit_degrees
 
       def initialize(tempo:, degrees:, key_type:, next_on_correct:, limit_degrees: [])
@@ -26,6 +27,7 @@ module Fet
         self.next_on_correct = next_on_correct
         self.limit_degrees = limit_degrees
         self.tmp_directory = Dir.mktmpdir
+        self.recorder = SoxInterface.new
         initialize_ui_objects
         validate!
         setup_window
@@ -35,6 +37,7 @@ module Fet
         score.start
         level.start
         timer.start
+        recorder.start_recording
         show_window
         Fet::ScoreSummary.add_entry(self)
       end

@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Gem runtime dependencies - place development dependencies inside Gemfile
+  spec.add_dependency "ffi", "~> 1.15", ">= 1.15.4"
   spec.add_dependency "gli", "~> 2.20", ">= 2.20.1"
   spec.add_dependency "ice_nine", "~> 0.11.2"
   spec.add_dependency "midilib", "~> 2.0", ">= 2.0.5"

@@ -16,6 +16,10 @@ module Fet
 
       def handle_update_loop; end
 
+      def select_by_singing
+        handle_selected(user_selected: true)
+      end
+
       def manually_select
         handle_selected(user_selected: false)
       end

@@ -10,6 +10,8 @@ module Fet
         score.handle_update_loop
         level.handle_update_loop
         timer.handle_update_loop
+
+        handle_custom_events
       end
 
       def handle_event_loop(event)

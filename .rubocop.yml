@@ -43,6 +43,9 @@ Layout/LineLength:
 Style/Lambda:
   EnforcedStyle: lambda
 
+Layout/SpaceAroundOperators:
+  EnforcedStyleForExponentOperator: space
+
 Style/RedundantReturn:
   Enabled: false
 
