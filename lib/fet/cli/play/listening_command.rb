@@ -24,14 +24,18 @@ module Fet
             command.desc("Run the ear training application for listening")
             command.long_desc("Each level will play a chord progression, followed by the specified number of degrees harmonically. The correct degrees should be selected.")
             command.command :listening do |listening|
-              define_tempo_flag(listening)
-              define_degrees_flag(listening)
-              define_key_type_flag(listening)
-              define_next_on_correct_flag(listening)
-              define_limit_degrees_flag(listening)
-
+              define_listening_action_flags(listening)
               define_listening_action(listening)
             end
+          end
+
+          def define_listening_action_flags(command)
+            define_tempo_flag(command)
+            define_degrees_flag(command)
+            define_key_type_flag(command)
+            define_next_on_correct_flag(command)
+            define_limit_degrees_flag(command)
+            define_internal_range_flag(command)
           end
 
           def define_tempo_flag(command)
@@ -62,6 +66,12 @@ module Fet
             command.desc("Limit which degrees can play")
             command.default_value([])
             command.flag([:l, :"limit-degrees"], type: String, must_match: Fet::Degree::DEGREE_NAMES.flatten, multiple: true)
+          end
+
+          def define_internal_range_flag(command)
+            command.desc("Limit range of selected degrees in semitones")
+            command.default_value(nil)
+            command.flag([:q, :"question-range"], type: Integer)
           end
 
           def define_listening_action(command)
