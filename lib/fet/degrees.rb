@@ -90,7 +90,6 @@ module Fet
       return all_notes if internal_range.nil?
       return all_notes unless chosen_notes.size == 1
 
-      internal_range = 18
       highest_note = chosen_notes.min + internal_range
       lowest_note = chosen_notes.max - internal_range
 
