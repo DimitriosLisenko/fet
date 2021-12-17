@@ -52,7 +52,7 @@ module Fet
       def start_self
         self.question_number += 1
         self.degrees = generate_degrees
-        self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, game.number_of_degrees, game.limit_degrees)
+        self.midi_values = degrees.select_degrees_from_midi_values(game.note_range, nil, game.number_of_degrees, game.limit_degrees)
 
         update_music_objects
         play_full_question
