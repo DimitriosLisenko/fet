@@ -26,12 +26,10 @@ module Fet
       # NOTE: don't test coverage for these methods because this is more of a test of the Ruby2D library
       # :nocov:
       def setup_window_event_loop
-        Ruby2D::Window.on(:key_down) do |event|
-          handle_event_loop(event)
-        end
-
-        Ruby2D::Window.on(:mouse_down) do |event|
-          handle_event_loop(event)
+        [:key_down, :key_up, :mouse_down].each do |event_type|
+          Ruby2D::Window.on(event_type) do |event|
+            handle_event_loop(event)
+          end
         end
       end
       # :nocov:
