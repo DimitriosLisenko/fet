@@ -22,10 +22,24 @@ module Fet
         return unless event.is_a?(Ruby2D::Window::KeyEvent)
         return unless event.type == :down
 
+        if game.shift_held
+          handle_shift_buttons(event)
+        else
+          handle_non_shift_buttons(event)
+        end
+      end
+
+      def handle_non_shift_buttons(event)
         handle_c_key if event.key == "c"
         handle_n_key if event.key == "n"
         handle_l_key if event.key == "l"
         handle_return_key if event.key == "return"
+      end
+
+      def handle_shift_buttons(event)
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+"].each.with_index do |button, index|
+          individual_notes_music[index]&.play if button == event.key
+        end
       end
 
       def handle_c_key
