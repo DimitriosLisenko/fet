@@ -16,16 +16,17 @@ module Fet
       include GameLoopHandler
 
       attr_accessor :level, :score, :timer, :note_range, :tmp_directory,
-                    :tempo, :number_of_degrees, :key_type, :next_on_correct, :limit_degrees
+                    :tempo, :number_of_degrees, :key_type, :next_on_correct, :limit_degrees, :limit_keys
 
-      def initialize(tempo:, degrees:, key_type:, next_on_correct:, limit_degrees: [])
+      # TODO: specify all these items via a Config class
+      def initialize(tempo:, degrees:, key_type:, next_on_correct:, limit_degrees: [], limit_keys: [])
         self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
         self.tempo = tempo
         self.key_type = key_type
         self.number_of_degrees = degrees
         self.next_on_correct = next_on_correct
-        self.limit_degrees = limit_degrees
         self.tmp_directory = Dir.mktmpdir
+        set_limits(limit_degrees: limit_degrees, limit_keys: limit_keys)
         initialize_ui_objects
         validate!
         setup_window
@@ -44,6 +45,11 @@ module Fet
       end
 
       private
+
+      def set_limits(limit_degrees:, limit_keys:)
+        self.limit_degrees = limit_degrees
+        self.limit_keys = limit_keys
+      end
 
       def initialize_ui_objects
         self.score = Score.new(self)

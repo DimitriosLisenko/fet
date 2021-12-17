@@ -64,6 +64,7 @@ module Fet
 
       def generate_degrees
         root_midi_values = game.key_type == "major" ? Fet::MAJOR_ROOT_MIDI_VALUES : Fet::MINOR_ROOT_MIDI_VALUES
+        root_midi_values = root_midi_values.select { |key, _| game.limit_keys.include?(key) } unless game.limit_keys.empty?
         root_name, root_midi_value = root_midi_values.to_a.sample
         root_octave_value = Fet::MidiNote.new(root_midi_value).octave_number
         return Degrees.new(root_name: root_name, octave_value: root_octave_value)
