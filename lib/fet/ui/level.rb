@@ -47,7 +47,7 @@ module Fet
 
       private
 
-      attr_accessor :midi_values, :full_question_music, :chord_progression_music, :notes_music
+      attr_accessor :midi_values, :full_question_music, :chord_progression_music, :notes_music, :individual_notes_music
 
       def start_self
         self.question_number += 1
@@ -74,6 +74,7 @@ module Fet
         self.full_question_music = generate_full_question_music
         self.chord_progression_music = generate_chord_progression_music
         self.notes_music = generate_notes_music
+        self.individual_notes_music = generate_invidivual_notes_music
       end
 
       def generate_full_question_music
@@ -94,12 +95,20 @@ module Fet
         return Ruby2D::Music.new(filename)
       end
 
-      def create_midilib_object(info, filename)
+      def generate_invidivual_notes_music
+        return midi_values.map.with_index do |midi_value, index|
+          filename = File.join(game.tmp_directory, "question_note_#{index + 1}.mid")
+          create_midilib_object("Question Note #{index + 1}", filename, [midi_value]).create_notes_only
+          next(Ruby2D::Music.new(filename))
+        end
+      end
+
+      def create_midilib_object(info, filename, notes = midi_values)
         progression = Fet::ChordProgression.new(offset: degrees.root_midi_value, template_type: game.key_type).with_offset
         Fet::MidilibInterface.new(
           tempo: game.tempo,
           progression: progression,
-          notes: midi_values,
+          notes: notes,
           info: info,
           filename: filename,
         )
