@@ -41,9 +41,9 @@ module Fet
       return {
         "started_at" => game.timer.started_at.to_s,
         "seconds_elapsed" => game.timer.seconds_elapsed,
-        "number_of_degrees" => game.number_of_degrees,
-        "tempo" => game.tempo,
-        "key_type" => game.key_type,
+        "number_of_degrees" => game.config.number_of_degrees,
+        "tempo" => game.config.tempo,
+        "key_type" => game.config.key_type,
         "score" => game.score.score,
       }
     end

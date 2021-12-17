@@ -68,7 +68,7 @@ module Fet
       def handle_level_complete_event(event)
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
 
-        start if answered_correctly? && game.next_on_correct
+        start if answered_correctly? && game.config.next_on_correct
       end
     end
   end

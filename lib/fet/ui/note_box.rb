@@ -100,7 +100,7 @@ module Fet
 
       def generate_note_music
         Fet::MidilibInterface.new(
-          tempo: note_boxes.level.game.tempo,
+          tempo: note_boxes.level.game.config.tempo,
           progression: nil,
           notes: [note_boxes.level.degrees.root_midi_value + degree_instance.degree_index],
           info: degree_name,
@@ -111,7 +111,7 @@ module Fet
       end
 
       def midi_filename
-        return File.join(note_boxes.level.game.tmp_directory, "#{degree_name}.mid")
+        return File.join(note_boxes.level.game.config.tmp_directory, "#{degree_name}.mid")
       end
     end
   end
