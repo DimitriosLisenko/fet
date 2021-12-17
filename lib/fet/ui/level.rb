@@ -96,7 +96,8 @@ module Fet
       end
 
       def generate_invidivual_notes_music
-        return midi_values.map.with_index do |midi_value, index|
+        # NOTE: if melodic lines are ever implemented, then we should not sort, but for chords it's nice to hear from bottom to top
+        return midi_values.sort.map.with_index do |midi_value, index|
           filename = File.join(game.tmp_directory, "question_note_#{index + 1}.mid")
           create_midilib_object("Question Note #{index + 1}", filename, [midi_value]).create_notes_only
           next(Ruby2D::Music.new(filename))
