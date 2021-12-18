@@ -84,7 +84,7 @@ module Fet
         self.full_question_music = generate_full_question_music
         self.chord_progression_music = generate_chord_progression_music
         self.notes_music = generate_notes_music
-        self.individual_notes_music = generate_invidivual_notes_music
+        self.individual_notes_music = generate_individual_notes_music
       end
 
       def generate_full_question_music
@@ -105,9 +105,8 @@ module Fet
         return Ruby2D::Music.new(filename)
       end
 
-      def generate_invidivual_notes_music
-        # NOTE: if melodic lines are ever implemented, then we should not sort, but for chords it's nice to hear from bottom to top
-        return midi_values.sort.map.with_index do |midi_value, index|
+      def generate_individual_notes_music
+        return midi_values.map.with_index do |midi_value, index|
           filename = File.join(game.config.tmp_directory, "question_note_#{index + 1}.mid")
           create_midilib_object("Question Note #{index + 1}", filename, [midi_value]).create_notes_only
           next(Ruby2D::Music.new(filename))
