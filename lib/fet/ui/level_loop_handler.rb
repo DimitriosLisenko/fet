@@ -38,7 +38,7 @@ module Fet
 
       def handle_shift_buttons(event)
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+"].each.with_index do |button, index|
-          individual_notes_music[index]&.play if button == event.key
+          individual_notes_music.sort[index]&.play if button == event.key
         end
       end
 
