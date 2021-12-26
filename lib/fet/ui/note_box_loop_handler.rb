@@ -35,7 +35,6 @@ module Fet
       def handle_keyboard_event(event)
         return unless event.is_a?(Ruby2D::Window::KeyEvent)
         return unless event.type == :down
-        return if note_boxes.level.game.shift_held
 
         input = determine_keyboard_input(event)
         handle_selected if degree_instance.degree_index == input_degree_instance(input)&.degree_index
