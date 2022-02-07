@@ -80,6 +80,7 @@ module Fet
       selected_note = all_notes.sample
       chosen_notes << selected_note
 
+      # TODO: make this max range and also pass in min_range
       all_notes = filter_notes_by_internal_range(all_notes, chosen_notes, internal_range)
       all_notes = filter_notes_by_selected_note_degree(all_notes, selected_note)
 
@@ -90,11 +91,14 @@ module Fet
       return all_notes if internal_range.nil?
       return all_notes unless chosen_notes.size == 1
 
-      highest_note = chosen_notes.min + internal_range
-      lowest_note = chosen_notes.max - internal_range
+      the_chosen_note = chosen_notes.first
 
+      highest_note = the_chosen_note + internal_range
+      lowest_note = the_chosen_note - internal_range
+
+      # TODO: this doesn't quite work as it's not internal range or something
       return all_notes.select do |note|
-        note > lowest_note && note < highest_note
+        note > lowest_note && note < highest_note && (note - the_chosen_note).abs >= 3
       end
     end
 
