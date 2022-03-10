@@ -34,6 +34,7 @@ module Fet
         self.next_on_correct = flags[:"next-on-correct"]
         self.limit_degrees = flags[:"limit-degrees"]
         self.internal_range = flags[:"question-range"]
+        self.limit_keys = ["C"]
       end
     end
   end
