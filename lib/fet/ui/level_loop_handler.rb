@@ -21,11 +21,22 @@ module Fet
       def handle_keyboard_event(event)
         return unless event.is_a?(Ruby2D::Window::KeyEvent)
         return unless event.type == :down
+        return if game.shift_held
 
-        handle_c_key if event.key == "c"
-        handle_n_key if event.key == "n"
-        handle_l_key if event.key == "l"
-        handle_return_key if event.key == "return"
+        handle_key_down_event(event)
+      end
+
+      def handle_key_down_event(event)
+        case event.key
+        when "c"
+          handle_c_key
+        when "n"
+          handle_n_key
+        when "l"
+          handle_l_key
+        when "return"
+          handle_return_key
+        end
       end
 
       def handle_c_key
@@ -54,7 +65,7 @@ module Fet
       def handle_level_complete_event(event)
         return unless event.is_a?(CustomEvent) && event.type == CustomEvent::EVENT_TYPE_LEVEL_COMPLETE
 
-        start if answered_correctly? && game.next_on_correct
+        start if answered_correctly? && game.config.next_on_correct
       end
     end
   end

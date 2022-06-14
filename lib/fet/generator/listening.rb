@@ -61,7 +61,7 @@ module Fet
       def select_notes(all_notes, root_name, root_midi_value, number_degrees, key_type)
         root_octave_value = Fet::MidiNote.new(root_midi_value).octave_number
         degrees_instance = Fet::Degrees.new(root_name: root_name, octave_value: root_octave_value)
-        chosen_notes = degrees_instance.select_degrees_from_midi_values(all_notes, number_degrees, [])
+        chosen_notes = degrees_instance.select_degrees_from_midi_values(all_notes, nil, number_degrees, [])
         return create_midi_file(chosen_notes, root_name, root_midi_value, key_type)
       end
 

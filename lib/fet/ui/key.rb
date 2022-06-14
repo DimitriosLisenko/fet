@@ -36,7 +36,7 @@ module Fet
 
       def text_value
         key_name = level.degrees.root_name
-        key_type = level.game.key_type == "major" ? "Major" : "Minor"
+        key_type = level.game.config.key_type == "major" ? "Major" : "Minor"
         return "#{key_name} #{key_type}"
       end
     end

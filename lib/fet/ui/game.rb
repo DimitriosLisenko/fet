@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "ruby2d"
-require "tmpdir"
 require_relative "game_loop_handler"
 require_relative "game_setup_helper"
 require_relative "level"
@@ -15,17 +14,10 @@ module Fet
       include GameSetupHelper
       include GameLoopHandler
 
-      attr_accessor :level, :score, :timer, :note_range, :tmp_directory,
-                    :tempo, :number_of_degrees, :key_type, :next_on_correct, :limit_degrees
+      attr_accessor :level, :score, :timer, :config
 
-      def initialize(tempo:, degrees:, key_type:, next_on_correct:, limit_degrees: [])
-        self.note_range = Fet::REDUCED_BY_OCTAVE_PIANO_RANGE
-        self.tempo = tempo
-        self.key_type = key_type
-        self.number_of_degrees = degrees
-        self.next_on_correct = next_on_correct
-        self.limit_degrees = limit_degrees
-        self.tmp_directory = Dir.mktmpdir
+      def initialize(config:)
+        self.config = config
         initialize_ui_objects
         validate!
         setup_window
@@ -56,6 +48,8 @@ module Fet
       end
 
       def validate_degrees!
+        limit_degrees = config.limit_degrees
+        number_of_degrees = config.number_of_degrees
         return unless !limit_degrees.empty? && number_of_degrees > limit_degrees.uniq.size
 
         raise ArgumentError.new("Can not select #{number_of_degrees} degrees from set of #{limit_degrees}")

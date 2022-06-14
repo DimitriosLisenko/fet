@@ -65,6 +65,14 @@ module Fet
         )
       end
 
+      def question_note_music
+        note_boxes.level.degree_indices.zip(note_boxes.level.individual_notes_music).each do |the_degree_index, music|
+          return music if degree_index == the_degree_index
+        end
+
+        return nil
+      end
+
       def text_x_offset
         return degree_instance.degree_accidental ? TEXT_X_FOR_ACCIDENTAL_OFFSET : TEXT_X_FOR_NATURAL_OFFSET
       end
@@ -100,7 +108,7 @@ module Fet
 
       def generate_note_music
         Fet::MidilibInterface.new(
-          tempo: note_boxes.level.game.tempo,
+          tempo: note_boxes.level.game.config.tempo,
           progression: nil,
           notes: [note_boxes.level.degrees.root_midi_value + degree_instance.degree_index],
           info: degree_name,
@@ -111,7 +119,7 @@ module Fet
       end
 
       def midi_filename
-        return File.join(note_boxes.level.game.tmp_directory, "#{degree_name}.mid")
+        return File.join(note_boxes.level.game.config.tmp_directory, "#{degree_name}.mid")
       end
     end
   end

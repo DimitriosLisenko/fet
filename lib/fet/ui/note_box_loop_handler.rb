@@ -95,7 +95,11 @@ module Fet
       end
 
       def play_note
-        note_music.play
+        if note_boxes.level.game.shift_held
+          question_note_music&.play
+        else
+          note_music.play
+        end
       end
 
       def update_colors

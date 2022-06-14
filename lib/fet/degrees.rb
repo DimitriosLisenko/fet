@@ -31,8 +31,8 @@ module Fet
       return degree_to_note_name[Degree.new(degree_name).degree_name]
     end
 
-    def select_degrees_from_midi_values(midi_value_range, number_of_degrees, degrees_filter)
-      return select_degrees_from_midi_values_recursive(filtered_midi_values(midi_value_range, degrees_filter), [], number_of_degrees)
+    def select_degrees_from_midi_values(midi_value_range, internal_range, number_of_degrees, degrees_filter)
+      return select_degrees_from_midi_values_recursive(filtered_midi_values(midi_value_range, degrees_filter), internal_range, [], number_of_degrees)
     end
 
     private
@@ -72,17 +72,40 @@ module Fet
       return result
     end
 
-    def select_degrees_from_midi_values_recursive(all_notes, chosen_notes, number_of_degrees)
+    def select_degrees_from_midi_values_recursive(all_notes, internal_range, chosen_notes, number_of_degrees)
       return chosen_notes if number_of_degrees.zero?
+
+      raise InvalidRange if all_notes.empty?
 
       selected_note = all_notes.sample
       chosen_notes << selected_note
 
-      all_notes_without_note_degree = all_notes.reject do |note|
+      # TODO: make this max range and also pass in min_range
+      all_notes = filter_notes_by_internal_range(all_notes, chosen_notes, internal_range)
+      all_notes = filter_notes_by_selected_note_degree(all_notes, selected_note)
+
+      select_degrees_from_midi_values_recursive(all_notes, internal_range, chosen_notes, number_of_degrees - 1)
+    end
+
+    def filter_notes_by_internal_range(all_notes, chosen_notes, internal_range)
+      return all_notes if internal_range.nil?
+      return all_notes unless chosen_notes.size == 1
+
+      the_chosen_note = chosen_notes.first
+
+      highest_note = the_chosen_note + internal_range
+      lowest_note = the_chosen_note - internal_range
+
+      # TODO: this doesn't quite work as it's not internal range or something
+      return all_notes.select do |note|
+        note > lowest_note && note < highest_note && (note - the_chosen_note).abs >= 3
+      end
+    end
+
+    def filter_notes_by_selected_note_degree(all_notes, selected_note)
+      return all_notes.reject do |note|
         Fet::MidiNote.new(note).degree(root_midi_value) == Fet::MidiNote.new(selected_note).degree(root_midi_value)
       end
-
-      select_degrees_from_midi_values_recursive(all_notes_without_note_degree, chosen_notes, number_of_degrees - 1)
     end
   end
 end

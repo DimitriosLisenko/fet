@@ -6,6 +6,8 @@ module Fet
   module Ui
     # Handles various events and updates for the Game object
     module GameLoopHandler
+      attr_reader :shift_held
+
       def handle_update_loop
         score.handle_update_loop
         level.handle_update_loop
@@ -38,12 +40,26 @@ module Fet
       private
 
       attr_accessor :note_selected_event_flag, :level_started_event_flag, :level_complete_event_flag
+      attr_writer :shift_held
 
       def handle_keyboard_event(event)
         return unless event.is_a?(Ruby2D::Window::KeyEvent)
+
+        handle_shift_button(event) if event.key == "left shift" || event.key == "right shift"
+
         return unless event.type == :down
+        return if shift_held
 
         stop if event.key == "q"
+      end
+
+      def handle_shift_button(event)
+        case event.type
+        when :down
+          self.shift_held = true
+        when :up
+          self.shift_held = false
+        end
       end
 
       def handle_custom_events
