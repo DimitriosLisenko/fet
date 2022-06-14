@@ -35,7 +35,9 @@ module Fet
             define_key_type_flag(command)
             define_next_on_correct_flag(command)
             define_limit_degrees_flag(command)
+            define_limit_keys_flag(command)
             define_internal_range_flag(command)
+            define_note_range_flags(command)
           end
 
           def define_tempo_flag(command)
@@ -68,10 +70,26 @@ module Fet
             command.flag([:l, :"limit-degrees"], type: String, must_match: Fet::Degree::DEGREE_NAMES.flatten, multiple: true)
           end
 
+          def define_limit_keys_flag(command)
+            command.desc("Limit which keys to play in")
+            command.default_value([])
+            command.flag([:"limit-keys"], type: String, must_match: Fet::MusicTheory::MAJOR_KEYS, multiple: true)
+          end
+
           def define_internal_range_flag(command)
             command.desc("Limit range of selected degrees in semitones")
             command.default_value(nil)
             command.flag([:q, :"question-range"], type: Integer)
+          end
+
+          def define_note_range_flags(command)
+            command.desc("Minimum MIDI value of range")
+            command.default_value(nil)
+            command.flag([:"note-range-min"], type: Integer)
+
+            command.desc("Maximum MIDI value of range")
+            command.default_value(nil)
+            command.flag([:"note-range-max"], type: Integer)
           end
 
           def define_listening_action(command)

@@ -34,7 +34,14 @@ module Fet
         self.next_on_correct = flags[:"next-on-correct"]
         self.limit_degrees = flags[:"limit-degrees"]
         self.internal_range = flags[:"question-range"]
-        self.limit_keys = ["C"]
+        self.limit_keys = flags[:"limit-keys"]
+        set_note_range_from_flags(flags)
+      end
+
+      def set_note_range_from_flags(flags)
+        note_range_min = flags[:"note-range-min"] || note_range.first
+        note_range_max = flags[:"note-range-max"] || note_range.last
+        self.note_range = (note_range_min..note_range_max).to_a
       end
     end
   end

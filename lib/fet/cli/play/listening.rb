@@ -7,7 +7,7 @@ module Fet
       module Listening
         def self.run(_global_options, options, _args)
           Fet::Ui::Game.new(
-            config: Fet::Ui::Config.new(flags: options)
+            config: Fet::Ui::Config.new(flags: options),
           ).start
         end
       end
