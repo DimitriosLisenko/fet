@@ -16,6 +16,6 @@ group :test, :development do
   gem "codecov", "~> 0.6.0"
   gem "pry-byebug", "~> 3.9"
   gem "rake", "~> 13.0"
-  gem "rdoc", "~> 6.3", ">= 6.3.2"
+  gem "rdoc", "~> 6.3"
   gem "rubocop", "~> 1.7"
 end
